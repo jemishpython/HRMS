@@ -1,0 +1,132 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block body %}
+			
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+					<div class="row">
+						<div class="col-lg-8 col-md-8">
+							<section class="dash-section">
+								<div class="dash-sec-content">
+									<div class="dash-info-list">
+										<div class="dash-card">
+											<div class="dash-card-container">
+													<div class="welcome-img">
+														<img alt="profile" src="{% static 'img/profiles/avatar-02.jpg' %}">
+													</div>
+													<div class="welcome-det">
+														<h3>Welcome, {{user.username}}</h3>
+														<p>Monday, 20 May 2019</p>
+													</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</section>
+							<section class="dash-section">
+								<h1 class="dash-sec-title">Today Task</h1>
+								<div class="task-wrapper">
+                                        <div class="task-list-container">
+                                            <div class="task-list-body">
+                                                <ul id="task-list">
+                                                    {% for task in task_list %}
+                                                    <li class="task">
+                                                        <div class="task-container">
+                                                            <span class="task-action-btn task-check">
+                                                                <span class="action-circle large complete-btn" title="Mark Complete">
+                                                                    <i class="material-icons">check</i>
+                                                                </span>
+                                                            </span>
+                                                            <span class="task-label">{{task.task_title}}</span>
+                                                        </div>
+                                                    </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+							</section>
+						</div>
+
+						<div class="col-lg-4 col-md-4">
+							<div class="dash-sidebar">
+								<section>
+									<h5 class="dash-title">Projects</h5>
+									<div class="card">
+										<div class="card-body">
+											<div class="time-list">
+												<div class="dash-stats-list">
+													<h4>{{task_list.count}}</h4>
+													<p>Total Tasks</p>
+												</div>
+												<div class="dash-stats-list">
+													<h4>14</h4>
+													<p>Pending Tasks</p>
+												</div>
+											</div>
+											<div class="request-btn">
+												<div class="dash-stats-list">
+													<h4>1231123</h4>
+													<p>Total Projects</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section>
+									<h5 class="dash-title">Your Leave</h5>
+									<div class="card">
+										<div class="card-body">
+											<div class="time-list">
+												<div class="dash-stats-list">
+													<h4>4.5</h4>
+													<p>Leave Taken</p>
+												</div>
+												<div class="dash-stats-list">
+													<h4>12</h4>
+													<p>Remaining</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section>
+									<h5 class="dash-title">Your time off allowance</h5>
+									<div class="card">
+										<div class="card-body">
+											<div class="time-list">
+												<div class="dash-stats-list">
+													<h4>5.0 Hours</h4>
+													<p>Approved</p>
+												</div>
+												<div class="dash-stats-list">
+													<h4>15 Hours</h4>
+													<p>Remaining</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+								<section>
+									<h5 class="dash-title">Upcoming Holiday</h5>
+									<div class="card">
+										<div class="card-body text-center">
+											<h4 class="holiday-title mb-0">Mon 20 May 2019 - Ramnavmi</h4>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<!-- /Page Content -->
+
+            </div>
+			<!-- /Page Wrapper -->
+
+{% endblock body %}
+

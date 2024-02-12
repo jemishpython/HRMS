@@ -1,0 +1,52 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block body %}
+			
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-title">Department</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Department</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div>
+								<table class="table table-striped custom-table mb-0 datatable">
+									<thead>
+										<tr>
+											<th style="width: 50px;">Sr No</th>
+											<th>Department Name</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for x in departmentlist %}
+										<tr>
+											<td>{{forloop.counter}}</td>
+											<td>{{x.department_name}}</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+                </div>
+				<!-- /Page Content -->
+            </div>
+			<!-- /Page Wrapper -->
+		
+{% endblock body %}

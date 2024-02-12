@@ -1,0 +1,56 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block body %}
+
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+
+				<!-- Page Content -->
+                <div class="content container-fluid">
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-title">Holidays 2024</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Holidays</li>
+								</ul>
+							</div>
+
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive">
+								<table class="table table-striped custom-table mb-0">
+									<thead>
+										<tr>
+											<th>Sr NO</th>
+											<th>Title </th>
+											<th>Holiday Date</th>
+											<th class="text-right">Day</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for x in holidaylist %}
+										<tr class="holiday-upcoming">
+											<td>{{forloop.counter}}</td>
+											<td>{{x.holiday_title}}</td>
+											<td>{{x.holiday_date|date:"j - F - Y"}}</td>
+											<td class="text-right">{{x.holiday_date|date:"l"}}</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+                </div>
+				<!-- /Page Content -->
+            </div>
+			<!-- /Page Wrapper -->
+{% endblock body %}

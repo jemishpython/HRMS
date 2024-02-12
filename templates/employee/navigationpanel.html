@@ -1,0 +1,142 @@
+{% load static %}
+
+<!-- Main Wrapper -->
+<div class="main-wrapper">
+
+    <!-- Header -->
+    <div class="header">
+
+        <!-- Logo -->
+        <a href="javascript:void(0);" id="toggle_btn">
+					<span class="bar-icon">
+						<span></span>
+						<span></span>
+						<span></span>
+					</span>
+        </a>
+        <div class="header-left ">
+            <a class="logo" href="">
+                <img alt="" height="40" src="{% static 'img/logo.png' %}" width="40">
+            </a>
+        </div>
+        <!-- /Logo -->
+
+
+        <!-- Header Title -->
+        <div class="page-title-box">
+            <h3>Webmigrates Employee</h3>
+        </div>
+        <!-- /Header Title -->
+
+        <a class="mobile_btn" href="#sidebar" id="mobile_btn"><i class="fa fa-bars"></i></a>
+
+        <!-- Header Menu -->
+        <ul class="nav user-menu">
+
+            <!-- Search -->
+            <li class="nav-item">
+                <div class="top-nav-search">
+                    <a class="responsive-search" href="javascript:void(0);">
+                        <i class="fa fa-search"></i>
+                    </a>
+                    <form action="search.html">
+                        <input class="form-control" placeholder="Search here" type="text">
+                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
+            </li>
+            <!-- /Search -->
+
+            <li class="nav-item dropdown has-arrow main-drop">
+                <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
+                    <span>{{user.username}}</span>
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/admin_profile">My Profile</a>
+                    <a class="dropdown-item" href="settings.html">Settings</a>
+                    <a class="dropdown-item" href="/">Logout</a>
+                </div>
+            </li>
+        </ul>
+        <!-- /Header Menu -->
+
+        <!-- Mobile Menu -->
+        <div class="dropdown mobile-user-menu">
+            <a aria-expanded="false" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><i
+                    class="fa fa-ellipsis-v"></i></a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="/admin_profile">My Profile</a>
+                <a class="dropdown-item" href="settings.html">Settings</a>
+                <a class="dropdown-item" href="login.html">Logout</a>
+            </div>
+        </div>
+        <!-- /Mobile Menu -->
+
+    </div>
+</div>
+<!-- /Header -->
+<!--{% if messages %}-->
+<!--    {% for message in messages %}-->
+<!--        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">-->
+<!--            <strong> {{ message }} </strong>-->
+<!--            <button aria-label="Close" class="close" data-dismiss="alert" type="button">-->
+<!--                <span aria-hidden="true">&times;</span>-->
+<!--            </button>-->
+<!--        </div>-->
+<!--    {% endfor %}-->
+<!--{% endif %}-->
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div class="sidebar-menu" id="sidebar-menu">
+            <ul>
+                <li><a href="{% url 'EmployeeIndex' %}"><span>Employees Dashboard</span></a></li>
+                <li class="menu-title"><span>Employee</span></li>
+                <li><a href="{% url 'EmpHolidays' %}"><span>Holidays</span></a></li>
+                <li><a href="{% url 'EmpLeaves' user.id %}"><span>Leaves</span></a></li>
+                <li><a href="{% url 'EmpDepartmentView' %}"><span>Departments</span></a></li>
+                <li><a href="{% url 'EmpDesignationView' %}"><span>Designations</span></a></li>
+<!--                <li><a href="clients"><span>Clients</span></a></li>-->
+<!--                <li><a href="leads.html"><span>Leads</span></a></li>-->
+                <!--							<li>-->
+                <!--								<a href="tickets.html"><i class="la la-ticket"></i> <span>Tickets</span></a>-->
+                <!--							</li>-->
+<!--                <li><a href="trainers.html"><span>Trainers</span></a></li>-->
+                <!--							<li><a href="promotion.html"><i class="la la-bullhorn"></i> <span>Promotion</span></a></li>-->
+                <!--							<li><a href="resignation.html"><i class="la la-external-link-square"></i> <span>Resignation</span></a></li>-->
+                <!--							<li><a href="termination.html"><i class="la la-times-circle"></i> <span>Termination</span></a></li>-->
+                <!--							<li class="menu-title">-->
+                <!--								<span>Administration</span>-->
+                <!--							</li>-->
+                <!--							<li>-->
+                <!--								<a href="assets.html"><i class="la la-object-ungroup"></i> <span>Assets</span></a>-->
+                <!--							</li>-->
+                <!--							<li class="submenu">-->
+                <!--								<a href="#"><i class="la la-briefcase"></i> <span> Jobs </span> <span class="menu-arrow"></span></a>-->
+                <!--								<ul style="display: none;">-->
+                <!--									<li><a href="user-dashboard.html"> User Dasboard </a></li>-->
+                <!--									<li><a href="jobs-dashboard.html"> Jobs Dasboard </a></li>-->
+                <!--									<li><a href="jobs.html"> Manage Jobs </a></li>-->
+                <!--									<li><a href="manage-resumes.html"> Manage Resumes </a></li>-->
+                <!--									<li><a href="shortlist-candidates.html"> Shortlist Candidates </a></li>-->
+                <!--									<li><a href="interview-questions.html"> Interview Questions </a></li>-->
+                <!--									<li><a href="offer_approvals.html"> Offer Approvals </a></li>-->
+                <!--									<li><a href="experiance-level.html"> Experience Level </a></li>-->
+                <!--									<li><a href="candidates.html"> Candidates List </a></li>-->
+                <!--									<li><a href="schedule-timing.html"> Schedule timing </a></li>-->
+                <!--									<li><a href="apptitude-result.html"> Aptitude Results </a></li>-->
+                <!--								</ul>-->
+                <!--							</li>-->
+                <!--							<li>-->
+                <!--								<a href="knowledgebase.html"><i class="la la-question"></i> <span>Knowledgebase</span></a>-->
+                <!--							</li>-->
+                <!--							<li>-->
+                <!--								<a href="activities.html"><i class="la la-bell"></i> <span>Activities</span></a>-->
+                <!--							</li>-->
+<!--                <li><a href="users.html"><span>Users</span></a></li>-->
+<!--                <li><a href="settings.html"><span>Settings</span></a></li>-->
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- /Sidebar -->

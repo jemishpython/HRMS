@@ -1,0 +1,29 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block body %}
+
+		<!-- Edit Holiday Modal -->
+		<div class="mt-5 pt-5" id="edit_holiday" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+						<div class="modal-body">
+						<form method="post" action="holidays/update/{{up_holiday_details.id}}" id="edit_holiday_form">
+							{% csrf_token %}
+							<div class="form-group">
+								<label for="up_holidaytitle">Holiday Title <span class="text-danger">*</span></label>
+								<input class="form-control" type="text" id="up_holidaytitle" name="up_holiday_title" value="{{up_holiday_details.holiday_title}}">
+							</div>
+							<div class="form-group">
+								<label for="up_holidaytitle">Holiday Date <span class="text-danger">*</span></label>
+								<input class="form-control" type="date" id="up_holidaydate" name="up_holiday_date" value="{{up_holiday_details.holiday_date|date:'Y-m-d' }}">
+							</div>
+							<div class="submit-section">
+								<button class="btn btn-primary submit-btn" type="submit">Submit</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Edit Holiday Modal -->
+{% endblock body %}

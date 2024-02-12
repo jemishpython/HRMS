@@ -1,0 +1,159 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block body %}
+
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-title">Leaves</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Leaves</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<!-- Leave Statistics -->
+					<div class="row">
+						<div class="col-md-3">
+							<div class="stats-info">
+								<h6>Today Presents</h6>
+								<h4>12 / 60</h4>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="stats-info">
+								<h6>Planned Leaves</h6>
+								<h4>8 <span>Today</span></h4>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="stats-info">
+								<h6>Unplanned Leaves</h6>
+								<h4>0 <span>Today</span></h4>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="stats-info">
+								<h6>Pending Requests</h6>
+								<h4>12</h4>
+							</div>
+						</div>
+					</div>
+					<!-- /Leave Statistics -->
+					
+					<!-- Search Filter -->
+					<div class="row filter-row">
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+							<div class="form-group form-focus">
+								<input type="text" class="form-control floating">
+								<label class="focus-label">Employee Name</label>
+							</div>
+					   </div>
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+							<div class="form-group form-focus select-focus">
+								<select class="select floating"> 
+									<option> -- Select -- </option>
+									<option>Casual Leave</option>
+									<option>Medical Leave</option>
+									<option>Loss of Pay</option>
+								</select>
+								<label class="focus-label">Leave Type</label>
+							</div>
+					   </div>
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12"> 
+							<div class="form-group form-focus select-focus">
+								<select class="select floating"> 
+									<option> -- Select -- </option>
+									<option> Pending </option>
+									<option> Approved </option>
+									<option> Rejected </option>
+								</select>
+								<label class="focus-label">Leave Status</label>
+							</div>
+					   </div>
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+							<div class="form-group form-focus">
+								<div class="cal-icon">
+									<input class="form-control floating datetimepicker" type="text">
+								</div>
+								<label class="focus-label">From</label>
+							</div>
+						</div>
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+							<div class="form-group form-focus">
+								<div class="cal-icon">
+									<input class="form-control floating datetimepicker" type="text">
+								</div>
+								<label class="focus-label">To</label>
+							</div>
+						</div>
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+							<a href="#" class="btn btn-success btn-block"> Search </a>  
+					   </div>     
+                    </div>
+					<!-- /Search Filter -->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive">
+								<table class="table table-striped custom-table mb-0 datatable">
+									<thead>
+										<tr>
+											<th>Employee</th>
+											<th>Leave Type</th>
+											<th>From</th>
+											<th>To</th>
+											<th>No of Days</th>
+											<th>Reason</th>
+											<th class="text-center">Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for x in leave_list %}
+										<tr>
+											<td>
+												<h2 class="table-avatar">
+													<a href="profile.html" class="avatar"><img alt="" src="assets/img/profiles/avatar-09.jpg"></a>
+													<a href="#">{{x.leave_user}} <span>{{x.leave_user.designation}}</span></a>
+												</h2>
+											</td>
+											<td>{{x.leave_type}}</td>
+											<td>{{x.leave_from|date:"j - M - Y"}}</td>
+											<td>{{x.leave_to|date:"j - M - Y"}}</td>
+											<td>{{x.leave_days}} days</td>
+											<td>{{x.leave_reason}}</td>
+											<td class="text-center">
+												<div class="dropdown action-label">
+													<form action="{% url 'AdminLeaveStatusUpdate' x.id %}" method="post">
+													{% csrf_token %}
+														<select class="px-2 py-1 border rounded-pill" onChange="this.form.submit();" name="leave_status">
+															<option selected disabled>New</option>
+															<option {% if x.leave_status == "Approved" %}selected{% endif %}>Approved</option>
+															<option {% if x.leave_status == "Declined" %}selected{% endif %}>Declined</option>
+														</select>
+													</form>
+												</div>
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+                </div>
+				<!-- /Page Content -->
+				
+            </div>
+			<!-- /Page Wrapper -->
+{% endblock body %}
