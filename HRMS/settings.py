@@ -41,8 +41,11 @@ INSTALLED_APPS = [
     "admin_app",
     "hrms_api",
     "employee_app",
-    # "crispy_forms",
+    "crispy_forms",
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

@@ -1,13 +1,15 @@
 from django import forms
 
-from hrms_api.models import Holiday
+from hrms_api.models import *
 
-class EditHolidaysForm(forms.Form):
-    name = forms.CharField()
-    email = forms.EmailField()
-    message = forms.CharField(widget=forms.Textarea)
 
-# class EditHolidaysForm(forms.ModelForm):
-#     class Meta:
-#             model = Holiday
-#             fields = ['holiday_title,', 'holiday_date']
+class AddHolidaysForm(forms.ModelForm):
+    class Meta:
+        model = Holiday
+        fields = '__all__'
+
+
+class EditHolidaysForm(forms.ModelForm):
+    class Meta:
+        model = Holiday
+        fields = '__all__'

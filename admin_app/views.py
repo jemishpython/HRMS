@@ -4,6 +4,7 @@ from django.contrib.auth import logout, login
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
+from admin_app.forms import AddHolidaysForm, EditHolidaysForm
 # Create your views here.
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign
 
@@ -79,7 +80,7 @@ def AddEmployee(request):
         # empdetails.set_password(employee_password)
         empdetails.save()
         messages.success(request, "Hello, School data has been send.")
-        return redirect('AdminIndex')
+        return redirect('AdminEmployeeView')
 
     empprofile = User.objects.get(id=id)
     return render(request, "admin/employees.html", {'profile': empprofile})
@@ -98,7 +99,6 @@ def EditEmployee(request, id):
         up_employee_department = request.POST.get('employee_department')
         up_employee_designation = request.POST.get('employee_designation')
 
-
         up_empdetails = User.objects.get(id=id)
         up_empdetails.username = up_employee_name
         up_empdetails.email = up_employee_email
@@ -108,7 +108,7 @@ def EditEmployee(request, id):
         up_empdetails.department = up_employee_department
         up_empdetails.designation = up_employee_designation
         up_empdetails.save()
-        return redirect('AdminEmployee')
+        return redirect('AdminEmployeeView')
 
     edit_employee = User.objects.get(id=id)
     print(edit_employee, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>PROFILE")
@@ -148,29 +148,48 @@ def Holidays(request):
 
 
 def AddHolidays(request):
+    form = AddHolidaysForm(request.POST or None)
     if request.method == 'POST':
-        add_holiday_title = request.POST.get('holiday_title')
-        add_holiday_date = request.POST.get('holiday_date')
-        holiday_add = Holiday(holiday_title=add_holiday_title, holiday_date=add_holiday_date)
-        holiday_add.save()
-        return redirect('AdminHolidays')
-    return render(request, "admin/holidays_list.html")
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Holiday add successfully')
+                return redirect('AdminHolidays')
+        except Exception as e:
+            form = AddHolidaysForm()
+    context = {'form': form}
+    return render(request, "admin/holidays_list.html", context)
+
+
+# def UpdateHolidays(request, id):
+#     if request.method == 'POST':
+#         update_holiday_title = request.POST.get('up_holiday_title')
+#         update_holiday_date = request.POST.get('up_holiday_date')
+#         up_holiday_details = Holiday.objects.get(id=id)
+#         up_holiday_details.holiday_title = update_holiday_title
+#         up_holiday_details.holiday_date = update_holiday_date
+#         up_holiday_details.save()
+#         return redirect('AdminHolidays')
+#
+#     holiday_detail = Holiday.objects.get(id=id)
+#     context = {
+#         'up_holiday_details': holiday_detail
+#     }
+#     return render(request, "admin/edit_holidays.html", context)
 
 
 def UpdateHolidays(request, id):
+    edit_holiday = Holiday.objects.get(id=id)
+    form = EditHolidaysForm(request.POST or None, instance=edit_holiday)
     if request.method == 'POST':
-        update_holiday_title = request.POST.get('up_holiday_title')
-        update_holiday_date = request.POST.get('up_holiday_date')
-        up_holiday_details = Holiday.objects.get(id=id)
-        up_holiday_details.holiday_title = update_holiday_title
-        up_holiday_details.holiday_date = update_holiday_date
-        up_holiday_details.save()
-        return redirect('AdminHolidays')
-
-    holiday_detail = Holiday.objects.get(id=id)
-    context = {
-        'up_holiday_details': holiday_detail
-    }
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Holiday Update successfully')
+                return redirect('AdminHolidays')
+        except Exception as e:
+            form = EditHolidaysForm(instance=edit_holiday)
+    context = {'form': form, 'edit_holiday': edit_holiday}
     return render(request, "admin/edit_holidays.html", context)
 
 
@@ -281,7 +300,6 @@ def ProjectTaskList(request, id):
     project_id = id
     tasklist = Task.objects.filter(task_project=id)
     user_list = User.objects.all()
-
 
     context = {
         'project_tasklist': tasklist,

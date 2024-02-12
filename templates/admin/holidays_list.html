@@ -1,4 +1,5 @@
 {% extends 'admin/base.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block body %}
 
@@ -49,8 +50,8 @@
 											<td>{{x.holiday_date|date:"l"}}</td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
-													<a class="p-0 ml-4 text-info" href="holidays/update/{{x.id}}">Edit</a>
-													<a class="p-0 ml-4 text-danger" href="holidays/delete/{{x.id}}" data-toggle="modal" data-target="#delete_holiday" data-href="{% url 'AdminDeleteHolidays' x.id %}">Delete</a>
+													<a class="p-0 ml-4 text-info" href="holidays/update/{{x.id}}" data-toggle="modal" data-target="#edit_holiday" data-href="{% url 'AdminUpdateHoliday' x.id %}">Edit</a>
+													<a class="p-0 ml-4 text-danger delete-holiday" href="#" data-toggle="modal" data-target="#delete_holiday" data-href="{% url 'AdminDeleteHolidays' x.id %}">Delete</a>
 												</div>
 											</td>
 										</tr>
@@ -77,8 +78,8 @@
 									<form method="post" action="{% url 'AdminAddHolidays' %}" enctype="multipart/form-data">
 									{% csrf_token %}
 									<div class="form-group">
-										<label for="holidaytitle">Holiday Title <span class="text-danger">*</span></label>
-										<input class="form-control" type="text" id="holidaytitle" name="holiday_title">
+										{{ form.holiday_title|as_crispy_field }}
+
 									</div>
 									<div class="form-group">
 										<label for="holidaydate">Holiday Date <span class="text-danger">*</span></label>
@@ -94,6 +95,37 @@
 				</div>
 				<!-- /Add Holiday Modal -->
 
+				<!-- Edit Holiday Modal -->
+				<div class="modal custom-modal fade" id="edit_holiday" role="dialog">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title">Add Holiday</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<form method="post" action="holidays/update/{{up_holiday_details.id}}" id="edit_holiday_form">
+									{% csrf_token %}
+									<div class="form-group">
+										<label for="up_holidaytitle">Holiday Title <span class="text-danger">*</span></label>
+										<input class="form-control" type="text" id="up_holidaytitle" name="up_holiday_title" value="{{up_holiday_details.holiday_title}}">
+									</div>
+									<div class="form-group">
+										<label for="up_holidaytitle">Holiday Date <span class="text-danger">*</span></label>
+										<input class="form-control" type="date" id="up_holidaydate" name="up_holiday_date" value="{{up_holiday_details.holiday_date|date:'Y-m-d' }}">
+									</div>
+									<div class="submit-section">
+										<button class="btn btn-primary submit-btn" type="submit">Submit</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Edit Holiday Modal -->
+
 				<!-- Delete Holiday Modal -->
 				<div class="modal custom-modal fade" id="delete_holiday" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
@@ -106,7 +138,7 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-											<a id="deleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
 										</div>
 										<div class="col-6">
 											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
@@ -119,10 +151,9 @@
 				</div>
 				<!-- /Delete Holiday Modal -->
 				<script>
-					$('#delete_holiday').on('show.bs.modal', function (event) {
-						var button = $(event.relatedTarget);
-						var deleteUrl = button.data('href');
-						$("#deleteBtn").attr("href", deleteUrl);
+					$('.delete-holiday').click(function() {
+						var deleteUrl = $(this).data('href');
+						$('#confirmDeleteBtn').attr('href', deleteUrl);
 					});
 				</script>
 
