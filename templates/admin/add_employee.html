@@ -1,0 +1,85 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!-- Add Employee Modal -->
+<div id="add_employee_model" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Employee</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'AdminAddEmployee' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label" for="employee_name">Name <span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" name="employee_name" id="employee_name">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label" for="employee_email">Email <span class="text-danger">*</span></label>
+                                <input class="form-control" type="email" name="employee_email" id="employee_email">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label" for="employee_password">Password</label>
+                                <input class="form-control" type="text" name="employee_password" id="employee_password">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label" for="employee_conf_password">Confirm Password</label>
+                                <input class="form-control" type="text" name="employee_conf_password" id="employee_conf_password">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label" for="employee_phone">Phone <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="employee_phone" id="employee_phone">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label" for="employee_joindate">Joining Date <span class="text-danger">*</span></label>
+                                <div class="cal-icon"><input class="form-control" type="date" name="employee_joindate" id="employee_joindate"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label" for="employee_department">Department <span class="text-danger">*</span></label>
+                                <select class="select-form form-control" name="employee_department" id="employee_department">
+                                    <option>Select Department</option>
+                                    <option value="1">Web Development</option>
+                                    <option value="2">IT Management</option>
+                                    <option value="3">Marketing</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="col-form-label" for="employee_designation">Designation <span class="text-danger">*</span></label>
+                                <select class="select-form form-control" name="employee_designation" id="employee_designation">
+                                    <option>Select Designation</option>
+                                    <option value="1">Web Designer</option>
+                                    <option value="2">Web Developer</option>
+                                    <option value="3">Android Developer</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn" name="employee_submit_data" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add Employee Modal -->

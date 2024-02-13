@@ -1,9 +1,6 @@
 {% extends 'admin/base.html' %}
-{% load crispy_forms_tags %}
 {% load static %}
 {% block body %}
-
-
 
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
@@ -22,7 +19,7 @@
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<a href="holidays/add" class="btn add-btn" data-toggle="modal" data-target="#add_holiday"><i class="fa fa-plus"></i> Add Holiday</a>
+								<button class="btn add-btn" onclick="addHoliday()"><i class="fa fa-plus"></i> Add Holiday</button>
 							</div>
 						</div>
 					</div>
@@ -50,8 +47,8 @@
 											<td>{{x.holiday_date|date:"l"}}</td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
-													<a class="p-0 ml-4 text-info" href="holidays/update/{{x.id}}" data-toggle="modal" data-target="#edit_holiday" data-href="{% url 'AdminUpdateHoliday' x.id %}">Edit</a>
-													<a class="p-0 ml-4 text-danger delete-holiday" href="#" data-toggle="modal" data-target="#delete_holiday" data-href="{% url 'AdminDeleteHolidays' x.id %}">Delete</a>
+													<button class="p-0 ml-4 text-info border-0 " onclick="editHoliday({{x.id}})">Edit</button>
+													<button class="p-0 ml-4 text-danger border-0 " onclick="deleteHoliday({{x.id}})">Delete</button>
 												</div>
 											</td>
 										</tr>
@@ -64,70 +61,15 @@
                 </div>
 				<!-- /Page Content -->
 
-				<!-- Add Holiday Modal -->
-				<div class="modal custom-modal fade" id="add_holiday" role="dialog">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Add Holiday</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-									<form method="post" action="{% url 'AdminAddHolidays' %}" enctype="multipart/form-data">
-									{% csrf_token %}
-									<div class="form-group">
-										{{ form.holiday_title|as_crispy_field }}
 
-									</div>
-									<div class="form-group">
-										<label for="holidaydate">Holiday Date <span class="text-danger">*</span></label>
-										<input class="form-control" type="date" id="holidaydate" name="holiday_date">
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn" type="submit">Submit</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Add Holiday Modal -->
+				<div id="add-holiday-form"></div>
 
-				<!-- Edit Holiday Modal -->
-				<div class="modal custom-modal fade" id="edit_holiday" role="dialog">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Add Holiday</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form method="post" action="holidays/update/{{up_holiday_details.id}}" id="edit_holiday_form">
-									{% csrf_token %}
-									<div class="form-group">
-										<label for="up_holidaytitle">Holiday Title <span class="text-danger">*</span></label>
-										<input class="form-control" type="text" id="up_holidaytitle" name="up_holiday_title" value="{{up_holiday_details.holiday_title}}">
-									</div>
-									<div class="form-group">
-										<label for="up_holidaytitle">Holiday Date <span class="text-danger">*</span></label>
-										<input class="form-control" type="date" id="up_holidaydate" name="up_holiday_date" value="{{up_holiday_details.holiday_date|date:'Y-m-d' }}">
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn" type="submit">Submit</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Edit Holiday Modal -->
+
+				<div id="edit-holiday-form"></div>
+
 
 				<!-- Delete Holiday Modal -->
-				<div class="modal custom-modal fade" id="delete_holiday" role="dialog">
+				<div class="modal custom-modal fade" id="delete_holiday_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
@@ -150,14 +92,37 @@
 					</div>
 				</div>
 				<!-- /Delete Holiday Modal -->
-				<script>
-					$('.delete-holiday').click(function() {
-						var deleteUrl = $(this).data('href');
-						$('#confirmDeleteBtn').attr('href', deleteUrl);
-					});
-				</script>
-
             </div>
 			<!-- /Page Wrapper -->
+
+<script>
+function addHoliday() {
+    $.ajax({
+        url: "{% url 'AdminAddHolidays' %}",
+        success: function(response) {
+            $("#add-holiday-form").html(response);
+            $("#add_holiday_model").modal('show');
+        }
+    });
+}
+function editHoliday(editHolidayId) {
+    $.ajax({
+        url: "holidays/update/"+ editHolidayId,
+        success: function(response) {
+            $("#edit-holiday-form").html(response);
+            $("#edit_holiday_model").modal('show');
+        }
+    });
+}
+
+function deleteHoliday(deleteHolidayId) {
+    $("#delete_holiday_model").modal('show');
+    if (deleteHolidayId) {
+        var deleteUrl = "{% url 'AdminDeleteHolidays' id=0 %}".replace(0, deleteHolidayId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
+</script>
 
 {% endblock body %}

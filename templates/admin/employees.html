@@ -17,7 +17,7 @@
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<a href="/employee/add" class="btn add-btn" data-toggle="modal" data-target="#add_employee"><i class="fa fa-plus"></i> Add Employee</a>
+								<button class="btn add-btn" onclick="addEmployee()"><i class="fa fa-plus"></i> Add Employee</button>
 								<div class="view-icons">
 									<a href="{% url 'AdminEmployeeView' %}" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
 									<a href="{% url 'AdminEmployeeListView' %}" class="list-view btn btn-link"><i class="fa fa-bars"></i></a>
@@ -76,172 +76,12 @@
 						{% endfor %}
                 	</div>
 				<!-- /Page Content -->
+
+
+				<div id="add-employee-form"></div>
+
 				
-				<!-- Add Employee Modal -->
-				<div id="add_employee" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered modal-lg">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Add Employee</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form action="{% url 'AdminAddEmployee' %}" method="POST">
-									{% csrf_token %}
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label" for="employee_name">Name <span class="text-danger">*</span></label>
-												<input class="form-control" type="text" name="employee_name" id="employee_name">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label" for="employee_email">Email <span class="text-danger">*</span></label>
-												<input class="form-control" type="email" name="employee_email" id="employee_email">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label" for="employee_password">Password</label>
-												<input class="form-control" type="text" name="employee_password" id="employee_password">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label" for="employee_conf_password">Confirm Password</label>
-												<input class="form-control" type="text" name="employee_conf_password" id="employee_conf_password">
-											</div>
-										</div>
-										<div class="col-sm-6">  
-											<div class="form-group">
-												<label class="col-form-label" for="employee_phone">Phone <span class="text-danger">*</span></label>
-												<input type="text" class="form-control" name="employee_phone" id="employee_phone">
-											</div>
-										</div>
-										<div class="col-sm-6">  
-											<div class="form-group">
-												<label class="col-form-label" for="employee_joindate">Joining Date <span class="text-danger">*</span></label>
-												<div class="cal-icon"><input class="form-control" type="date" name="employee_joindate" id="employee_joindate"></div>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="form-group">
-												<label class="col-form-label" for="employee_department">Department <span class="text-danger">*</span></label>
-												<select class="select-form form-control" name="employee_department" id="employee_department">
-													<option>Select Department</option>
-													<option value="1">Web Development</option>
-													<option value="2">IT Management</option>
-													<option value="3">Marketing</option>
-												</select>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="form-group">
-												<label class="col-form-label" for="employee_designation">Designation <span class="text-danger">*</span></label>
-												<select class="select-form form-control" name="employee_designation" id="employee_designation">
-													<option>Select Designation</option>
-													<option value="1">Web Designer</option>
-													<option value="2">Web Developer</option>
-													<option value="3">Android Developer</option>
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn" name="employee_submit_data" type="submit">Submit</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Add Employee Modal -->
-				
-				<!-- Edit Employee Modal -->
-				<div id="employee_edit" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered modal-lg">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Edit Employee</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form action="employee/edit/{{edit_employee.id}}" method="POST" role="form">
-									{% csrf_token %}
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label" for="up_employee_name">Name <span class="text-danger">*</span></label>
-												<input class="form-control" value="sonani jemish n" type="text" name="up_employee_name" id="up_employee_name">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label" for="up_employee_email">Email <span class="text-danger">*</span></label>
-												<input class="form-control" value="{{edit_employee.email}}" type="email" name="up_employee_email" id="up_employee_email">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label" for="up_employee_password">Password</label>
-												<input class="form-control" value="johndoe" type="password" name="up_employee_password" id="up_employee_password">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label" for="up_employee_conf_password">Confirm Password</label>
-												<input class="form-control" value="johndoe" type="password" name="up_employee_conf_password" id="up_employee_conf_password">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label class="col-form-label" for="up_employee_phone">Phone <span class="text-danger">*</span></label>
-												<input type="text" class="form-control" name="up_employee_phone" id="up_employee_phone">
-											</div>
-										</div>
-										<div class="col-sm-6">  
-											<div class="form-group">
-												<label class="col-form-label" for="up_employee_joindate">Joining Date <span class="text-danger">*</span></label>
-												<div class="cal-icon"><input class="form-control" type="date" value="{{profile.date_joined}}" name="up_employee_joindate" id="up_employee_joindate"></div>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="form-group">
-												<label for="up_employee_department">Department <span class="text-danger">*</span></label>
-												<select class="select-form form-control" value="{{profile.department}}" name="up_employee_department" id="up_employee_department">
-													<option value="">Select Department</option>
-													<option value="1">Web Development</option>
-													<option value="2">IT Management</option>
-													<option value="3">Marketing</option>
-												</select>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="form-group">
-												<label for="up_employee_designation">Designation <span class="text-danger">*</span></label>
-												<select class="select-form form-control" value="{{profile.designation}}" name="up_employee_designation" id="up_employee_designation">
-													<option value="" >Select Designation</option>
-													<option value="1">Web Designer</option>
-													<option value="2">Web Developer</option>
-													<option value="3">Android Developer</option>
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn" id="employee_update_data" name="employee_update_data" type="submit">Update</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Edit Employee Modal -->
+
 				
 				<!-- Delete Employee Modal -->
 				<div class="modal custom-modal fade" id="delete_employee" role="dialog">
@@ -267,17 +107,23 @@
 					</div>
 				</div>
 				<!-- /Delete Employee Modal -->
-				<script>
-				$('#delete_employee').on('show.bs.modal', function (event) {
-					var button = $(event.relatedTarget);
-					var deleteUrl = button.data('href');
-					$("#deleteBtn").attr("href", deleteUrl);
-				});
-				</script>
 				
             </div>
 			<!-- /Page Wrapper -->
 
         </div>
 		<!-- /Main Wrapper -->
+
+<script>
+function addEmployee() {
+    $.ajax({
+        url: "{% url 'AdminAddEmployee' %}",
+        success: function(response) {
+            $("#add-employee-form").html(response);
+            $("#add_employee_model").modal('show');
+        }
+    });
+}
+</script>
+
 {% endblock body %}

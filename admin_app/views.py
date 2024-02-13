@@ -4,7 +4,7 @@ from django.contrib.auth import logout, login
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
-from admin_app.forms import AddHolidaysForm, EditHolidaysForm
+from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm
 # Create your views here.
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign
 
@@ -59,31 +59,48 @@ def EmployeeListView(request):
     return render(request, "admin/employees_list.html", {'employeedetails': employeedetails})
 
 
+# def AddEmployee(request):
+#     if request.method == "POST":
+#         employee_name = request.POST.get('employee_name')
+#         employee_email = request.POST.get('employee_email')
+#         # employee_email = BaseUserManager.normaliize_email(email)
+#         employee_password = request.POST.get('employee_password')
+#         employee_phone = request.POST.get('employee_phone')
+#         employeejoindate = request.POST.get('employee_joindate')
+#         employee_joindate = datetime.strptime(employeejoindate, '%Y-%m-%d').date()
+#         employee_department_id = request.POST.get('employee_department')
+#         employee_department = Department.objects.get(id=employee_department_id)
+#         employee_designation_id = request.POST.get('employee_designation')
+#         employee_designation = Designation.objects.get(id=employee_designation_id)
+#         # if employee_password == employee_conf_password:
+#         #     emp_verify_password = employee_password
+#         # else:
+#         #     print("Password is not match")
+#         empdetails = User(username=employee_name, email=employee_email, password=employee_password, phone=employee_phone, date_joined=employee_joindate, department=employee_department, designation=employee_designation)
+#         # empdetails.set_password(employee_password)
+#         empdetails.save()
+#         messages.success(request, "Hello, School data has been send.")
+#         return redirect('AdminEmployeeView')
+#
+#     empprofile = User.objects.get(id=id)
+#     return render(request, "admin/employees.html", {'profile': empprofile})
+
+
 def AddEmployee(request):
-    if request.method == "POST":
-        employee_name = request.POST.get('employee_name')
-        employee_email = request.POST.get('employee_email')
-        # employee_email = BaseUserManager.normaliize_email(email)
-        employee_password = request.POST.get('employee_password')
-        employee_phone = request.POST.get('employee_phone')
-        employeejoindate = request.POST.get('employee_joindate')
-        employee_joindate = datetime.strptime(employeejoindate, '%Y-%m-%d').date()
-        employee_department_id = request.POST.get('employee_department')
-        employee_department = Department.objects.get(id=employee_department_id)
-        employee_designation_id = request.POST.get('employee_designation')
-        employee_designation = Designation.objects.get(id=employee_designation_id)
-        # if employee_password == employee_conf_password:
-        #     emp_verify_password = employee_password
-        # else:
-        #     print("Password is not match")
-        empdetails = User(username=employee_name, email=employee_email, password=employee_password, phone=employee_phone, date_joined=employee_joindate, department=employee_department, designation=employee_designation)
-        # empdetails.set_password(employee_password)
-        empdetails.save()
-        messages.success(request, "Hello, School data has been send.")
-        return redirect('AdminEmployeeView')
+    form = AddEmployeeForm(request.POST or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Holiday add successfully')
+                return redirect('AdminEmployeeView')
+        except Exception as e:
+            form = AddEmployeeForm()
 
     empprofile = User.objects.get(id=id)
-    return render(request, "admin/employees.html", {'profile': empprofile})
+    context = {'form': form,'profile': empprofile}
+    return render(request, "admin/add_employee.html", context)
+
 
 
 def EditEmployee(request, id):
@@ -158,24 +175,7 @@ def AddHolidays(request):
         except Exception as e:
             form = AddHolidaysForm()
     context = {'form': form}
-    return render(request, "admin/holidays_list.html", context)
-
-
-# def UpdateHolidays(request, id):
-#     if request.method == 'POST':
-#         update_holiday_title = request.POST.get('up_holiday_title')
-#         update_holiday_date = request.POST.get('up_holiday_date')
-#         up_holiday_details = Holiday.objects.get(id=id)
-#         up_holiday_details.holiday_title = update_holiday_title
-#         up_holiday_details.holiday_date = update_holiday_date
-#         up_holiday_details.save()
-#         return redirect('AdminHolidays')
-#
-#     holiday_detail = Holiday.objects.get(id=id)
-#     context = {
-#         'up_holiday_details': holiday_detail
-#     }
-#     return render(request, "admin/edit_holidays.html", context)
+    return render(request, "admin/add_holidays.html", context)
 
 
 def UpdateHolidays(request, id):
@@ -193,10 +193,11 @@ def UpdateHolidays(request, id):
     return render(request, "admin/edit_holidays.html", context)
 
 
-def DeleteHolidays(id):
+def DeleteHolidays(request, id):
     delete_holiday = Holiday.objects.get(id=id)
     delete_holiday.delete()
     return redirect('AdminHolidays')
+
 
 
 def DepartmentView(request):
