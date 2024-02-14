@@ -3,7 +3,7 @@ from django.contrib import messages
 from django import forms
 from django.shortcuts import render, redirect
 
-
+from employee_app.forms import AddLeaveForm, EditLeaveForm
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign
 
@@ -99,3 +99,38 @@ def AddLeave(request, id):
             raise forms.ValidationError("Leave-from date must be not grater than leave-to date")
         return redirect('EmpLeaves', id=id)
     return render(request, "employee/leaves-employee.html")
+
+
+def AddLeave(request):
+    form = AddLeaveForm(request.POST or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Holiday add successfully')
+                return redirect('AdminHolidays')
+        except Exception as e:
+            form = AddLeaveForm()
+    context = {'form': form}
+    return render(request, "admin/add_holidays.html", context)
+
+
+def EditLeave(request, id):
+    edit_holiday = Holiday.objects.get(id=id)
+    form = EditLeaveForm(request.POST or None, instance=edit_holiday)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Holiday Update successfully')
+                return redirect('AdminHolidays')
+        except Exception as e:
+            form = EditLeaveForm(instance=edit_holiday)
+    context = {'form': form, 'edit_holiday': edit_holiday}
+    return render(request, "admin/edit_holidays.html", context)
+
+
+def DeleteLeave(request, id):
+    delete_holiday = Holiday.objects.get(id=id)
+    delete_holiday.delete()
+    return redirect('AdminHolidays')

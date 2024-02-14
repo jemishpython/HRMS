@@ -99,109 +99,9 @@
                 </div>
 				<!-- /Page Content -->
 				
-				<!-- Add Leave Modal -->
-				<div id="add_leave" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Add Leave</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form action="{% url 'EmpAddLeaves' user.id %}" method="post">
-									{% csrf_token %}
-									<div class="form-group">
-										<label>Leave Type <span class="text-danger">*</span></label>
-										<select class="form-control" name="leave_type">
-											<option disabled selected>Select Leave Type</option>
-											<option value="Casual Leave">Casual Leave</option>
-											<option value="Medical Leave">Medical Leave</option>
-										</select>
-									</div>
-									<div class="form-group">
-										<label>From <span class="text-danger">*</span></label>
-										<div>
-											<input class="form-control" type="date" name="leave_from">
-										</div>
-									</div>
-									<div class="form-group">
-										<label>To <span class="text-danger">*</span></label>
-										<div>
-											<input class="form-control" type="date" name="leave_to">
-										</div>
-									</div>
-									<div class="form-group">
-										<label>Number of days <span class="text-danger">*</span></label>
-										<input class="form-control" type="text" name="leave_days">
-									</div>
-									<div class="form-group">
-										<label>Leave Reason <span class="text-danger">*</span></label>
-										<textarea rows="4" class="form-control" name="leave_reason"></textarea>
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn" type="submit">Submit</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Add Leave Modal -->
+				<div id="add-leave-form"></div>
 				
-				<!-- Edit Leave Modal -->
-				<div id="edit_leave" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Edit Leave</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form>
-									<div class="form-group">
-										<label>Leave Type <span class="text-danger">*</span></label>
-										<select class="select">
-											<option>Select Leave Type</option>
-											<option>Casual Leave 12 Days</option>
-										</select>
-									</div>
-									<div class="form-group">
-										<label>From <span class="text-danger">*</span></label>
-										<div class="cal-icon">
-											<input class="form-control datetimepicker" value="01-01-2019" type="text">
-										</div>
-									</div>
-									<div class="form-group">
-										<label>To <span class="text-danger">*</span></label>
-										<div class="cal-icon">
-											<input class="form-control datetimepicker" value="01-01-2019" type="text">
-										</div>
-									</div>
-									<div class="form-group">
-										<label>Number of days <span class="text-danger">*</span></label>
-										<input class="form-control" readonly type="text" value="2">
-									</div>
-									<div class="form-group">
-										<label>Remaining Leaves <span class="text-danger">*</span></label>
-										<input class="form-control" readonly value="12" type="text">
-									</div>
-									<div class="form-group">
-										<label>Leave Reason <span class="text-danger">*</span></label>
-										<textarea rows="4" class="form-control">Going to hospital</textarea>
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn">Save</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Edit Leave Modal -->
+				<div id="edit-leave-form"></div>
 				
 				<!-- Delete Leave Modal -->
 				<div class="modal custom-modal fade" id="delete_approve" role="dialog">
@@ -227,8 +127,37 @@
 					</div>
 				</div>
 				<!-- /Delete Leave Modal -->
-				
             </div>
 			<!-- /Page Wrapper -->
+
+<script>
+function addLeave() {
+    $.ajax({
+        url: "{% url 'AdminAddHolidays' %}",
+        success: function(response) {
+            $("#add-holiday-form").html(response);
+            $("#add_holiday_model").modal('show');
+        }
+    });
+}
+function editLeave(editHolidayId) {
+    $.ajax({
+        url: "holidays/update/"+ editHolidayId,
+        success: function(response) {
+            $("#edit-holiday-form").html(response);
+            $("#edit_holiday_model").modal('show');
+        }
+    });
+}
+
+function deleteLeave(deleteHolidayId) {
+    $("#delete_holiday_model").modal('show');
+    if (deleteHolidayId) {
+        var deleteUrl = "{% url 'AdminDeleteHolidays' id=0 %}".replace(0, deleteHolidayId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
+</script>
 
 {% endblock body %}

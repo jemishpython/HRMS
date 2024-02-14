@@ -1,0 +1,49 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!-- Assign Leader Modal -->
+<div id="add_project_assignee_model" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Assign Leader to this project</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'AdminAddProjectAssignee' project_id.id %}" method="post" id="form">
+            {% csrf_token %}
+                <div class="modal-body">
+                    <div class="input-group m-b-30">
+                        <input placeholder="Search to add a leader" class="form-control search-input" type="text">
+                        <span class="input-group-append">
+                            <button class="btn btn-primary">Search</button>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        {{ form.assignee_type|as_crispy_field }}
+                    </div>
+                    <div>
+                        <ul class="chat-user-list">
+                            <li>
+                                <div class="media">
+                                    <span class="avatar"><img alt="" src="{% static 'img/profiles/avatar-09.jpg' %}"></span>
+                                    <div class="media-body align-self-center text-nowrap">
+                                        <div class="user-name">{{user.username}}</div>
+                                        <span class="designation">{{user.designation}}</span>
+                                    </div>
+                                    <input class="action-circle medium complete-btn" type="checkbox" name="assign_leader_name" value="{{user.id}}">
+                                    {{ form.employee_name|as_crispy_field }}
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn" type="submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /Assign Leader Modal -->

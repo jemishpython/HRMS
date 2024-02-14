@@ -35,7 +35,7 @@
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<a href="projects/add" class="btn add-btn" data-toggle="modal" data-target="#create_project"><i class="fa fa-plus"></i> Create Project</a>
+								<button class="btn add-btn" onclick="addProject()"><i class="fa fa-plus"></i> Add Project</button>
 								<div class="view-icons">
 									<a href="projects.html" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
 									<a href="project-list.html" class="list-view btn btn-link"><i class="fa fa-bars"></i></a>
@@ -76,31 +76,28 @@
 						</div>     
                     </div>
 					<!-- Search Filter -->
-					
+
+				<!-- /Page Content -->
 					<div class="row">
-						{% for x in projectlist %}
+						{% for project in projectlist %}
 						<div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
 							<div class="card">
 								<div class="card-body">
-									<div class="dropdown dropdown-action profile-action">
-										<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-										<div class="dropdown-menu dropdown-menu-right">
-											<a class="dropdown-item" href="#" data-toggle="modal" data-target="#edit_project"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-											<a class="dropdown-item" href="#" data-toggle="modal" data-target="#delete_project"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-										</div>
+									<div class="dropdown profile-action">
+										<button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger" onclick="deleteProject({{project.id}})"><i class="las la-lg la-trash"></i></button>
 									</div>
-									<h4 class="project-title"><a href="projects/details-view/{{x.id}}">{{x.project_name}}</a></h4>
+									<h4 class="project-title"><a href="projects/details-view/{{project.id}}">{{project.project_name}}</a></h4>
 									<small class="block text-ellipsis m-b-15">
 										<span class="text-xs">1</span> <span class="text-muted">open tasks, </span>
 										<span class="text-xs">9</span> <span class="text-muted">tasks completed</span>
 									</small>
-									<p class="text-muted summary-wrap">{{x.project_summary}}</p>
+									<p class="text-muted summary-wrap">{{project.project_summary}}</p>
 									<div class="pro-deadline m-b-15 mt-4">
 										<div class="sub-title">
 											Deadline:
 										</div>
 										<div class="text-muted">
-											{{x.project_end_date|date:'j - F - Y'}}
+											{{project.project_end_date|date:'j - F - Y'}}
 										</div>
 									</div>
 <!--									<p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>-->
@@ -115,185 +112,10 @@
                 </div>
 				<!-- /Page Content -->
 
-				<!-- Create Project Modal -->
-				<div id="create_project" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Create Project</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form method="post" action="{% url 'AdminAddProjects' %}" enctype="multipart/form-data">
-									{% csrf_token %}
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Project Name</label>
-												<input class="form-control" name="project_name" type="text">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Client Name</label>
-												<input class="form-control" name="project_client_name" type="text">
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Start Date</label>
-												<div>
-													<input class="form-control" name="project_start_date" type="date">
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>End Date</label>
-												<div>
-													<input class="form-control" name="project_end_date" type="date">
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Rate</label>
-												<input placeholder="$50" class="form-control" name="project_cost" type="text">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Priority</label>
-												<select class="form-control" name="project_priority">
-													<option value="1">High</option>
-													<option value="2">Medium</option>
-													<option value="3">Low</option>
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label>Description</label>
-										<textarea rows="4" class="form-control" name="project_summary" placeholder="Enter your message here"></textarea>
-									</div>
-									<div class="form-group">
-										<label>Upload Images</label>
-										<input class="form-control" name="project_images" type="file">
-									</div>
-									<div class="form-group">
-										<label>Upload Files</label>
-										<input class="form-control" name="project_file" type="file">
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn">Submitt</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Create Project Modal -->
-				
-				<!-- Edit Project Modal -->
-				<div id="edit_project" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Edit Project</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form>
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Project Name</label>
-												<input class="form-control" value="Project Management" type="text">
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Client</label>
-												<select class="select">
-													<option>Global Technologies</option>
-													<option>Delta Infotech</option>
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Start Date</label>
-												<div class="cal-icon">
-													<input class="form-control datetimepicker" type="date">
-												</div>
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>End Date</label>
-												<div class="cal-icon">
-													<input class="form-control datetimepicker" type="date">
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-sm-3">
-											<div class="form-group">
-												<label>Rate</label>
-												<input placeholder="$50" class="form-control" value="$5000" type="text">
-											</div>
-										</div>
-										<div class="col-sm-3">
-											<div class="form-group">
-												<label>&nbsp;</label>
-												<select class="select">
-													<option>Hourly</option>
-													<option selected>Fixed</option>
-												</select>
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Priority</label>
-												<select class="select">
-													<option selected>High</option>
-													<option>Medium</option>
-													<option>Low</option>
-												</select>
-											</div>
-										</div>
-									</div>
-									<div class="form-group">
-										<label>Description</label>
-										<textarea rows="4" class="form-control" placeholder="Enter your message here"></textarea>
-									</div>
-									<div class="form-group">
-										<label>Upload Files</label>
-										<input class="form-control" type="file">
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn">Save</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Edit Project Modal -->
-				
+				<div id="add-project-form"></div>
+
 				<!-- Delete Project Modal -->
-				<div class="modal custom-modal fade" id="delete_project" role="dialog">
+				<div class="modal custom-modal fade" id="delete_project_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
@@ -304,7 +126,7 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-											<a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
 										</div>
 										<div class="col-6">
 											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
@@ -319,4 +141,25 @@
 				
             </div>
 			<!-- /Page Wrapper -->
+
+<script>
+function addProject() {
+    $.ajax({
+        url: "{% url 'AdminAddProjects' %}",
+        success: function(response) {
+            $("#add-project-form").html(response);
+            $("#add_project_model").modal('show');
+        }
+    });
+}
+function deleteProject(deleteProjectId) {
+    $("#delete_project_model").modal('show');
+    if (deleteProjectId) {
+        var deleteUrl = "{% url 'AdminDeleteProject' id=0 %}".replace(0, deleteProjectId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
+</script>
+
 {% endblock body %}

@@ -1,0 +1,70 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!-- Create Project Modal -->
+<div id="add_project_model" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Create Project</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'AdminAddProjects' %}" id="form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form.project_name|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form.project_client_name|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form.project_start_date|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form.project_end_date|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form.project_cost|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                {{ form.project_priority|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{ form.project_summary|as_crispy_field }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.project_image|as_crispy_field }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.project_file|as_crispy_field }}
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Create Project Modal -->

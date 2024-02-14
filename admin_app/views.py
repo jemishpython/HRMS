@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, AddDepartmentForm, EditDepartmentForm, \
-    AddDesignationForm, EditDesignationForm
+    AddDesignationForm, EditDesignationForm, EditProjectForm, AddProjectForm, ProjectAssignForm
 # Create your views here.
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign
 
@@ -234,21 +234,39 @@ def ProjectsView(request):
     return render(request, "admin/projects.html", {'projectlist': projectlist})
 
 
-def AddProjects(request):
+def AddProject(request):
+    form = AddProjectForm(request.POST or None)
     if request.method == 'POST':
-        add_project_name = request.POST.get('project_name')
-        add_project_client_name = request.POST.get('project_client_name')
-        add_project_start_date = request.POST.get('project_start_date')
-        add_project_end_date = request.POST.get('project_end_date')
-        add_project_cost = request.POST.get('project_cost')
-        add_project_priority = request.POST.get('project_priority')
-        add_project_summary = request.POST.get('project_summary')
-        add_project_images = request.POST.get('project_images')
-        add_project_file = request.POST.get('project_file')
-        project_add = Project(project_name=add_project_name, project_client_name=add_project_client_name, project_start_date=add_project_start_date, project_end_date=add_project_end_date, project_cost=add_project_cost, project_priority=add_project_priority, project_summary=add_project_summary, project_image=add_project_images, project_file=add_project_file)
-        project_add.save()
-        return redirect('AdminProjectsView')
-    return render(request, "admin/projects.html")
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Project add successfully')
+                return redirect('AdminProjectsView')
+        except Exception as e:
+            form = AddProjectForm()
+    context = {'form': form}
+    return render(request, "admin/add_project.html", context)
+
+
+def UpdateProject(request, id):
+    edit_project = Project.objects.get(id=id)
+    form = EditProjectForm(request.POST or None, instance=edit_project)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Project Update successfully')
+                return redirect('AdminProjectDetailsView', id=id)
+        except Exception as e:
+            form = EditProjectForm(instance=edit_project)
+    context = {'form': form, 'edit_project': edit_project}
+    return render(request, "admin/edit_project.html", context)
+
+
+def DeleteProject(request,id):
+    delete_project = Project.objects.get(id=id)
+    delete_project.delete()
+    return redirect('AdminProjectsView')
 
 
 def ProjectDetailsView(request, id):
@@ -326,23 +344,17 @@ def UpdateLeaveStatus(request, id):
     return render(request, "admin/leaves.html")
 
 
-def AddProjectLeaderAssign(request, id):
-    project_name_id = Project.objects.get(id=id)
-    assignee_type_leader = 'Leader'
-    if request.method == "POST":
-        add_project_assign = request.POST.get('assign_leader_name')
-        project_assign_add = ProjectAssign(project_name_id=project_name_id.id, assignee_type=assignee_type_leader, employee_name_id=add_project_assign)
-        project_assign_add.save()
-        return redirect('AdminProjectDetailsView', id=id)
-    return render(request, "admin/project-view.html")
-
-
-def AddProjectEmployeeAssign(request, id):
-    project_name_id = Project.objects.get(id=id)
-    assignee_type_teammember = 'Team Member'
-    if request.method == "POST":
-        add_project_assign = request.POST.get('assign_employee_name')
-        project_assign_add = ProjectAssign(project_name_id=project_name_id.id, assignee_type=assignee_type_teammember, employee_name_id=add_project_assign)
-        project_assign_add.save()
-        return redirect('AdminProjectDetailsView', id=id)
-    return render(request, "admin/project-view.html")
+def AddProjectAssignee(request, id):
+    user_list = User.objects.all()
+    project_id = Project.objects.get(id=id)
+    form = ProjectAssignForm(request.POST or None, instance=project_id)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Project Assign successfully')
+                return redirect('AdminProjectDetailsView', id=id)
+        except Exception as e:
+            form = ProjectAssignForm(instance=project_id)
+    context = {'form': form, 'user_list': user_list, 'project_id': project_id}
+    return render(request, "admin/add_project_assignee.html", context)

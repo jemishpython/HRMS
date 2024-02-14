@@ -41,8 +41,10 @@ urlpatterns = [
     # path("clients", views.ClientsView, name="AdminClientsView"),
 
     path("projects", views.ProjectsView, name="AdminProjectsView"),
-    path("projects/add", views.AddProjects, name="AdminAddProjects"),
+    path("projects/add", views.AddProject, name="AdminAddProjects"),
     path("projects/details-view/<int:id>", views.ProjectDetailsView, name="AdminProjectDetailsView"),
+    path("projects/update/<int:id>", views.UpdateProject, name="AdminUpdateProject"),
+    path("projects/delete/<int:id>", views.DeleteProject, name="AdminDeleteProject"),
 
     path("projects/tasks", views.ProjectTask, name="AdminProjectTask"),
     path("project/<int:id>/tasks", views.ProjectTaskList, name="AdminProjectTaskList"),
@@ -53,7 +55,6 @@ urlpatterns = [
     path("leaves", views.LeaveList, name='AdminLeaveList'),
     path("leaves/status-update/<int:id>", views.UpdateLeaveStatus, name='AdminLeaveStatusUpdate'),
 
-    path("project-leader-assign/<int:id>", views.AddProjectLeaderAssign, name='AdminAddProjectLeaderAssign'),
-    path("project-team-member-assign/<int:id>", views.AddProjectEmployeeAssign, name='AdminAddProjectEmployeeAssign'),
+    path("project-assignee/<int:id>", views.AddProjectAssignee, name='AdminAddProjectAssignee'),
 
 ]

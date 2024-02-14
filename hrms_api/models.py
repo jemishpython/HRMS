@@ -3,7 +3,8 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 # Create your models here.
-from hrms_api.choices import GenderTypeChoice, MaritalStatusChoice, ProjectPriorityChoice, TaskStatusChoice, ProjectStatusChoice, LeaveTypeChoice, LeaveStatusChoice
+from hrms_api.choices import GenderTypeChoice, MaritalStatusChoice, ProjectPriorityChoice, TaskStatusChoice, \
+    ProjectStatusChoice, LeaveTypeChoice, LeaveStatusChoice, ProjectAssigneeTypeChoice
 
 
 class Department(models.Model):
@@ -136,7 +137,7 @@ class Leave(models.Model):
 
 class ProjectAssign(models.Model):
     project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
-    assignee_type = models.CharField(verbose_name='Assignee Type', max_length=50, blank=True, null=True)
+    assignee_type = models.CharField(verbose_name='Assignee Type', max_length=50, blank=True, null=True, choices=ProjectAssigneeTypeChoice.choices, default=ProjectAssigneeTypeChoice.TEAM_MEMBER)
     employee_name = models.ForeignKey(User, verbose_name='Employee Name', on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):

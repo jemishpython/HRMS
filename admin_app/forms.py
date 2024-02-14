@@ -52,3 +52,29 @@ class EditDesignationForm(forms.ModelForm):
     class Meta:
         model = Designation
         fields = '__all__'
+
+
+class AddProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = '__all__'
+        widgets = {
+            'project_start_date': forms.DateInput(attrs={'type': 'date'}),
+            'project_end_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+class EditProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = '__all__'
+        widgets = {
+            'project_start_date': forms.DateInput(attrs={'type': 'date'}),
+            'project_end_date': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+class ProjectAssignForm(forms.ModelForm):
+    class Meta:
+        model = ProjectAssign
+        fields = '__all__'

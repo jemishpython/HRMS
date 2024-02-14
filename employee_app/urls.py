@@ -15,6 +15,8 @@ urlpatterns = [
     path("designation", views.DesignationView, name="EmpDesignationView"),
 
     path("leaves/<int:id>", views.Leaves, name="EmpLeaves"),
-    path("leaves/add/<int:id>", views.AddLeave, name="EmpAddLeaves")
+    path("leaves/add/<int:id>", views.AddLeave, name="EmpAddLeaves"),
+    path("leaves/update/<int:id>", views.EditLeave, name="EmpEditLeave"),
+    path("leaves/delete/<int:id>", views.DeleteLeave, name="EmpDeleteLeave"),
 
 ]

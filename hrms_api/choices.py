@@ -12,6 +12,11 @@ class MaritalStatusChoice(models.TextChoices):
     SINGLE = ("Single", _("SINGLE"))
 
 
+class ProjectAssigneeTypeChoice(models.TextChoices):
+    LEADER = ("Leader", _("LEADER"))
+    TEAM_MEMBER = ("Team Member", _("TEAM MEMBER"))
+
+
 class ProjectPriorityChoice(models.TextChoices):
     LOW = ("Low", _("LOW"))
     MEDIUM = ("Medium", _("MEDIUM"))

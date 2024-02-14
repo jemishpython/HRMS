@@ -12,7 +12,7 @@
 						</button>
 					</div>
 					<div class="modal-body">
-						<form method="post" action="holidays/update/{{edit_holiday.id}}" id="edit_holiday_form">
+						<form method="post" action="holidays/update/{{edit_holiday.id}}" id="form">
 							{% csrf_token %}
 							<div class="form-group">
 								{{ form.holiday_title|as_crispy_field }}
