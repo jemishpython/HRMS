@@ -18,7 +18,7 @@
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<a href="designation/add" class="btn add-btn" data-toggle="modal" data-target="#add_designation"><i class="fa fa-plus"></i> Add Designation</a>
+								<button class="btn add-btn" onclick="addDesignation()"><i class="fa fa-plus"></i> Add Designation</button>
 							</div>
 						</div>
 					</div>
@@ -37,15 +37,15 @@
 										</tr>
 									</thead>
 									<tbody>
-										{% for x in designationlist %}
+										{% for designation in designationlist %}
 										<tr>
 											<td>{{forloop.counter}}</td>
-											<td>{{x.designation_name}}</td>
-											<td>{{x.department}}</td>
+											<td>{{designation.designation_name}}</td>
+											<td>{{designation.department}}</td>
 											<td class="text-right">
                                             <div class="d-flex justify-content-end">
-												<a class="p-0 ml-4 text-info" href="#" data-toggle="modal" data-target="#edit_designation">Edit</a>
-												<a class="p-0 ml-4 text-danger" href="designation/delete/{{x.id}}" data-toggle="modal" data-target="#delete_designation" data-href="{% url 'AdminDeleteDesignation' x.id %}">Delete</a>
+												<button class="p-0 ml-4 text-info border-0 " onclick="editDesignation({{designation.id}})">Edit</button>
+												<button class="p-0 ml-4 text-danger border-0 " onclick="deleteDesignation({{designation.id}})">Delete</button>
 											</div>
 											</td>
 										</tr>
@@ -58,79 +58,12 @@
                 </div>
 				<!-- /Page Content -->
 
-				<!-- Add Designation Modal -->
-				<div id="add_designation" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Add Designation</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form method="post" action="{% url 'AdminAddDesignation' %}" enctype="multipart/form-data">
-									{% csrf_token %}
-									<div class="form-group">
-										<label for="designation_name">Designation Name <span class="text-danger">*</span></label>
-										<input class="form-control" type="text" id="designation_name" name="designation_name">
-									</div>
-									<div class="form-group">
-										<label>Department <span class="text-danger">*</span></label>
-										<select class="select" name="department">
-											<option value="">Select Department</option>
-											<option value="1">Web Development</option>
-											<option value="2">IT Management</option>
-											<option value="3">Marketing</option>
-										</select>
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn" type="submit">Submit</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Add Designation Modal -->
-				
-				<!-- Edit Designation Modal -->
-				<div id="edit_designation" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Edit Designation</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form>
-									<div class="form-group">
-										<label>Designation Name <span class="text-danger">*</span></label>
-										<input class="form-control" value="Web Developer" type="text">
-									</div>
-									<div class="form-group">
-										<label>Department <span class="text-danger">*</span></label>
-										<select class="select">
-											<option>Select Department</option>
-											<option>Web Development</option>
-											<option>IT Management</option>
-											<option>Marketing</option>
-										</select>
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn" type="submit">Save</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Edit Designation Modal -->
-				
+				<div id="add-designation-form"></div>
+
+				<div id="edit-designation-form"></div>
+
 				<!-- Delete Designation Modal -->
-				<div class="modal custom-modal fade" id="delete_designation" role="dialog">
+				<div class="modal custom-modal fade" id="delete_designation_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
@@ -141,7 +74,7 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-											<a id="deleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
 										</div>
 										<div class="col-6">
 											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
@@ -153,14 +86,37 @@
 					</div>
 				</div>
 				<!-- /Delete Designation Modal -->
-				<script>
-					$('#delete_designation').on('show.bs.modal', function (event) {
-						var button = $(event.relatedTarget);
-						var deleteUrl = button.data('href');
-						$("#deleteBtn").attr("href", deleteUrl);
-					});
-				</script>
-			
             </div>
 			<!-- /Page Wrapper -->
+
+<script>
+function addDesignation() {
+    $.ajax({
+        url: "{% url 'AdminAddDesignation' %}",
+        success: function(response) {
+            $("#add-designation-form").html(response);
+            $("#add_designation_model").modal('show');
+        }
+    });
+}
+function editDesignation(editDesignationId) {
+    $.ajax({
+        url: "designation/update/"+ editDesignationId,
+        success: function(response) {
+            $("#edit-designation-form").html(response);
+            $("#edit_designation_model").modal('show');
+        }
+    });
+}
+
+function deleteDesignation(deleteDesignationId) {
+    $("#delete_designation_model").modal('show');
+    if (deleteDesignationId) {
+        var deleteUrl = "{% url 'AdminDeleteDesignation' id=0 %}".replace(0, deleteDesignationId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
+</script>
+
 {% endblock body %}

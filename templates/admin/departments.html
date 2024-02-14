@@ -18,7 +18,7 @@
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<a href="department/add" class="btn add-btn" data-toggle="modal" data-target="#add_department"><i class="fa fa-plus"></i> Add Department</a>
+								<button class="btn add-btn" onclick="addDepartment()"><i class="fa fa-plus"></i> Add Department</button>
 							</div>
 						</div>
 					</div>
@@ -30,7 +30,7 @@
 								<table class="table table-striped custom-table mb-0 datatable">
 									<thead>
 										<tr>
-											<th style="width: 50px;">Sr No</th>
+											<th>Sr No</th>
 											<th>Department Name</th>
 											<th class="text-right">Action</th>
 										</tr>
@@ -42,8 +42,8 @@
 											<td>{{x.department_name}}</td>
 											<td class="text-right">
                                             <div class="d-flex justify-content-end">
-												<a class="p-0 ml-4 text-info" href="#" data-toggle="modal" data-target="#edit_department">Edit</a>
-												<a class="p-0 ml-4 text-danger" href="department/delete/{{x.id}}" data-toggle="modal" data-target="#delete_department" data-href="{% url 'AdminDeleteDepartment' x.id %}">Delete</a>
+												<button class="p-0 ml-4 text-info border-0 " onclick="editDepartment({{x.id}})">Edit</button>
+												<button class="p-0 ml-4 text-danger border-0 " onclick="deleteDepartment({{x.id}})">Delete</button>
 											</div>
 											</td>
 										</tr>
@@ -56,61 +56,12 @@
                 </div>
 				<!-- /Page Content -->
 				
-				<!-- Add Department Modal -->
-				<div id="add_department" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Add Department</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form method="post" action="{% url 'AdminAddDepartment' %}" enctype="multipart/form-data">
-									{% csrf_token %}
-									<div class="form-group">
-										<label for="department_name">Department Name <span class="text-danger">*</span></label>
-										<input class="form-control" type="text" id="department_name" name="department_name">
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn" type="submit">Submit</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Add Department Modal -->
-				
-				<!-- Edit Department Modal -->
-				<div id="edit_department" class="modal custom-modal fade" role="dialog">
-					<div class="modal-dialog modal-dialog-centered" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Edit Department</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<form>
-									<div class="form-group">
-										<label>Department Name <span class="text-danger">*</span></label>
-										<input class="form-control" value="IT Management" type="text">
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn">Save</button>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Edit Department Modal -->
+				<div id="add-department-form"></div>
+
+				<div id="edit-department-form"></div>
 
 				<!-- Delete Department Modal -->
-				<div class="modal custom-modal fade" id="delete_department" role="dialog">
+				<div class="modal custom-modal fade" id="delete_department_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
@@ -121,7 +72,7 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-											<a id="deleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
 										</div>
 										<div class="col-6">
 											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
@@ -133,15 +84,37 @@
 					</div>
 				</div>
 				<!-- /Delete Department Modal -->
-				<script>
-					$('#delete_department').on('show.bs.modal', function (event) {
-						var button = $(event.relatedTarget);
-						var deleteUrl = button.data('href');
-						$("#deleteBtn").attr("href", deleteUrl);
-					});
-				</script>
-
             </div>
 			<!-- /Page Wrapper -->
+
+<script>
+function addDepartment() {
+    $.ajax({
+        url: "{% url 'AdminAddDepartment' %}",
+        success: function(response) {
+            $("#add-department-form").html(response);
+            $("#add_department_model").modal('show');
+        }
+    });
+}
+function editDepartment(editDepartmentId) {
+    $.ajax({
+        url: "department/update/"+ editDepartmentId,
+        success: function(response) {
+            $("#edit-department-form").html(response);
+            $("#edit_department_model").modal('show');
+        }
+    });
+}
+
+function deleteDepartment(deleteDepartmentId) {
+    $("#delete_department_model").modal('show');
+    if (deleteDepartmentId) {
+        var deleteUrl = "{% url 'AdminDeleteDepartment' id=0 %}".replace(0, deleteDepartmentId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
+</script>
 		
 {% endblock body %}

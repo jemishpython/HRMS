@@ -103,9 +103,9 @@
 							<span>{{user.username}}</span>
 						</a>
 						<div class="dropdown-menu">
-							<a class="dropdown-item" href="{% url 'AdminProfileView' id=user.id %}">My Profile</a>
-							<a class="dropdown-item" href="settings.html">Settings</a>
-							<a class="dropdown-item" href="/">Logout</a>
+							<a class="dropdown-item" href="{% url 'AdminProfileView' id=user.id %}"><i class="las la-user"></i>  My Profile</a>
+							<a class="dropdown-item" href="settings.html"><i class="las la-user-cog"></i>  Settings</a>
+							<a class="dropdown-item" href="/"><i class="las la-sign-out-alt"></i>  Logout</a>
 						</div>
 					</li>
 				</ul>

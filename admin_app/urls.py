@@ -14,7 +14,7 @@ urlpatterns = [
     path("employee", views.EmployeeView, name="AdminEmployeeView"),
     path("employee_list", views.EmployeeListView, name="AdminEmployeeListView"),
     path("employee/add", views.AddEmployee, name="AdminAddEmployee"),
-    path("employee/edit/<int:id>", views.EditEmployee, name="AdminEditEmployee"),
+    # path("employee/edit/<int:id>", views.EditEmployee, name="AdminEditEmployee"),
     path("employee/delete/<int:id>", views.DeleteEmployee, name="AdminDeleteEmployee"),
     path("employee_list/delete/<int:id>", views.DeleteEmployeeList, name="AdminDeleteEmployeeList"),
 
@@ -30,12 +30,12 @@ urlpatterns = [
 
     path("department", views.DepartmentView, name="AdminDepartmentView"),
     path("department/add", views.AddDepartment, name="AdminAddDepartment"),
-    # path("department/update/<int:id>", views.UpdateDepartment, name="AdminUpdateDepartment"),
+    path("department/update/<int:id>", views.UpdateDepartment, name="AdminUpdateDepartment"),
     path("department/delete/<int:id>", views.DeleteDepartment, name="AdminDeleteDepartment"),
 
     path("designation", views.DesignationView, name="AdminDesignationView"),
     path("designation/add", views.AddDesignation, name="AdminAddDesignation"),
-    # path("designation/update/<int:id>", views.UpdateDesignation, name="AdminUpdateDesignation"),
+    path("designation/update/<int:id>", views.UpdateDesignation, name="AdminUpdateDesignation"),
     path("designation/delete/<int:id>", views.DeleteDesignation, name="AdminDeleteDesignation"),
 
     # path("clients", views.ClientsView, name="AdminClientsView"),

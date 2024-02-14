@@ -7,14 +7,14 @@ from hrms_api.choices import GenderTypeChoice, MaritalStatusChoice, ProjectPrior
 
 
 class Department(models.Model):
-    department_name = models.CharField(verbose_name='Department Name', max_length=255, null=True, blank=True)
+    department_name = models.CharField(verbose_name='Department Name', max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.department_name
 
 
 class Designation(models.Model):
-    designation_name = models.CharField(verbose_name='Designation Name', max_length=255, null=True, blank=True)
+    designation_name = models.CharField(verbose_name='Designation Name', max_length=50, null=True, blank=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
@@ -88,7 +88,7 @@ class User(AbstractUser):
 
 
 class Holiday(models.Model):
-    holiday_title = models.CharField(verbose_name='Holiday Title', max_length=255, null=True, blank=True)
+    holiday_title = models.CharField(verbose_name='Holiday Title', max_length=50, null=True, blank=True)
     holiday_date = models.DateField(verbose_name="Holiday Date", null=True, blank=True)
 
     def __str__(self):
@@ -96,11 +96,11 @@ class Holiday(models.Model):
 
 
 class Project(models.Model):
-    project_name = models.CharField(verbose_name='Project Name', max_length=255, null=True, blank=True)
-    project_client_name = models.CharField(verbose_name='Project Client Name', max_length=255, null=True, blank=True)
+    project_name = models.CharField(verbose_name='Project Name', max_length=100, null=True, blank=True)
+    project_client_name = models.CharField(verbose_name='Project Client Name', max_length=100, null=True, blank=True)
     project_start_date = models.DateField(verbose_name='Project Start Date', null=True, blank=True)
     project_end_date = models.DateField(verbose_name='Project End Date', null=True, blank=True)
-    project_cost = models.CharField(verbose_name='Project Cost', max_length=255, null=True, blank=True)
+    project_cost = models.CharField(verbose_name='Project Cost', max_length=50, null=True, blank=True)
     project_priority = models.CharField(verbose_name='Project Priority', choices=ProjectPriorityChoice.choices, default=ProjectPriorityChoice.HIGH, max_length=255, null=True, blank=True)
     project_summary = models.TextField(verbose_name='Project Summary', max_length=1000, null=True, blank=True)
     project_image = models.ImageField(verbose_name='Project Image', max_length=255, null=True, blank=True)
@@ -112,7 +112,7 @@ class Project(models.Model):
 
 
 class Task(models.Model):
-    task_title = models.CharField(verbose_name='Task Title', max_length=255, null=True)
+    task_title = models.CharField(verbose_name='Task Title', max_length=100, null=True)
     task_status = models.CharField(verbose_name='Task Status', choices=TaskStatusChoice.choices, default=TaskStatusChoice.WORKING, max_length=255, null=True, blank=True)
     task_project = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
     task_assign = models.ForeignKey(User, verbose_name='Task Assign', on_delete=models.DO_NOTHING, null=True)
@@ -122,7 +122,7 @@ class Task(models.Model):
 
 
 class Leave(models.Model):
-    leave_type = models.CharField(verbose_name='Leave Type', max_length=255, choices=LeaveTypeChoice.choices, default=LeaveTypeChoice.CASUAL, null=True, blank=True)
+    leave_type = models.CharField(verbose_name='Leave Type', max_length=50, choices=LeaveTypeChoice.choices, default=LeaveTypeChoice.CASUAL, null=True, blank=True)
     leave_from = models.DateField(verbose_name='Leave From', null=True, blank=True)
     leave_to = models.DateField(verbose_name='Leave To', null=True, blank=True)
     leave_days = models.IntegerField(verbose_name='Leave Days', null=True, blank=True)

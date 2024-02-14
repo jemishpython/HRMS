@@ -102,7 +102,7 @@
 							<span>{{user.username}}</span>
 						</a>
 						<div class="dropdown-menu">
-							<a class="dropdown-item" href="{% url 'AdminProfileView' id=user.id %}">My Profile</a>
+							<a class="dropdown-item" href="{% url 'AdminProfileView' id=user.id %}"><i class="las la-user"></i> My Profile</a>
 							<a class="dropdown-item" href="settings.html">Settings</a>
 							<a class="dropdown-item" href="/">Logout</a>
 						</div>
@@ -115,7 +115,7 @@
 					<a aria-expanded="false" class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><i
 							class="fa fa-ellipsis-v"></i></a>
 					<div class="dropdown-menu dropdown-menu-right">
-						<a class="dropdown-item" href="/admin_profile">My Profile</a>
+						<a class="dropdown-item" href="/admin_profile"><i class="las la-user"></i> My Profile</a>
 						<a class="dropdown-item" href="settings.html">Settings</a>
 						<a class="dropdown-item" href="login.html">Logout</a>
 					</div>

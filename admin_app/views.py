@@ -4,7 +4,8 @@ from django.contrib.auth import logout, login
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
-from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm
+from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, AddDepartmentForm, EditDepartmentForm, \
+    AddDesignationForm, EditDesignationForm
 # Create your views here.
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign
 
@@ -59,83 +60,21 @@ def EmployeeListView(request):
     return render(request, "admin/employees_list.html", {'employeedetails': employeedetails})
 
 
-# def AddEmployee(request):
-#     if request.method == "POST":
-#         employee_name = request.POST.get('employee_name')
-#         employee_email = request.POST.get('employee_email')
-#         # employee_email = BaseUserManager.normaliize_email(email)
-#         employee_password = request.POST.get('employee_password')
-#         employee_phone = request.POST.get('employee_phone')
-#         employeejoindate = request.POST.get('employee_joindate')
-#         employee_joindate = datetime.strptime(employeejoindate, '%Y-%m-%d').date()
-#         employee_department_id = request.POST.get('employee_department')
-#         employee_department = Department.objects.get(id=employee_department_id)
-#         employee_designation_id = request.POST.get('employee_designation')
-#         employee_designation = Designation.objects.get(id=employee_designation_id)
-#         # if employee_password == employee_conf_password:
-#         #     emp_verify_password = employee_password
-#         # else:
-#         #     print("Password is not match")
-#         empdetails = User(username=employee_name, email=employee_email, password=employee_password, phone=employee_phone, date_joined=employee_joindate, department=employee_department, designation=employee_designation)
-#         # empdetails.set_password(employee_password)
-#         empdetails.save()
-#         messages.success(request, "Hello, School data has been send.")
-#         return redirect('AdminEmployeeView')
-#
-#     empprofile = User.objects.get(id=id)
-#     return render(request, "admin/employees.html", {'profile': empprofile})
-
-
 def AddEmployee(request):
     form = AddEmployeeForm(request.POST or None)
     if request.method == 'POST':
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Holiday add successfully')
+                messages.success(request, 'Employee add successfully')
                 return redirect('AdminEmployeeView')
         except Exception as e:
             form = AddEmployeeForm()
-
-    empprofile = User.objects.get(id=id)
-    context = {'form': form,'profile': empprofile}
+    context = {'form': form}
     return render(request, "admin/add_employee.html", context)
 
 
-
-def EditEmployee(request, id):
-
-    if request.method == "POST":
-        up_employee_name = request.POST.get('employee_name')
-        up_employee_email = request.POST.get('employee_email')
-        up_employee_password = request.POST.get('employee_password')
-        up_employee_conf_password = request.POST.get('employee_conf_password')
-        up_employee_phone = request.POST.get('employee_phone')
-        up_employeejoindate = request.POST.get('employee_joindate')
-        up_employee_joindate = datetime.strptime(up_employeejoindate, '%Y-%m-%d').date()
-        up_employee_department = request.POST.get('employee_department')
-        up_employee_designation = request.POST.get('employee_designation')
-
-        up_empdetails = User.objects.get(id=id)
-        up_empdetails.username = up_employee_name
-        up_empdetails.email = up_employee_email
-        up_empdetails.password = up_employee_password
-        up_empdetails.phone = up_employee_phone
-        up_empdetails.date_joined = up_employee_joindate
-        up_empdetails.department = up_employee_department
-        up_empdetails.designation = up_employee_designation
-        up_empdetails.save()
-        return redirect('AdminEmployeeView')
-
-    edit_employee = User.objects.get(id=id)
-    print(edit_employee, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>PROFILE")
-    context = {
-        "edit_employee": edit_employee,
-    }
-    return render(request, "admin/employees.html", context)
-
-
-def DeleteEmployee(id):
+def DeleteEmployee(request,id):
     delete_employee = User.objects.get(id=id)
     delete_employee.delete()
     return redirect('AdminEmployeeView')
@@ -209,15 +148,35 @@ def DepartmentView(request):
 
 
 def AddDepartment(request):
+    form = AddDepartmentForm(request.POST or None)
     if request.method == 'POST':
-        add_department_name = request.POST.get('department_name')
-        department_add = Department(department_name=add_department_name)
-        department_add.save()
-        return redirect('AdminDepartmentView')
-    return render(request, "admin/departments.html")
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Department add successfully')
+                return redirect('AdminDepartmentView')
+        except Exception as e:
+            form = AddDepartmentForm()
+    context = {'form': form}
+    return render(request, "admin/add_department.html", context)
 
 
-def DeleteDepartment(id):
+def UpdateDepartment(request, id):
+    edit_department = Department.objects.get(id=id)
+    form = EditDepartmentForm(request.POST or None, instance=edit_department)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Department Update successfully')
+                return redirect('AdminDepartmentView')
+        except Exception as e:
+            form = EditDepartmentForm(instance=edit_department)
+    context = {'form': form, 'edit_department': edit_department}
+    return render(request, "admin/edit_department.html", context)
+
+
+def DeleteDepartment(request, id):
     delete_department = Department.objects.get(id=id)
     delete_department.delete()
     return redirect('AdminDepartmentView')
@@ -232,17 +191,35 @@ def DesignationView(request):
 
 
 def AddDesignation(request):
+    form = AddDesignationForm(request.POST or None)
     if request.method == 'POST':
-        add_designation_name = request.POST.get('designation_name')
-        add_department_name = request.POST.get('department')
-        department_instance = Department.objects.get(id=add_department_name)
-        designation_add = Designation(designation_name=add_designation_name, department=department_instance)
-        designation_add.save()
-        return redirect('AdminDesignationView')
-    return render(request, "admin/designation.html")
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Designation add successfully')
+                return redirect('AdminDesignationView')
+        except Exception as e:
+            form = AddDesignationForm()
+    context = {'form': form}
+    return render(request, "admin/add_designation.html", context)
 
 
-def DeleteDesignation(id):
+def UpdateDesignation(request, id):
+    edit_designation = Designation.objects.get(id=id)
+    form = EditDesignationForm(request.POST or None, instance=edit_designation)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Designation Update successfully')
+                return redirect('AdminDesignationView')
+        except Exception as e:
+            form = EditDesignationForm(instance=edit_designation)
+    context = {'form': form, 'edit_designation': edit_designation}
+    return render(request, "admin/edit_designation.html", context)
+
+
+def DeleteDesignation(request,id):
     delete_designation = Designation.objects.get(id=id)
     delete_designation.delete()
     return redirect('AdminDesignationView')
