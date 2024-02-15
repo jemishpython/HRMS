@@ -1,17 +1,14 @@
-{% load crispy_forms_tags %}
-{% load static %}
-
-<!-- Assign Leader Modal -->
-<div id="add_project_assignee_model" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
+<!-- Assignee Modal -->
+<div id="assignee" class="modal custom-modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Assign Leader to this project</h5>
+                <h5 class="modal-title">Assign to this task</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{% url 'AdminAddProjectAssignee' project_id.id %}" method="post" id="form">
+            <form action="" method="post">
             {% csrf_token %}
                 <div class="modal-body">
                     <div class="input-group m-b-30">
@@ -20,22 +17,20 @@
                             <button class="btn btn-primary">Search</button>
                         </span>
                     </div>
-                    <div class="form-group">
-                        {{ form.assignee_type|as_crispy_field }}
-                    </div>
                     <div>
                         <ul class="chat-user-list">
+                            {% for user in user_list %}
                             <li>
                                 <div class="media">
+                                    <span class="avatar"><img alt="" src="{% static 'img/profiles/avatar-09.jpg' %}"></span>
                                     <div class="media-body align-self-center text-nowrap">
-                                        <span class="avatar"><img alt="" src="{% static 'img/profiles/avatar-09.jpg' %}"></span>
                                         <div class="user-name">{{user.username}}</div>
                                         <span class="designation">{{user.designation}}</span>
                                     </div>
-                                        <span>{{ form.employee_name|as_crispy_field }}</span>
-<!--                                    <input class="action-circle medium complete-btn" type="checkbox" name="assign_leader_name" value="{{user.id}}">-->
+                                    <input class="action-circle medium complete-btn" type="checkbox" name="assign_leader_name" value="{{user.id}}">
                                 </div>
                             </li>
+                            {% endfor %}
                         </ul>
                     </div>
                     <div class="submit-section">
@@ -46,4 +41,4 @@
         </div>
     </div>
 </div>
-<!-- /Assign Leader Modal -->
+<!-- /Assignee Modal -->

@@ -5,7 +5,8 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, AddDepartmentForm, EditDepartmentForm, \
-    AddDesignationForm, EditDesignationForm, EditProjectForm, AddProjectForm, ProjectAssignForm
+    AddDesignationForm, EditDesignationForm, EditProjectForm, AddProjectForm, ProjectAssignForm, AddTaskForm, \
+    EditTaskForm
 # Create your views here.
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign
 
@@ -74,7 +75,7 @@ def AddEmployee(request):
     return render(request, "admin/add_employee.html", context)
 
 
-def DeleteEmployee(request,id):
+def DeleteEmployee(request, id):
     delete_employee = User.objects.get(id=id)
     delete_employee.delete()
     return redirect('AdminEmployeeView')
@@ -308,13 +309,45 @@ def ProjectTaskList(request, id):
 
 
 def AddProjectTask(request, id):
-    task_project_id = Project.objects.get(id=id)
+    add_project_id = Project.objects.get(id=id)
+    form = AddTaskForm(request.POST or None)
     if request.method == 'POST':
-        add_project_task = request.POST.get('task_title')
-        project_task_add = Task(task_title=add_project_task, task_project_id=task_project_id.id)
-        project_task_add.save()
-        return redirect('AdminProjectTaskList', id=id)
-    return render(request, "admin/tasks.html")
+        # form = AddTaskForm(request.POST or None)
+        if form.is_valid():
+            task = form.save(commit=False)
+            task.task_project = Project.objects.get(id=id)
+            task.save()
+            messages.success(request, 'Task added successfully')
+            return redirect('AdminProjectTaskList', id=id)
+    else:
+        form = AddTaskForm()
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    context = {'form': form, 'add_project_id':add_project_id}
+    return render(request, "admin/add_task.html", context)
+
+
+# def EditProjectTask(request, id, projectid):
+#     projectid = Project.objects.get(id=projectid)
+#     edit_task = Task.objects.get(id=id)
+#     form = EditTaskForm(request.POST or None, instance=edit_task)
+#     if request.method == 'POST':
+#         try:
+#             if form.is_valid():
+#                 form.save()
+#                 messages.success(request, 'Leave Update successfully')
+#                 return redirect('EmpLeaves', id=projectid.id)
+#         except Exception as e:
+#             form = EditTaskForm(instance=edit_task)
+#     context = {'form': form, 'edit_task': edit_task}
+#     return render(request, "employee/edit_task.html", context)
+
+
+def DeleteProjectTask(request, id, projectid):
+    # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    project_id = Project.objects.get(id=projectid)
+    delete_leave = Leave.objects.get(id=id)
+    delete_leave.delete()
+    return redirect('EmpLeaves', id=project_id.id)
 
 
 def AddTaskAssign(request, id):

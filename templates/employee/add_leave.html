@@ -2,11 +2,11 @@
 {% load static %}
 
 <!-- Add Leave Modal -->
-<div id="add_leave" class="modal custom-modal fade" role="dialog">
+<div id="add_leave_model" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add Leave</h5>
+                <h3 class="modal-title">Add Leave</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -15,32 +15,19 @@
                 <form action="{% url 'EmpAddLeaves' user.id %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label>Leave Type <span class="text-danger">*</span></label>
-                        <select class="form-control" name="leave_type">
-                            <option disabled selected>Select Leave Type</option>
-                            <option value="Casual Leave">Casual Leave</option>
-                            <option value="Medical Leave">Medical Leave</option>
-                        </select>
+                        {{ form.leave_type|as_crispy_field }}
                     </div>
                     <div class="form-group">
-                        <label>From <span class="text-danger">*</span></label>
-                        <div>
-                            <input class="form-control" type="date" name="leave_from">
-                        </div>
+                        {{ form.leave_from|as_crispy_field }}
                     </div>
                     <div class="form-group">
-                        <label>To <span class="text-danger">*</span></label>
-                        <div>
-                            <input class="form-control" type="date" name="leave_to">
-                        </div>
+                        {{ form.leave_to|as_crispy_field }}
                     </div>
                     <div class="form-group">
-                        <label>Number of days <span class="text-danger">*</span></label>
-                        <input class="form-control" type="text" name="leave_days">
+                        {{ form.leave_days|as_crispy_field }}
                     </div>
                     <div class="form-group">
-                        <label>Leave Reason <span class="text-danger">*</span></label>
-                        <textarea rows="4" class="form-control" name="leave_reason"></textarea>
+                        {{ form.leave_reason|as_crispy_field }}
                     </div>
                     <div class="submit-section">
                         <button class="btn btn-primary submit-btn" type="submit">Submit</button>

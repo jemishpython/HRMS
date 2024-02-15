@@ -1,4 +1,5 @@
 {% extends 'admin/base.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block body %}
 
@@ -119,27 +120,27 @@
 										</tr>
 									</thead>
 									<tbody>
-										{% for x in leave_list %}
+										{% for leave in leave_list %}
 										<tr>
 											<td>
 												<h2 class="table-avatar">
 													<a href="profile.html" class="avatar"><img alt="" src="assets/img/profiles/avatar-09.jpg"></a>
-													<a href="#">{{x.leave_user}} <span>{{x.leave_user.designation}}</span></a>
+													<a href="#">{{leave.leave_user}} <span>{{leave.leave_user.designation}}</span></a>
 												</h2>
 											</td>
-											<td>{{x.leave_type}}</td>
-											<td>{{x.leave_from|date:"j - M - Y"}}</td>
-											<td>{{x.leave_to|date:"j - M - Y"}}</td>
-											<td>{{x.leave_days}} days</td>
-											<td>{{x.leave_reason}}</td>
+											<td>{{leave.leave_type}}</td>
+											<td>{{leave.leave_from|date:"j - M - Y"}}</td>
+											<td>{{leave.leave_to|date:"j - M - Y"}}</td>
+											<td>{{leave.leave_days}} days</td>
+											<td>{{leave.leave_reason}}</td>
 											<td class="text-center">
-												<div class="dropdown action-label">
-													<form action="{% url 'AdminLeaveStatusUpdate' x.id %}" method="post">
+												<div class="dropdown action-label" >
+													<form action="{% url 'AdminLeaveStatusUpdate' leave.id %}" method="post">
 													{% csrf_token %}
 														<select class="px-2 py-1 border rounded-pill" onChange="this.form.submit();" name="leave_status">
 															<option selected disabled>New</option>
-															<option {% if x.leave_status == "Approved" %}selected{% endif %}>Approved</option>
-															<option {% if x.leave_status == "Declined" %}selected{% endif %}>Declined</option>
+															<option {% if leave.leave_status == "Approved" %}selected{% endif %}>Approved</option>
+															<option {% if leave.leave_status == "Declined" %}selected{% endif %}>Declined</option>
 														</select>
 													</form>
 												</div>

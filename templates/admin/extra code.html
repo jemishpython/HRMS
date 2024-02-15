@@ -163,3 +163,15 @@
     </div>
 </div>
 <!-- /Edit Employee Modal -->
+
+
+
+function editTask(editTaskId, ProjectId) {
+    $.ajax({
+        url: "{% url 'AdminEditProjectTask' id=0 projectid=1 %}".replace(0, editTaskId).replace(1,ProjectId),
+        success: function(response) {
+            $("#edit-task-form").html(response);
+            $("#edit_task_model").modal('show');
+        }
+    });
+}

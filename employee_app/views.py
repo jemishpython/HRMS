@@ -85,52 +85,39 @@ def Leaves(request, id):
 
 
 def AddLeave(request, id):
-    user_id = User.objects.get(id=id)
-    if request.method == "POST":
-        add_leave_type = request.POST.get("leave_type")
-        add_leave_from = request.POST.get("leave_from")
-        add_leave_to = request.POST.get("leave_to")
-        add_leave_days = request.POST.get("leave_days")
-        add_leave_reason = request.POST.get("leave_reason")
-        if add_leave_from < add_leave_to:
-            leave_add = Leave(leave_type=add_leave_type, leave_from=add_leave_from, leave_to=add_leave_to, leave_days=add_leave_days, leave_reason=add_leave_reason, leave_user_id=user_id.id)
-            leave_add.save()
-        else:
-            raise forms.ValidationError("Leave-from date must be not grater than leave-to date")
-        return redirect('EmpLeaves', id=id)
-    return render(request, "employee/leaves-employee.html")
-
-
-def AddLeave(request):
-    form = AddLeaveForm(request.POST or None)
+    userid = User.objects.get(id=id)
     if request.method == 'POST':
-        try:
-            if form.is_valid():
-                form.save()
-                messages.success(request, 'Holiday add successfully')
-                return redirect('AdminHolidays')
-        except Exception as e:
-            form = AddLeaveForm()
+        form = AddLeaveForm(request.POST)
+        if form.is_valid():
+            leave = form.save(commit=False)
+            leave.leave_user = User.objects.get(id=id)
+            leave.save()
+            messages.success(request, 'Leave added successfully')
+            return redirect('EmpLeaves', id=userid.id)
+    else:
+        form = AddLeaveForm()
     context = {'form': form}
-    return render(request, "admin/add_holidays.html", context)
+    return render(request, "employee/add_leave.html", context)
 
 
-def EditLeave(request, id):
-    edit_holiday = Holiday.objects.get(id=id)
-    form = EditLeaveForm(request.POST or None, instance=edit_holiday)
+def EditLeave(request, id, userid):
+    userid = User.objects.get(id=userid)
+    edit_leave = Leave.objects.get(id=id)
+    form = EditLeaveForm(request.POST or None, instance=edit_leave)
     if request.method == 'POST':
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Holiday Update successfully')
-                return redirect('AdminHolidays')
+                messages.success(request, 'Leave Update successfully')
+                return redirect('EmpLeaves', id=userid.id)
         except Exception as e:
-            form = EditLeaveForm(instance=edit_holiday)
-    context = {'form': form, 'edit_holiday': edit_holiday}
-    return render(request, "admin/edit_holidays.html", context)
+            form = EditLeaveForm(instance=edit_leave)
+    context = {'form': form, 'edit_leave': edit_leave}
+    return render(request, "employee/edit_leave.html", context)
 
 
 def DeleteLeave(request, id):
-    delete_holiday = Holiday.objects.get(id=id)
-    delete_holiday.delete()
-    return redirect('AdminHolidays')
+    userid = request.user.id
+    delete_leave = Leave.objects.get(id=id)
+    delete_leave.delete()
+    return redirect('EmpLeaves', id=userid)

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block body %}
 <!-- Sidebar -->
@@ -8,8 +9,8 @@
 				<ul>
 					<li><a href="{% url 'AdminProjectTask' %}"><span>Task List</span></a></li>
 					<li class="menu-title">Projects</li>
-					{% for x in projectlist %}
-					<li><a href="{% url 'AdminProjectTaskList' x.id %}"><span>{{x.project_name}}</span></a></li>
+					{% for project in projectlist %}
+					<li><a href="{% url 'AdminProjectTaskList' project.id %}"><span>{{project.project_name}}</span></a></li>
 					{% endfor %}
 				</ul>
 			</div>
@@ -26,7 +27,7 @@
                     <div class="fixed-header">
                         <div class="navbar">
                             <div class="add-task-btn-wrapper float-left mr-auto">
-                                <span class="add-task-btn btn btn-white btn-sm">Add Task</span>
+                                <button class="add-task-btn btn btn-white btn-sm" onclick="addTask({{project_id}})"><i class="las la-plus"></i>Add Task</button>
                             </div>
                             <ul class="nav custom-menu float-right">
                                 <li class="nav-item dropdown dropdown-action">
@@ -48,7 +49,7 @@
                                         <div class="task-list-container">
                                             <div class="task-list-body">
                                                 <ul id="task-list">
-                                                    {% for x in project_tasklist %}
+                                                    {% for task_list in project_tasklist %}
                                                     <li class="task">
                                                         <div class="task-container">
                                                             <span class="task-action-btn task-check">
@@ -56,31 +57,17 @@
                                                                     <i class="material-icons">check</i>
                                                                 </span>
                                                             </span>
-                                                            <span class="task-label">{{x.task_title}}</span>
+                                                            <span class="task-label">{{task_list.task_title}}</span>
                                                             <span class="task-action-btn task-btn-right">
-                                                                <span class="action-circle large" title="Assign">
-                                                                    <a href="#" data-toggle="modal" data-target="#assignee"><i class="material-icons">person_add</i></a>
-                                                                </span>
-                                                                <span class="action-circle large delete-btn" title="Delete Task">
-                                                                    <i class="material-icons">delete</i>
-                                                                </span>
+                                                                <button class="border border-info rounded-circle px-1 mx-1 text-info" onclick="addTaskAssign({{project_id}})" title="Task Assign"><i class="las la-user-plus"></i></i></button>
+                                                                <button class="border border-danger rounded-circle px-1 mx-1 text-danger" title="Delete Task" onclick="deleteTask({{task_list.id}},{{project_id}})"><i class="fa fa-trash"></i></button>
                                                             </span>
                                                         </div>
                                                     </li>
                                                     {% endfor %}
                                                 </ul>
                                             </div>
-                                            <div class="task-list-footer">
-                                                <div class="new-task-wrapper">
-                                                    <form action="{% url 'AdminAddProjectTask' project_id %}" method="post">
-                                                        {% csrf_token %}
-                                                        <input type="text" class="form-control" id="new-task" name="task_title" placeholder="Enter new task here...">
-                                                        <button class="add-new-task-btn btn" type="submit">Add Task</button>
-                                                    </form>
-                                                    <span class="error-message hidden">You need to enter a task first</span>
-                                                    <span class="btn" id="close-task-panel">Close</span>
-                                                </div>
-                                            </div>
+                                            <div id="add-task-form"> </div>
                                         </div>
                                     </div>
                                     <div class="notification-popup hide">
@@ -100,49 +87,26 @@
 </div>
 <!-- /Page Wrapper -->
 
-<!-- Assignee Modal -->
-<div id="assignee" class="modal custom-modal fade" role="dialog">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Assign to this task</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="" method="post">
-            {% csrf_token %}
-                <div class="modal-body">
-                    <div class="input-group m-b-30">
-                        <input placeholder="Search to add a leader" class="form-control search-input" type="text">
-                        <span class="input-group-append">
-                            <button class="btn btn-primary">Search</button>
-                        </span>
-                    </div>
-                    <div>
-                        <ul class="chat-user-list">
-                            {% for x in user_list %}
-                            <li>
-                                <div class="media">
-                                    <span class="avatar"><img alt="" src="{% static 'img/profiles/avatar-09.jpg' %}"></span>
-                                    <div class="media-body align-self-center text-nowrap">
-                                        <div class="user-name">{{x.username}}</div>
-                                        <span class="designation">{{x.designation}}</span>
-                                    </div>
-                                    <input class="action-circle medium complete-btn" type="checkbox" name="assign_leader_name" value="{{x.id}}">
-                                </div>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    <div class="submit-section">
-                        <button class="btn btn-primary submit-btn" type="submit">Submit</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!-- /Assignee Modal -->
+
+<script>
+function addTask(ProjectId) {
+    $.ajax({
+        url: "{% url 'AdminAddProjectTask' id=0 %}".replace(0, ProjectId),
+        success: function(response) {
+            $("#add-task-form").html(response);
+            $("#add_task_model").modal('show');
+        }
+    });
+}
+function deleteTask(deleteTaskId, ProjectId) {
+    alert(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Function call")
+    if (deleteTaskId) {
+        var deleteUrl = "{% url 'AdminDeleteProjectTask' id=0 projectid=1 %}".replace(0, deleteTaskId).replace(1,ProjectId);
+    }
+}
+
+</script>
 
 {% endblock body %}
+
+addTask

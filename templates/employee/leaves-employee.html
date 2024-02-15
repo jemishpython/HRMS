@@ -19,7 +19,7 @@
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<a href="leaves/add" class="btn add-btn" data-toggle="modal" data-target="#add_leave"><i class="fa fa-plus"></i> Add Leave</a>
+								<button class="btn add-btn" onclick="addLeave({{user.id}})"><i class="fa fa-plus"></i> Add Leave</button>
 							</div>
 						</div>
 					</div>
@@ -53,7 +53,8 @@
 						</div>
 					</div>
 					<!-- /Leave Statistics -->
-					
+
+				<!-- /Page Content -->
 					<div class="row">
 						<div class="col-md-12">
 							<div class="table-responsive">
@@ -70,23 +71,23 @@
 										</tr>
 									</thead>
 									<tbody>
-										{% for x in leave_list %}
+										{% for leave in leave_list %}
 										<tr>
-											<td>{{x.leave_type}}</td>
-											<td>{{x.leave_from|date:"j - M - Y"}}</td>
-											<td>{{x.leave_to|date:"j - M - Y"}}</td>
-											<td>{{x.leave_days}}  Days</td>
-											<td>{{x.leave_reason}}</td>
+											<td>{{leave.leave_type}}</td>
+											<td>{{leave.leave_from|date:"j - M - Y"}}</td>
+											<td>{{leave.leave_to|date:"j - M - Y"}}</td>
+											<td>{{leave.leave_days}}  Days</td>
+											<td>{{leave.leave_reason}}</td>
 											<td class="text-center">
 												<div class="action-label">
-													<a class="border rounded-pill p-1 text-dark">{{x.leave_status}}</a>
+													<a class="border rounded-pill p-1 text-dark">{{leave.leave_status}}</a>
 												</div>
 											</td>
 
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
-														<a class="p-0 ml-4 text-info" href="#" data-toggle="modal" data-target="#edit_leave">Edit</a>
-														<a class="p-0 ml-4 text-danger" href="#" data-toggle="modal" data-target="#delete_approve">Delete</a>
+													<button class="p-0 ml-4 text-info border-0 " onclick="editLeave({{leave.id}},{{user.id}})">Edit</button>
+													<button class="p-0 ml-4 text-danger border-0 " onclick="deleteLeave({{leave.id}})">Delete</button>
 												</div>
 											</td>
 										</tr>
@@ -104,7 +105,7 @@
 				<div id="edit-leave-form"></div>
 				
 				<!-- Delete Leave Modal -->
-				<div class="modal custom-modal fade" id="delete_approve" role="dialog">
+				<div class="modal custom-modal fade" id="delete_leave_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
@@ -115,7 +116,7 @@
 								<div class="modal-btn delete-action">
 									<div class="row">
 										<div class="col-6">
-											<a href="javascript:void(0);" class="btn btn-primary continue-btn">Delete</a>
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
 										</div>
 										<div class="col-6">
 											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
@@ -131,29 +132,29 @@
 			<!-- /Page Wrapper -->
 
 <script>
-function addLeave() {
+function addLeave(UserId) {
     $.ajax({
-        url: "{% url 'AdminAddHolidays' %}",
+        url: "{% url 'EmpAddLeaves' id=0 %}".replace(0, UserId),
         success: function(response) {
-            $("#add-holiday-form").html(response);
-            $("#add_holiday_model").modal('show');
+            $("#add-leave-form").html(response);
+            $("#add_leave_model").modal('show');
         }
     });
 }
-function editLeave(editHolidayId) {
+function editLeave(editLeaveId, UserId) {
     $.ajax({
-        url: "holidays/update/"+ editHolidayId,
+        url: "{% url 'EmpEditLeave' id=0 userid=1 %}".replace(0, editLeaveId).replace(1,UserId),
         success: function(response) {
-            $("#edit-holiday-form").html(response);
-            $("#edit_holiday_model").modal('show');
+            $("#edit-leave-form").html(response);
+            $("#edit_leave_model").modal('show');
         }
     });
 }
 
-function deleteLeave(deleteHolidayId) {
-    $("#delete_holiday_model").modal('show');
-    if (deleteHolidayId) {
-        var deleteUrl = "{% url 'AdminDeleteHolidays' id=0 %}".replace(0, deleteHolidayId);
+function deleteLeave(deleteLeaveId) {
+    $("#delete_leave_model").modal('show');
+    if (deleteLeaveId) {
+        var deleteUrl = "{% url 'EmpDeleteLeave' id=0 %}".replace(0, deleteLeaveId);
         $("#confirmDeleteBtn").attr("href", deleteUrl);
     }
 }

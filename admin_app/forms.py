@@ -5,8 +5,8 @@ from hrms_api.models import *
 
 class AddEmployeeForm(forms.ModelForm):
     class Meta:
-        model= User
-        fields = ['username','email','password','phone','date_joined','department','designation']
+        model = User
+        fields = ['username', 'email', 'password', 'phone', 'date_joined', 'department', 'designation']
         widgets = {
             'date_joined': forms.DateInput(attrs={'type': 'date'}),
         }
@@ -78,3 +78,15 @@ class ProjectAssignForm(forms.ModelForm):
     class Meta:
         model = ProjectAssign
         fields = '__all__'
+
+
+class AddTaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['task_title']
+
+
+class EditTaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['task_title']
