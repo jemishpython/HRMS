@@ -46,6 +46,10 @@ def EmployeeIndex(request):
 
     return render(request, "employee/employee-dashboard.html", context)
 
+def EmployeeListView(request):
+    emp_list = User.objects.all()
+    return render(request, "employee/employees_list.html",{'emp_list':emp_list})
+
 
 def EmployeeLogout(request):
     logout(request)

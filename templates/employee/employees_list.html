@@ -1,0 +1,95 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block body %}
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+			
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-title">Employee</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Employee</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<!-- Search Filter -->
+					<div class="row filter-row">
+						<div class="col-sm-6 col-md-3">  
+							<div class="form-group form-focus">
+								<input type="text" class="form-control floating">
+								<label class="focus-label">Employee ID</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">  
+							<div class="form-group form-focus">
+								<input type="text" class="form-control floating">
+								<label class="focus-label">Employee Name</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3"> 
+							<div class="form-group form-focus select-focus">
+								<select class="select floating"> 
+									<option>Select Designation</option>
+									<option>Web Developer</option>
+									<option>Web Designer</option>
+									<option>Android Developer</option>
+									<option>Ios Developer</option>
+								</select>
+								<label class="focus-label">Designation</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">  
+							<a href="#" class="btn btn-success btn-block"> Search </a>  
+						</div>     
+                    </div>
+					<!-- /Search Filter -->
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive">
+								<table class="table table-striped custom-table datatable">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Employee ID</th>
+											<th>Email</th>
+											<th>Mobile</th>
+											<th class="text-nowrap">Join Date</th>
+											<th>Role</th>
+										</tr>
+									</thead>
+									<tbody>
+									{% for employee in emp_list %}
+										<tr>
+											<td>
+												<h2 class="table-avatar">
+													<a href="admin_profile" class="avatar"><img alt="" src="assets/img/profiles/avatar-02.jpg"></a>
+													<a href="admin_profile">{{employee.username}} <span>{{employee.designation}}</span></a>
+												</h2>
+											</td>
+											<td>EMP-{{employee.id}}</td>
+											<td>{{employee.email}}</td>
+											<td>{{employee.phone}}</td>
+											<td>{{employee.date_joined|date:"d M Y"}}</td>
+											<td>{{employee.department}}</td>
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+                </div>
+				<!-- /Page Content -->
+            </div>
+			<!-- /Page Wrapper -->
+{% endblock body %}

@@ -49,8 +49,8 @@ urlpatterns = [
     path("projects/tasks", views.ProjectTask, name="AdminProjectTask"),
     path("project/<int:id>/tasks", views.ProjectTaskList, name="AdminProjectTaskList"),
     path("project/<int:id>/task-add", views.AddProjectTask, name="AdminAddProjectTask"),
-    # path("project/<int:projectid>/task-edit/<int:id>", views.EditProjectTask, name="AdminEditProjectTask"),
-    path("project/<int:projectid>/task-add/<int:id>", views.DeleteProjectTask, name="AdminDeleteProjectTask"),
+    path("project/<int:projectid>/task-edit/<int:id>", views.EditProjectTask, name="AdminEditProjectTask"),
+    path("project/<int:projectid>/task-delete/<int:id>", views.DeleteProjectTask, name="AdminDeleteProjectTask"),
 
     path("project-task-assign/<int:id>", views.AddTaskAssign, name='AdminAddTaskAssign'),
 

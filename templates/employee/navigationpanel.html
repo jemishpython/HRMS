@@ -52,9 +52,9 @@
                     <span>{{user.username}}</span>
                 </a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="/admin_profile">My Profile</a>
-                    <a class="dropdown-item" href="settings.html">Settings</a>
-                    <a class="dropdown-item" href="/">Logout</a>
+                    <a class="dropdown-item" href="/admin_profile"><i class="las la-user"></i> My Profile</a>
+                    <a class="dropdown-item" href="settings.html"><i class="las la-user-cog"></i> Settings</a>
+                    <a class="dropdown-item" href="/"><i class="las la-sign-out-alt"></i> Logout</a>
                 </div>
             </li>
         </ul>
@@ -90,11 +90,12 @@
     <div class="sidebar-inner slimscroll">
         <div class="sidebar-menu" id="sidebar-menu">
             <ul>
-                <li><a href="{% url 'EmployeeIndex' %}"><span>Employees Dashboard</span></a></li>
+                <li><a href="{% url 'EmployeeIndex' %}"><i class="lar la-user-circle"></i><span>Employees Dashboard</span></a></li>
                 <li class="menu-title"><span>Employee</span></li>
-                <li><a href="{% url 'EmpHolidays' %}"><span>Holidays</span></a></li>
-                <li><a href="{% url 'EmpLeaves' user.id %}"><span>Leaves</span></a></li>
-                <li><a href="{% url 'EmpDepartmentView' %}"><span>Departments</span></a></li>
+                <li><a href="{% url 'EmployeeListView' %}"><i class="las la-users"></i><span>Employee</span></a></li>
+                <li><a href="{% url 'EmpHolidays' %}"><i class="las la-calendar-day"></i><span>Holidays</span></a></li>
+                <li><a href="{% url 'EmpLeaves' user.id %}"><i class="las la-calendar-minus"></i><span>Leaves</span></a></li>
+                <li><a href="{% url 'EmpDepartmentView' %}"><i class="las la-building"></i><span>Departments</span></a></li>
                 <li><a href="{% url 'EmpDesignationView' %}"><span>Designations</span></a></li>
 <!--                <li><a href="clients"><span>Clients</span></a></li>-->
 <!--                <li><a href="leads.html"><span>Leads</span></a></li>-->

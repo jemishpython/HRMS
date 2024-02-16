@@ -7,7 +7,7 @@
 		<div class="sidebar-inner slimscroll">
 			<div class="sidebar-menu">
 				<ul>
-					<li><a href="{% url 'AdminProjectTask' %}"><span>Task List</span></a></li>
+					<li><a href="{% url 'AdminProjectTask' %}"><span>Project List</span></a></li>
 					<li class="menu-title">Projects</li>
 					{% for project in projectlist %}
 					<li><a href="{% url 'AdminProjectTaskList' project.id %}"><span>{{project.project_name}}</span></a></li>
@@ -59,7 +59,8 @@
                                                             </span>
                                                             <span class="task-label">{{task_list.task_title}}</span>
                                                             <span class="task-action-btn task-btn-right">
-                                                                <button class="border border-info rounded-circle px-1 mx-1 text-info" onclick="addTaskAssign({{project_id}})" title="Task Assign"><i class="las la-user-plus"></i></i></button>
+                                                                <button class="border border-info rounded-circle px-1 mx-1 text-info" onclick="addTaskAssign({{project_id}})" title="Task Assign"><i class="las la-user-plus"></i></button>
+                                                                <button class="border border-dark rounded-circle px-1 mx-1 text-dark" onclick="editTask({{task_list.id}},{{project_id}})" title="Edit Task"><i class="las la-edit"></i></button>
                                                                 <button class="border border-danger rounded-circle px-1 mx-1 text-danger" title="Delete Task" onclick="deleteTask({{task_list.id}},{{project_id}})"><i class="fa fa-trash"></i></button>
                                                             </span>
                                                         </div>
@@ -67,7 +68,10 @@
                                                     {% endfor %}
                                                 </ul>
                                             </div>
+
                                             <div id="add-task-form"> </div>
+
+                                            <div id="edit-task-form"> </div>
                                         </div>
                                     </div>
                                     <div class="notification-popup hide">
@@ -97,13 +101,29 @@ function addTask(ProjectId) {
             $("#add_task_model").modal('show');
         }
     });
+
 }
+
+function editTask(editTaskId, ProjectId) {
+    $.ajax({
+        url: "{% url 'AdminEditProjectTask' id=0 projectid=1 %}".replace(0, editTaskId).replace(1, ProjectId),
+        success: function(response) {
+            $("#edit-task-form").html(response);
+            $("#edit_task_model").modal('show');
+        }
+    });
+}
+
 function deleteTask(deleteTaskId, ProjectId) {
-    alert(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Function call")
-    if (deleteTaskId) {
-        var deleteUrl = "{% url 'AdminDeleteProjectTask' id=0 projectid=1 %}".replace(0, deleteTaskId).replace(1,ProjectId);
-    }
+    $.ajax({
+        url: "{% url 'AdminDeleteProjectTask' id=0 projectid=1 %}".replace(0, deleteTaskId).replace(1,ProjectId),
+        success: function() {
+            location.reload();
+        }
+    });
 }
+
+
 
 </script>
 

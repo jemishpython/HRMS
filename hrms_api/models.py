@@ -136,9 +136,9 @@ class Leave(models.Model):
 
 
 class ProjectAssign(models.Model):
-    project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
+    project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.CASCADE, null=True)
     assignee_type = models.CharField(verbose_name='Assignee Type', max_length=50, blank=True, null=True, choices=ProjectAssigneeTypeChoice.choices, default=ProjectAssigneeTypeChoice.TEAM_MEMBER)
-    employee_name = models.ForeignKey(User, verbose_name='Employee Name', on_delete=models.DO_NOTHING, null=True)
+    employee_name = models.ForeignKey(User, verbose_name='Employee Name', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.project_name

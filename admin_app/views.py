@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth import logout, login
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, AddDepartmentForm, EditDepartmentForm, \
@@ -43,7 +44,16 @@ def Login(request):
 
 
 def AdminIndex(request):
-    return render(request, "admin/index.html")
+    users = User.objects.all()
+    projects = Project.objects.all()
+    tasks = Task.objects.all()
+
+    context = {
+        'projects': projects,
+        'tasks': tasks,
+        'users': users,
+    }
+    return render(request, "admin/index.html", context)
 
 
 def AdminLogout(request):
@@ -259,7 +269,7 @@ def UpdateProject(request, id):
                 messages.success(request, 'Project Update successfully')
                 return redirect('AdminProjectDetailsView', id=id)
         except Exception as e:
-            form = EditProjectForm(instance=edit_project)
+            messages.error(request, "Invalid credentials")
     context = {'form': form, 'edit_project': edit_project}
     return render(request, "admin/edit_project.html", context)
 
@@ -321,31 +331,29 @@ def AddProjectTask(request, id):
             return redirect('AdminProjectTaskList', id=id)
     else:
         form = AddTaskForm()
-        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     context = {'form': form, 'add_project_id':add_project_id}
     return render(request, "admin/add_task.html", context)
 
 
-# def EditProjectTask(request, id, projectid):
-#     projectid = Project.objects.get(id=projectid)
-#     edit_task = Task.objects.get(id=id)
-#     form = EditTaskForm(request.POST or None, instance=edit_task)
-#     if request.method == 'POST':
-#         try:
-#             if form.is_valid():
-#                 form.save()
-#                 messages.success(request, 'Leave Update successfully')
-#                 return redirect('EmpLeaves', id=projectid.id)
-#         except Exception as e:
-#             form = EditTaskForm(instance=edit_task)
-#     context = {'form': form, 'edit_task': edit_task}
-#     return render(request, "employee/edit_task.html", context)
+def EditProjectTask(request, id, projectid):
+    projectid = Project.objects.get(id=projectid)
+    edit_task = Task.objects.get(id=id)
+    form = EditTaskForm(request.POST or None, instance=edit_task)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Task Update successfully')
+                return redirect('AdminProjectTaskList', id=projectid.id)
+        except Exception as e:
+            form = EditTaskForm(instance=edit_task)
+    context = {'form': form, 'edit_task': edit_task, 'projectid':projectid}
+    return render(request, "admin/edit_task.html", context)
 
 
 def DeleteProjectTask(request, id, projectid):
-    # print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     project_id = Project.objects.get(id=projectid)
-    delete_leave = Leave.objects.get(id=id)
+    delete_leave = Task.objects.get(id=id)
     delete_leave.delete()
     return redirect('EmpLeaves', id=project_id.id)
 

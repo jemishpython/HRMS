@@ -25,7 +25,7 @@
 							<div class="card dash-widget">
 								<div class="card-body">
 									<div class="dash-widget-info">
-										<h3>112</h3>
+										<h3>{{projects.count}}</h3>
 										<span>Projects</span>
 									</div>
 								</div>
@@ -45,7 +45,7 @@
 							<div class="card dash-widget">
 								<div class="card-body">
 									<div class="dash-widget-info">
-										<h3>37</h3>
+										<h3>{{tasks.count}}</h3>
 										<span>Tasks</span>
 									</div>
 								</div>
@@ -55,7 +55,7 @@
 							<div class="card dash-widget">
 								<div class="card-body">
 									<div class="dash-widget-info">
-										<h3>218</h3>
+										<h3>{{users.count}}</h3>
 										<span>Employees</span>
 									</div>
 								</div>
@@ -247,13 +247,13 @@
 												<tr>
 													<th>Project Name </th>
 													<th>Progress</th>
-													<th class="text-right">Action</th>
 												</tr>
 											</thead>
 											<tbody>
+												{% for project_list in projects %}
 												<tr>
 													<td>
-														<h2><a href="project-view.html">Office Management</a></h2>
+														<h2><a href="{% url 'AdminProjectDetailsView' project_list.id %}">{{project_list.project_name}}</a></h2>
 														<small class="block text-ellipsis">
 															<span>1</span> <span class="text-muted">open tasks, </span>
 															<span>9</span> <span class="text-muted">tasks completed</span>
@@ -264,108 +264,8 @@
 															<div class="progress-bar" role="progressbar" data-toggle="tooltip" title="65%" style="width: 65%"></div>
 														</div>
 													</td>
-													<td class="text-right">
-														<div class="dropdown dropdown-action">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-															<div class="dropdown-menu dropdown-menu-right">
-																<a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-																<a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-															</div>
-														</div>
-													</td>
 												</tr>
-												<tr>
-													<td>
-														<h2><a href="project-view.html">Project Management</a></h2>
-														<small class="block text-ellipsis">
-															<span>2</span> <span class="text-muted">open tasks, </span>
-															<span>5</span> <span class="text-muted">tasks completed</span>
-														</small>
-													</td>
-													<td>
-														<div class="progress progress-xs progress-striped">
-															<div class="progress-bar" role="progressbar" data-toggle="tooltip" title="15%" style="width: 15%"></div>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown dropdown-action">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-															<div class="dropdown-menu dropdown-menu-right">
-																<a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-																<a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2><a href="project-view.html">Video Calling App</a></h2>
-														<small class="block text-ellipsis">
-															<span>3</span> <span class="text-muted">open tasks, </span>
-															<span>3</span> <span class="text-muted">tasks completed</span>
-														</small>
-													</td>
-													<td>
-														<div class="progress progress-xs progress-striped">
-															<div class="progress-bar" role="progressbar" data-toggle="tooltip" title="49%" style="width: 49%"></div>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown dropdown-action">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-															<div class="dropdown-menu dropdown-menu-right">
-																<a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-																<a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2><a href="project-view.html">Hospital Administration</a></h2>
-														<small class="block text-ellipsis">
-															<span>12</span> <span class="text-muted">open tasks, </span>
-															<span>4</span> <span class="text-muted">tasks completed</span>
-														</small>
-													</td>
-													<td>
-														<div class="progress progress-xs progress-striped">
-															<div class="progress-bar" role="progressbar" data-toggle="tooltip" title="88%" style="width: 88%"></div>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown dropdown-action">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-															<div class="dropdown-menu dropdown-menu-right">
-																<a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-																<a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-															</div>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<h2><a href="project-view.html">Digital Marketplace</a></h2>
-														<small class="block text-ellipsis">
-															<span>7</span> <span class="text-muted">open tasks, </span>
-															<span>14</span> <span class="text-muted">tasks completed</span>
-														</small>
-													</td>
-													<td>
-														<div class="progress progress-xs progress-striped">
-															<div class="progress-bar" role="progressbar" data-toggle="tooltip" title="100%" style="width: 100%"></div>
-														</div>
-													</td>
-													<td class="text-right">
-														<div class="dropdown dropdown-action">
-															<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-															<div class="dropdown-menu dropdown-menu-right">
-																<a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-																<a class="dropdown-item" href="javascript:void(0)"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-															</div>
-														</div>
-													</td>
-												</tr>
+												{% endfor %}
 											</tbody>
 										</table>
 									</div>

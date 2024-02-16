@@ -8,6 +8,8 @@ urlpatterns = [
     path("employee_index", views.EmployeeIndex, name="EmployeeIndex"),
     path("employee_logout", views.EmployeeLogout, name="EmployeeLogout"),
 
+    path("employee-list", views.EmployeeListView, name="EmployeeListView"),
+
     path("holidays", views.Holidays, name="EmpHolidays"),
 
     path("department", views.DepartmentView, name="EmpDepartmentView"),
