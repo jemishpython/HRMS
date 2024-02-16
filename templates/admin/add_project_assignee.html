@@ -6,7 +6,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Assign Leader to this project</h5>
+                <h3 class="modal-title">Assign Leader to this project</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -21,19 +21,22 @@
                         </span>
                     </div>
                     <div class="form-group">
-                        {{ form.assignee_type|as_crispy_field }}
+                        <select name="assignee_type" class="select form-control" id="id_assignee_type">
+                          <option value="">---------</option>
+                          <option value="Leader">LEADER</option>
+                          <option value="Team Member" selected="">TEAM MEMBER</option>
+                        </select>
                     </div>
-                    <div>
+                    <div class="overflow-auto">
                         <ul class="chat-user-list">
                             <li>
                                 <div class="media">
+                                    <span class="avatar"><img alt="" src="{% static 'img/profiles/avatar-09.jpg' %}"></span>
                                     <div class="media-body align-self-center text-nowrap">
-                                        <span class="avatar"><img alt="" src="{% static 'img/profiles/avatar-09.jpg' %}"></span>
-                                        <div class="user-name">{{user.username}}</div>
-                                        <span class="designation">{{user.designation}}</span>
+                                        <div class="user-name">{{users.username}}abc</div>
+                                        <span class="designation">{{users.designation}}xyz</span>
                                     </div>
-                                        <span>{{ form.employee_name|as_crispy_field }}</span>
-<!--                                    <input class="action-circle medium complete-btn" type="checkbox" name="assign_leader_name" value="{{user.id}}">-->
+                                    <input class="action-circle medium complete-btn" type="checkbox" name="assign_leader_name" value="{{user.id}}">
                                 </div>
                             </li>
                         </ul>

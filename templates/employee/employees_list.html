@@ -72,8 +72,8 @@
 										<tr>
 											<td>
 												<h2 class="table-avatar">
-													<a href="admin_profile" class="avatar"><img alt="" src="assets/img/profiles/avatar-02.jpg"></a>
-													<a href="admin_profile">{{employee.username}} <span>{{employee.designation}}</span></a>
+													<a href="{% url 'EmpProfileView' employee.id %}" class="avatar"><img alt="" src="assets/img/profiles/avatar-02.jpg"></a>
+													<a href="{% url 'EmpProfileView' employee.id %}">{{employee.username}} <span>{{employee.designation}}</span></a>
 												</h2>
 											</td>
 											<td>EMP-{{employee.id}}</td>

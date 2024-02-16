@@ -386,16 +386,21 @@ def UpdateLeaveStatus(request, id):
 
 
 def AddProjectAssignee(request, id):
-    user_list = User.objects.all()
+    users_list = User.objects.all()
     project_id = Project.objects.get(id=id)
     form = ProjectAssignForm(request.POST or None, instance=project_id)
     if request.method == 'POST':
         try:
             if form.is_valid():
-                form.save()
+                project_assign = form.save(commit=False)
+                selected_users_ids = request.POST.getlist('assign_leader_name')
+                for user_id in selected_users_ids:
+                    user = User.objects.get(id=user_id)
+                    project_assign.employee_name.add(user)
+                project_assign.save()
                 messages.success(request, 'Project Assign successfully')
                 return redirect('AdminProjectDetailsView', id=id)
         except Exception as e:
             form = ProjectAssignForm(instance=project_id)
-    context = {'form': form, 'user_list': user_list, 'project_id': project_id}
+    context = {'form': form, 'users_list': users_list, 'project_id': project_id}
     return render(request, "admin/add_project_assignee.html", context)

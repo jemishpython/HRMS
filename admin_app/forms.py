@@ -75,10 +75,15 @@ class EditProjectForm(forms.ModelForm):
 
 
 class ProjectAssignForm(forms.ModelForm):
+
     class Meta:
         model = ProjectAssign
         fields = '__all__'
-
+        widgets = {
+            'employee_name': forms.CheckboxSelectMultiple(attrs={
+                'class': 'form-control'
+            }),
+        }
 
 class AddTaskForm(forms.ModelForm):
     class Meta:

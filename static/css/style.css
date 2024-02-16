@@ -537,8 +537,8 @@ table.dataTable thead > tr > td.sorting {
 .btn-primary.active,
 .btn-primary:active,
 .open > .dropdown-toggle.btn-primary {
-	background-color: #f10e1d;
-	border: 1px solid #f10e1d;
+	background-color: #3E3939 ;
+	border: 1px solid #3E3939 ;
 }
 .btn-primary.active.focus,
 .btn-primary.active:focus,
@@ -549,14 +549,13 @@ table.dataTable thead > tr > td.sorting {
 .open > .dropdown-toggle.btn-primary.focus,
 .open > .dropdown-toggle.btn-primary:focus,
 .open > .dropdown-toggle.btn-primary:hover {
-	background-color: #f10e1d;
-	border: 1px solid #f10e1d;
+	background-color: #3E3939 ;
+	border: 1px solid #3E3939 ;
 }
 .btn-primary.active:not(:disabled):not(.disabled),
 .btn-primary:active:not(:disabled):not(.disabled),
 .show > .btn-primary.dropdown-toggle {
-	background-color: #f10e1d;
-	border-color: #f10e1d;
+	background-color: #3E3939 ;
 	color: #F6F4F4 ;
 }
 .btn-primary.active:focus:not(:disabled):not(.disabled), 
@@ -2967,6 +2966,8 @@ table.dataTable thead > tr > td.sorting {
     list-style: none;
     margin: 0;
     padding: 0;
+    max-height: 350px;
+    overflow-y: auto;
 }
 .chat-user-list .media {
 	border-bottom: 1px solid #eaeaea;

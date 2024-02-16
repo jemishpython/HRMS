@@ -9,6 +9,7 @@ urlpatterns = [
     path("employee_logout", views.EmployeeLogout, name="EmployeeLogout"),
 
     path("employee-list", views.EmployeeListView, name="EmployeeListView"),
+    path("employee-profile/<int:id>", views.ProfileView, name="EmpProfileView"),
 
     path("holidays", views.Holidays, name="EmpHolidays"),
 

@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from hrms_api.models import *
+
 
 class GenderTypeChoice(models.TextChoices):
     FEMALE = ("Female", _("FEMALE"))
@@ -45,6 +47,3 @@ class LeaveStatusChoice(models.TextChoices):
     NEW = ("New", _("New"))
     APPROVED = ("Approved", _("Approved"))
     DECLINED = ("Declined", _("Declined"))
-
-
-

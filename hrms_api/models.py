@@ -116,7 +116,7 @@ class Task(models.Model):
     task_title = models.CharField(verbose_name='Task Title', max_length=100, null=True)
     task_status = models.CharField(verbose_name='Task Status', choices=TaskStatusChoice.choices, default=TaskStatusChoice.WORKING, max_length=255, null=True, blank=True)
     task_project = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
-    task_assign = models.ForeignKey(User, verbose_name='Task Assign', on_delete=models.DO_NOTHING, null=True)
+    task_assign = models.ManyToManyField(User, verbose_name='Task Assign')
 
     def __str__(self):
         return self.task_title
@@ -138,7 +138,7 @@ class Leave(models.Model):
 class ProjectAssign(models.Model):
     project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.CASCADE, null=True)
     assignee_type = models.CharField(verbose_name='Assignee Type', max_length=50, blank=True, null=True, choices=ProjectAssigneeTypeChoice.choices, default=ProjectAssigneeTypeChoice.TEAM_MEMBER)
-    employee_name = models.ForeignKey(User, verbose_name='Employee Name', on_delete=models.CASCADE, null=True)
+    employee_name = models.ManyToManyField(User, verbose_name='Employee Name')
 
     def __str__(self):
         return self.project_name

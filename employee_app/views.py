@@ -51,6 +51,11 @@ def EmployeeListView(request):
     return render(request, "employee/employees_list.html",{'emp_list':emp_list})
 
 
+def ProfileView(request, id):
+    user_details = User.objects.get(id=id)
+    return render(request, "employee/profile.html", {'user_details': user_details})
+
+
 def EmployeeLogout(request):
     logout(request)
     return render(request, "employee/login.html")
