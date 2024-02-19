@@ -20,7 +20,10 @@ urlpatterns = [
 
 
     path("employee/profile/<int:id>", views.ProfileView, name="AdminProfileView"),
-    path("profile/detailsform/<int:id>", views.FillProfileDetails, name="AdminFillProfileDetails"),
+    path("employee/profile-info-edit/<int:id>", views.EditProfileInfo, name="AdminEditProfileInfo"),
+    path("employee/personal-info-edit/<int:id>", views.EditPersonalInfo, name="AdminEditPersonalInfo"),
+    path("employee/education-info-edit/<int:id>", views.EditEducationInfo, name="AdminEditEducationInfo"),
+    path("employee/experience-info-edit/<int:id>", views.EditExperienceInfo, name="AdminEditExperienceInfo"),
 
 
     path("holidays", views.Holidays, name="AdminHolidays"),

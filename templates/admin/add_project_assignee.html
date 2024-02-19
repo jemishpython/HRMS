@@ -21,25 +21,10 @@
                         </span>
                     </div>
                     <div class="form-group">
-                        <select name="assignee_type" class="select form-control" id="id_assignee_type">
-                          <option value="">---------</option>
-                          <option value="Leader">LEADER</option>
-                          <option value="Team Member" selected="">TEAM MEMBER</option>
-                        </select>
+                        {{ form.assignee_type|as_crispy_field }}
                     </div>
                     <div class="overflow-auto">
-                        <ul class="chat-user-list">
-                            <li>
-                                <div class="media">
-                                    <span class="avatar"><img alt="" src="{% static 'img/profiles/avatar-09.jpg' %}"></span>
-                                    <div class="media-body align-self-center text-nowrap">
-                                        <div class="user-name">{{users.username}}abc</div>
-                                        <span class="designation">{{users.designation}}xyz</span>
-                                    </div>
-                                    <input class="action-circle medium complete-btn" type="checkbox" name="assign_leader_name" value="{{user.id}}">
-                                </div>
-                            </li>
-                        </ul>
+                        {{ form.employee_name|as_crispy_field }}
                     </div>
                     <div class="submit-section">
                         <button class="btn btn-primary submit-btn" type="submit">Submit</button>

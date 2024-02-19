@@ -75,15 +75,13 @@ class EditProjectForm(forms.ModelForm):
 
 
 class ProjectAssignForm(forms.ModelForm):
-
     class Meta:
         model = ProjectAssign
         fields = '__all__'
         widgets = {
-            'employee_name': forms.CheckboxSelectMultiple(attrs={
-                'class': 'form-control'
-            }),
+            'employee_name': forms.CheckboxSelectMultiple,
         }
+
 
 class AddTaskForm(forms.ModelForm):
     class Meta:
@@ -95,3 +93,25 @@ class EditTaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['task_title']
+
+
+class EditProfileInfoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'phone', 'dob', 'email', 'address', 'gender', 'date_joined', 'department', 'designation']
+        widgets = {
+            'dob': forms.DateInput(attrs={'type': 'date'}),
+            'date_joined': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+class EditPersonalInfoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['nationality', 'religion', 'marital_status']
+
+
+class EditEducationInfoForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['nationality', 'religion', 'marital_status']

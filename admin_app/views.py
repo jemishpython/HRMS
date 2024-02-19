@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 
 from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, AddDepartmentForm, EditDepartmentForm, \
     AddDesignationForm, EditDesignationForm, EditProjectForm, AddProjectForm, ProjectAssignForm, AddTaskForm, \
-    EditTaskForm
+    EditTaskForm, EditProfileInfoForm, EditPersonalInfoForm
 # Create your views here.
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign
 
@@ -102,8 +102,64 @@ def ProfileView(request, id):
     return render(request, "admin/profile.html", {'profile': profile})
 
 
-def FillProfileDetails(request):
-    return render(request, "admin/profile.html")
+def EditProfileInfo(request, id):
+    edit_profile_info = User.objects.get(id=id)
+    form = EditProfileInfoForm(request.POST or None, instance=edit_profile_info)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Profile Info Update successfully')
+                return redirect('AdminProfileView', id=id)
+        except Exception as e:
+            form = EditProfileInfoForm(instance=edit_profile_info)
+    context = {'form': form, 'edit_profile_info': edit_profile_info}
+    return render(request, "admin/edit_profile_info.html", context)
+
+
+def EditPersonalInfo(request, id):
+    edit_personal_info = User.objects.get(id=id)
+    form = EditPersonalInfoForm(request.POST or None, instance=edit_personal_info)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Personal Info Update successfully')
+                return redirect('AdminProfileView', id=id)
+        except Exception as e:
+            form = EditPersonalInfoForm(instance=edit_personal_info)
+    context = {'form': form, 'edit_personal_info': edit_personal_info}
+    return render(request, "admin/edit_personal_info.html", context)
+
+
+def EditEducationInfo(request, id):
+    # edit_education_info = User.objects.get(id=id)
+    # form = EditPersonalInfoForm(request.POST or None, instance=edit_education_info)
+    # if request.method == 'POST':
+    #     try:
+    #         if form.is_valid():
+    #             form.save()
+    #             messages.success(request, 'Personal Info Update successfully')
+    #             return redirect('AdminProfileView', id=id)
+    #     except Exception as e:
+    #         form = EditPersonalInfoForm(instance=edit_education_info)
+    # context = {'form': form, 'edit_education_info': edit_education_info}
+    return render(request, "admin/edit_education_info.html")
+
+
+def EditExperienceInfo(request, id):
+    # edit_education_info = User.objects.get(id=id)
+    # form = EditPersonalInfoForm(request.POST or None, instance=edit_education_info)
+    # if request.method == 'POST':
+    #     try:
+    #         if form.is_valid():
+    #             form.save()
+    #             messages.success(request, 'Personal Info Update successfully')
+    #             return redirect('AdminProfileView', id=id)
+    #     except Exception as e:
+    #         form = EditPersonalInfoForm(instance=edit_education_info)
+    # context = {'form': form, 'edit_education_info': edit_education_info}
+    return render(request, "admin/edit_experience_info.html")
 
 
 def Holidays(request):
