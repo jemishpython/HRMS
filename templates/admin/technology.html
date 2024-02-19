@@ -11,14 +11,14 @@
 					<div class="page-header">
 						<div class="row align-items-center">
 							<div class="col">
-								<h3 class="page-title">Department</h3>
+								<h3 class="page-title">Technologys</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-									<li class="breadcrumb-item active">Department</li>
+									<li class="breadcrumb-item active">Technologys</li>
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<button class="btn add-btn" onclick="addDepartment()"><i class="fa fa-plus"></i> Add Department</button>
+								<button class="btn add-btn" onclick="addTechnology()"><i class="fa fa-plus"></i> Add Technology</button>
 							</div>
 						</div>
 					</div>
@@ -31,19 +31,18 @@
 									<thead>
 										<tr>
 											<th style="width: 100px;">Sr No</th>
-											<th>Department Name</th>
-											<th class="text-right">Action</th>
+											<th>Technology </th>
 										</tr>
 									</thead>
 									<tbody>
-										{% for department in departmentlist %}
+										{% for technology in technologylist %}
 										<tr>
 											<td>{{forloop.counter}}</td>
-											<td>{{department.department_name}}</td>
+											<td>{{technology.technology_name}}</td>
 											<td class="text-right">
                                             <div class="d-flex justify-content-end">
-												<button class="p-0 ml-4 text-info border-0 " onclick="editDepartment({{department.id}})">Edit</button>
-												<button class="p-0 ml-4 text-danger border-0 " onclick="deleteDepartment({{department.id}})">Delete</button>
+												<button class="p-0 ml-4 text-info border-0 " onclick="editTechnology({{technology.id}})">Edit</button>
+												<button class="p-0 ml-4 text-danger border-0 " onclick="deleteTechnology({{technology.id}})">Delete</button>
 											</div>
 											</td>
 										</tr>
@@ -55,18 +54,18 @@
 					</div>
                 </div>
 				<!-- /Page Content -->
-				
-				<div id="add-department-form"></div>
 
-				<div id="edit-department-form"></div>
+				<div id="add-technology-form"></div>
 
-				<!-- Delete Department Modal -->
-				<div class="modal custom-modal fade" id="delete_department_model" role="dialog">
+				<div id="edit-technology-form"></div>
+
+				<!-- Delete Technology Modal -->
+				<div class="modal custom-modal fade" id="delete_technology_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
 								<div class="form-header">
-									<h3>Delete Department</h3>
+									<h3>Delete Technology</h3>
 									<p>Are you sure want to delete?</p>
 								</div>
 								<div class="modal-btn delete-action">
@@ -83,38 +82,38 @@
 						</div>
 					</div>
 				</div>
-				<!-- /Delete Department Modal -->
+				<!-- /Delete Technology Modal -->
             </div>
 			<!-- /Page Wrapper -->
 
 <script>
-function addDepartment() {
+function addTechnology() {
     $.ajax({
-        url: "{% url 'AdminAddDepartment' %}",
+        url: "{% url 'AdminAddTechnology' %}",
         success: function(response) {
-            $("#add-department-form").html(response);
-            $("#add_department_model").modal('show');
+            $("#add-technology-form").html(response);
+            $("#add_technology_model").modal('show');
         }
     });
 }
-function editDepartment(editDepartmentId) {
+function editTechnology(editTechnologyId) {
     $.ajax({
-        url: "department/update/"+ editDepartmentId,
+        url: "technology/update/"+ editTechnologyId,
         success: function(response) {
-            $("#edit-department-form").html(response);
-            $("#edit_department_model").modal('show');
+            $("#edit-technology-form").html(response);
+            $("#edit_technology_model").modal('show');
         }
     });
 }
 
-function deleteDepartment(deleteDepartmentId) {
-    $("#delete_department_model").modal('show');
-    if (deleteDepartmentId) {
-        var deleteUrl = "{% url 'AdminDeleteDepartment' id=0 %}".replace(0, deleteDepartmentId);
+function deleteTechnology(deleteTechnologyId) {
+    $("#delete_technology_model").modal('show');
+    if (deleteTechnologyId) {
+        var deleteUrl = "{% url 'AdminDeleteTechnology' id=0 %}".replace(0, deleteTechnologyId);
         $("#confirmDeleteBtn").attr("href", deleteUrl);
     }
 }
 
 </script>
-		
+
 {% endblock body %}

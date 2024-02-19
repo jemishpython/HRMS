@@ -30,9 +30,8 @@
 								<table class="table table-striped custom-table mb-0 datatable">
 									<thead>
 										<tr>
-											<th style="width: 30px;">Sr No</th>
+											<th style="width: 100px;">Sr No</th>
 											<th>Designation </th>
-											<th>Department </th>
 											<th class="text-right">Action</th>
 										</tr>
 									</thead>
@@ -41,7 +40,6 @@
 										<tr>
 											<td>{{forloop.counter}}</td>
 											<td>{{designation.designation_name}}</td>
-											<td>{{designation.department}}</td>
 											<td class="text-right">
                                             <div class="d-flex justify-content-end">
 												<button class="p-0 ml-4 text-info border-0 " onclick="editDesignation({{designation.id}})">Edit</button>

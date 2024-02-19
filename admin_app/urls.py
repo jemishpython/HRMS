@@ -20,10 +20,6 @@ urlpatterns = [
 
 
     path("employee/profile/<int:id>", views.ProfileView, name="AdminProfileView"),
-    path("employee/profile-info-edit/<int:id>", views.EditProfileInfo, name="AdminEditProfileInfo"),
-    path("employee/personal-info-edit/<int:id>", views.EditPersonalInfo, name="AdminEditPersonalInfo"),
-    path("employee/education-info-edit/<int:id>", views.EditEducationInfo, name="AdminEditEducationInfo"),
-    path("employee/experience-info-edit/<int:id>", views.EditExperienceInfo, name="AdminEditExperienceInfo"),
 
 
     path("holidays", views.Holidays, name="AdminHolidays"),
@@ -35,6 +31,11 @@ urlpatterns = [
     path("department/add", views.AddDepartment, name="AdminAddDepartment"),
     path("department/update/<int:id>", views.UpdateDepartment, name="AdminUpdateDepartment"),
     path("department/delete/<int:id>", views.DeleteDepartment, name="AdminDeleteDepartment"),
+
+    path("technology", views.TechnologyView, name="AdminTechnologyView"),
+    path("technology/add", views.AddTechnology, name="AdminAddTechnology"),
+    path("technology/update/<int:id>", views.UpdateTechnology, name="AdminUpdateTechnology"),
+    path("technology/delete/<int:id>", views.DeleteTechnology, name="AdminDeleteTechnology"),
 
     path("designation", views.DesignationView, name="AdminDesignationView"),
     path("designation/add", views.AddDesignation, name="AdminAddDesignation"),

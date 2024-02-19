@@ -61,17 +61,17 @@
 
 				<!-- Page Content -->
 					<div class="row staff-grid-row">
-						{% for x in employeedetails %}
+						{% for employee in employeedetails %}
 						<div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
 							<div class="profile-widget">
 								<div class="profile-img">
-									<a href="{% url 'AdminProfileView' x.id %}" class="avatar"><img src="" alt="employee image"></a>
+									<a href="{% url 'AdminProfileView' employee.id %}" class="avatar"><img src="" alt="employee image"></a>
 								</div>
 								<div class="dropdown profile-action">
-									<button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger" onclick="deleteEmployee({{x.id}})"><i class="las la-lg la-trash"></i></button>
+									<button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger" onclick="deleteEmployee({{employee.id}})"><i class="las la-lg la-trash"></i></button>
 								</div>
-								<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="{% url 'AdminProfileView' x.id %}">{{x.username}}</a></h4>
-								<div class="small text-muted">{{x.department}}</div>
+								<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="{% url 'AdminProfileView' employee.id %}">{{employee.username}}</a></h4>
+								<div class="small text-muted">{{employee.department}} | {{employee.designation}} . {{employee.technology}}</div>
 							</div>
 						</div>
 						{% endfor %}

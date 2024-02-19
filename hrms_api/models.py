@@ -16,10 +16,16 @@ class Department(models.Model):
 
 class Designation(models.Model):
     designation_name = models.CharField(verbose_name='Designation Name', max_length=50, null=True, blank=True)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.designation_name
+
+
+class Technology(models.Model):
+    technology_name = models.CharField(verbose_name='Technology Name', max_length=50, null=True, blank=True)
+
+    def __str__(self):
+        return self.technology_name
 
 
 class UserManager(BaseUserManager):
@@ -74,10 +80,10 @@ class User(AbstractUser):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     designation = models.ForeignKey(Designation, on_delete=models.CASCADE, null=True, blank=True)
     date_joined = models.DateField(verbose_name='Date of Joining', null=True, blank=True)
-    birthdate = models.DateField(verbose_name='Birth Date', null=True, blank=True)
+    birthdate = models.DateField(verbose_name='Birth Date', null=True)
     marital_status = models.CharField(verbose_name='Marital Status', choices=MaritalStatusChoice.choices, default=MaritalStatusChoice.SINGLE, null=True, max_length=255)
-    religion = models.CharField(verbose_name='Religion', max_length=20, blank=True, null=True)
-    technology = models.CharField(verbose_name='Technology', max_length=30, null=True, blank=True)
+    religion = models.CharField(verbose_name='Religion', max_length=20, null=True)
+    technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True, blank=True)
 
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []

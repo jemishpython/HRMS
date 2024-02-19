@@ -159,7 +159,7 @@
 																	<span class="action-circle large" title="Assign">
 																		<form action="" method="post">
 																		{% csrf_token %}
-																			<a href="#" data-toggle="modal" data-target="#assignee"><i class="material-icons">person_add</i></a>
+																			<a href="#" data-toggle="modal" data-target="#assignee" title="fake"><i class="material-icons">person_add</i></a>
 																		</form>
 																	</span>
 																	<span class="action-circle large delete-btn" title="Delete Task">
@@ -198,10 +198,6 @@
 												<td class="text-right">{{projectdetailview.project_cost}}</td>
 											</tr>
 											<tr>
-												<td>Total Hours:</td>
-												<td class="text-right">100 Hours</td>
-											</tr>
-											<tr>
 												<td>Created:</td>
 												<td class="text-right">{{projectdetailview.project_start_date|date:'j  M , Y'}}</td>
 											</tr>
@@ -219,14 +215,14 @@
 											</tr>
 											<tr>
 												<td>Status:</td>
-												<td class="text-right">Working</td>
+												<td class="text-right">{{projectdetailview.project_status}}</td>
 											</tr>
 										</tbody>
 									</table>
-									<p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>
-									<div class="progress progress-xs mb-0">
-										<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="40%" style="width: 40%"></div>
-									</div>
+<!--									<p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>-->
+<!--									<div class="progress progress-xs mb-0">-->
+<!--										<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="40%" style="width: 40%"></div>-->
+<!--									</div>-->
 								</div>
 							</div>
 							<div class="mb-2">
@@ -292,22 +288,23 @@
 
 <script>
 
-function addProjectAssignee(addAssigneeProjectId) {
-    $.ajax({
-        url: "{% url 'AdminAddProjectAssignee' id=0 %}".replace(0, addAssigneeProjectId),
-        success: function(response) {
-            $("#add-project-assignee-form").html(response);
-				$("#add_project_assignee_model").modal('show');
-        }
-    });
-}
-
 function editProject(editProjectId) {
     $.ajax({
         url: "{% url 'AdminUpdateProject' id=0 %}".replace(0, editProjectId),
         success: function(response) {
             $("#edit-project-form").html(response);
             $("#edit_project_model").modal('show');
+        }
+    });
+}
+
+function addProjectAssignee(addAssigneeProjectId) {
+	alert(addAssigneeProjectId)
+    $.ajax({
+        url: "{% url 'AdminAddProjectAssignee' id=0 %}".replace(0, addAssigneeProjectId),
+        success: function(response) {
+            $("#add-project-assignee-form").html(response);
+			$("#add_project_assignee_model").modal('show');
         }
     });
 }

@@ -7,9 +7,9 @@ from django.shortcuts import render, redirect
 
 from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, AddDepartmentForm, EditDepartmentForm, \
     AddDesignationForm, EditDesignationForm, EditProjectForm, AddProjectForm, ProjectAssignForm, AddTaskForm, \
-    EditTaskForm, EditProfileInfoForm, EditPersonalInfoForm
+    EditTaskForm, EditTechnologyForm, AddTechnologyForm
 # Create your views here.
-from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign
+from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology
 
 
 def AdminRegister(request):
@@ -100,66 +100,6 @@ def DeleteEmployeeList(id):
 def ProfileView(request, id):
     profile = User.objects.get(id=id)
     return render(request, "admin/profile.html", {'profile': profile})
-
-
-def EditProfileInfo(request, id):
-    edit_profile_info = User.objects.get(id=id)
-    form = EditProfileInfoForm(request.POST or None, instance=edit_profile_info)
-    if request.method == 'POST':
-        try:
-            if form.is_valid():
-                form.save()
-                messages.success(request, 'Profile Info Update successfully')
-                return redirect('AdminProfileView', id=id)
-        except Exception as e:
-            form = EditProfileInfoForm(instance=edit_profile_info)
-    context = {'form': form, 'edit_profile_info': edit_profile_info}
-    return render(request, "admin/edit_profile_info.html", context)
-
-
-def EditPersonalInfo(request, id):
-    edit_personal_info = User.objects.get(id=id)
-    form = EditPersonalInfoForm(request.POST or None, instance=edit_personal_info)
-    if request.method == 'POST':
-        try:
-            if form.is_valid():
-                form.save()
-                messages.success(request, 'Personal Info Update successfully')
-                return redirect('AdminProfileView', id=id)
-        except Exception as e:
-            form = EditPersonalInfoForm(instance=edit_personal_info)
-    context = {'form': form, 'edit_personal_info': edit_personal_info}
-    return render(request, "admin/edit_personal_info.html", context)
-
-
-def EditEducationInfo(request, id):
-    # edit_education_info = User.objects.get(id=id)
-    # form = EditPersonalInfoForm(request.POST or None, instance=edit_education_info)
-    # if request.method == 'POST':
-    #     try:
-    #         if form.is_valid():
-    #             form.save()
-    #             messages.success(request, 'Personal Info Update successfully')
-    #             return redirect('AdminProfileView', id=id)
-    #     except Exception as e:
-    #         form = EditPersonalInfoForm(instance=edit_education_info)
-    # context = {'form': form, 'edit_education_info': edit_education_info}
-    return render(request, "admin/edit_education_info.html")
-
-
-def EditExperienceInfo(request, id):
-    # edit_education_info = User.objects.get(id=id)
-    # form = EditPersonalInfoForm(request.POST or None, instance=edit_education_info)
-    # if request.method == 'POST':
-    #     try:
-    #         if form.is_valid():
-    #             form.save()
-    #             messages.success(request, 'Personal Info Update successfully')
-    #             return redirect('AdminProfileView', id=id)
-    #     except Exception as e:
-    #         form = EditPersonalInfoForm(instance=edit_education_info)
-    # context = {'form': form, 'edit_education_info': edit_education_info}
-    return render(request, "admin/edit_experience_info.html")
 
 
 def Holidays(request):
@@ -290,6 +230,49 @@ def DeleteDesignation(request,id):
     delete_designation = Designation.objects.get(id=id)
     delete_designation.delete()
     return redirect('AdminDesignationView')
+
+
+def TechnologyView(request):
+    technologylist = Technology.objects.all()
+    context = {
+        'technologylist': technologylist,
+    }
+    return render(request, "admin/technology.html", context)
+
+
+def AddTechnology(request):
+    form = AddTechnologyForm(request.POST or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Technology add successfully')
+                return redirect('AdminTechnologyView')
+        except Exception as e:
+            form = AddTechnologyForm()
+    context = {'form': form}
+    return render(request, "admin/add_technology.html", context)
+
+
+def UpdateTechnology(request, id):
+    edit_technology = Technology.objects.get(id=id)
+    form = EditTechnologyForm(request.POST or None, instance=edit_technology)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Designation Update successfully')
+                return redirect('AdminTechnologyView')
+        except Exception as e:
+            form = EditTechnologyForm(instance=edit_technology)
+    context = {'form': form, 'edit_technology': edit_technology}
+    return render(request, "admin/edit_technology.html", context)
+
+
+def DeleteTechnology(request,id):
+    delete_technology = Technology.objects.get(id=id)
+    delete_technology.delete()
+    return redirect('AdminTechnologyView')
 
 
 def ClientsView(request):
@@ -449,7 +432,7 @@ def AddProjectAssignee(request, id):
         try:
             if form.is_valid():
                 project_assign = form.save(commit=False)
-                selected_users_ids = request.POST.getlist('assign_leader_name')
+                selected_users_ids = request.POST.getlist('employee_name')
                 for user_id in selected_users_ids:
                     user = User.objects.get(id=user_id)
                     project_assign.employee_name.add(user)

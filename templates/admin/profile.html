@@ -32,7 +32,8 @@
 													<div class="profile-info-left">
 														<h3 class="user-name m-t-0 mb-0">{{profile.username}}</h3>
 														<h6 class="text-muted">{{profile.department}}</h6>
-														<small class="text-muted">{{profile.designation}}</small>
+														<small class="text-muted">{{profile.designation}}</small>.
+														<small class="text-muted">{{profile.technology}}</small>
 														<div class="staff-id">Employee ID : FT-0001</div>
 														<div class="small doj text-muted">Date of Join : {{profile.date_joined|date:'d F Y'}}</div>
 													</div>
@@ -57,14 +58,11 @@
 														</li>
 														<li>
 															<div class="title">Gender</div>
-															<div class="text">Male</div>
+															<div class="text">{{profile.gender}}</div>
 														</li>
 													</ul>
 												</div>
 											</div>
-										</div>
-										<div class="pro-edit">
-											<button class="edit-icon" onclick="editProfileInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
 										</div>
 									</div>
 								</div>
@@ -81,7 +79,6 @@
 								<div class="col-md-6 d-flex">
 									<div class="card profile-box flex-fill">
 										<div class="card-body">
-											<button class="edit-icon" onclick="editPersonalInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
 											<h3 class="card-title">Personal Information</h3>
 											<ul class="personal-info">
 												<li>
@@ -134,7 +131,6 @@
 								<div class="col-md-6 d-flex">
 									<div class="card profile-box flex-fill">
 										<div class="card-body">
-											<button class="edit-icon" onclick="editEducationInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
 											<h3 class="card-title">Education Information</h3>
 											<div class="experience-box">
 												<ul class="experience-list">
@@ -170,7 +166,6 @@
 								<div class="col-md-6 d-flex">
 									<div class="card profile-box flex-fill">
 										<div class="card-body">
-											<button class="edit-icon" onclick="editExperienceInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
 											<h3 class="card-title">Experience</h3>
 											<div class="experience-box">
 												<ul class="experience-list">
@@ -265,54 +260,7 @@
                 </div>
 				<!-- /Page Content -->
 
-				<div id="edit-profile-info-form"></div>
-				<div id="edit-personal-info-form"></div>
-				<div id="edit-education-info-form"></div>
-				<div id="edit-experience-info-form"></div>
-
             </div>
 			<!-- /Page Wrapper -->
-
-<script>
-function editProfileInfo(UserId) {
-    $.ajax({
-        url: "{% url 'AdminEditProfileInfo' id=0 %}".replace(0, UserId),
-        success: function(response) {
-            $("#edit-profile-info-form").html(response);
-            $("#edit_profile_info_model").modal('show');
-        }
-    });
-}
-
-function editPersonalInfo(UserId) {
-    $.ajax({
-        url: "{% url 'AdminEditPersonalInfo' id=0 %}".replace(0, UserId),
-        success: function(response) {
-            $("#edit-personal-info-form").html(response);
-            $("#edit_personal_info_model").modal('show');
-        }
-    });
-}
-
-function editEducationInfo(UserId) {
-    $.ajax({
-        url: "{% url 'AdminEditEducationInfo' id=0 %}".replace(0, UserId),
-        success: function(response) {
-            $("#edit-education-info-form").html(response);
-            $("#edit_education_info_model").modal('show');
-        }
-    });
-}
-
-function editExperienceInfo(UserId) {
-    $.ajax({
-        url: "{% url 'AdminEditExperienceInfo' id=0 %}".replace(0, UserId),
-        success: function(response) {
-            $("#edit-experience-info-form").html(response);
-            $("#edit_experience_info_model").modal('show');
-        }
-    });
-}
-</script>
 
 {% endblock body %}

@@ -3,9 +3,9 @@ from django.contrib import messages
 from django import forms
 from django.shortcuts import render, redirect
 
-from employee_app.forms import AddLeaveForm, EditLeaveForm
+from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm, EditPersonalInfoForm
 # Create your views here.
-from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign
+from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology
 
 
 def landing(request):
@@ -56,6 +56,68 @@ def ProfileView(request, id):
     return render(request, "employee/profile.html", {'user_details': user_details})
 
 
+def EditProfileInfo(request, id):
+    edit_profile_info = User.objects.get(id=id)
+    form = EditProfileInfoForm(request.POST or None, instance=edit_profile_info)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                print(form,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>Call Function")
+                messages.success(request, 'Profile Info Update successfully')
+                return redirect('EmpProfileView', id=id)
+        except Exception as e:
+            form = EditProfileInfoForm(instance=edit_profile_info)
+    context = {'form': form, 'edit_profile_info': edit_profile_info}
+    return render(request, "employee/edit_profile_info.html", context)
+
+
+def EditPersonalInfo(request, id):
+    edit_personal_info = User.objects.get(id=id)
+    form = EditPersonalInfoForm(request.POST or None, instance=edit_personal_info)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Personal Info Update successfully')
+                return redirect('EmpProfileView', id=id)
+        except Exception as e:
+            form = EditPersonalInfoForm(instance=edit_personal_info)
+    context = {'form': form, 'edit_personal_info': edit_personal_info}
+    return render(request, "employee/edit_personal_info.html", context)
+
+
+def EditEducationInfo(request, id):
+    # edit_education_info = User.objects.get(id=id)
+    # form = EditPersonalInfoForm(request.POST or None, instance=edit_education_info)
+    # if request.method == 'POST':
+    #     try:
+    #         if form.is_valid():
+    #             form.save()
+    #             messages.success(request, 'Personal Info Update successfully')
+    #             return redirect('EmpProfileView', id=id)
+    #     except Exception as e:
+    #         form = EditPersonalInfoForm(instance=edit_education_info)
+    # context = {'form': form, 'edit_education_info': edit_education_info}
+    return render(request, "employee/edit_education_info.html")
+
+
+def EditExperienceInfo(request, id):
+    # edit_education_info = User.objects.get(id=id)
+    # form = EditPersonalInfoForm(request.POST or None, instance=edit_education_info)
+    # if request.method == 'POST':
+    #     try:
+    #         if form.is_valid():
+    #             form.save()
+    #             messages.success(request, 'Personal Info Update successfully')
+    #             return redirect('EmpProfileView', id=id)
+    #     except Exception as e:
+    #         form = EditPersonalInfoForm(instance=edit_education_info)
+    # context = {'form': form, 'edit_education_info': edit_education_info}
+    return render(request, "employee/edit_experience_info.html")
+
+
+
 def EmployeeLogout(request):
     logout(request)
     return render(request, "employee/login.html")
@@ -83,6 +145,14 @@ def DesignationView(request):
         'designationlist': designationlist,
     }
     return render(request, "employee/designations.html", context)
+
+
+def TechnologyView(request):
+    technologylist = Technology.objects.all()
+    context = {
+        'technologylist': technologylist,
+    }
+    return render(request, "employee/technology.html", context)
 
 
 def Leaves(request, id):
