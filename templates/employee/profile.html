@@ -135,34 +135,24 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
-											<button class="edit-icon" onclick="editEducationInfo({{user_details.id}})"><i class="fa fa-pencil"></i></button>
+											<button class="edit-icon ml-2" onclick="addEducationInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
 											<h3 class="card-title">Education Information</h3>
 											<div class="experience-box">
 												<ul class="experience-list">
+													{% for edu_info in view_education_info %}
 													<li>
 														<div class="experience-user">
 															<div class="before-circle"></div>
 														</div>
 														<div class="experience-content">
 															<div class="timeline-content">
-																<a href="#/" class="name">International College of Arts and Science (UG)</a>
-																<div>Bsc Computer Science</div>
-																<span class="time">2000 - 2003</span>
+																<h4 class="text-dark cursor_pointer" onclick="editEducationInfo({{user_details.id}}, {{edu_info.id}})" title="Edit">{{edu_info.institution}}</h4>
+																<div class="text-dark">{{edu_info.degree}}<span class="ml-2">| Grade :  {{edu_info.grade}}</span></div>
+																<span class="">{{edu_info.start_year|date:'F - Y'}} - {{edu_info.complete_year|date:'F - Y'}}</span>
 															</div>
 														</div>
 													</li>
-													<li>
-														<div class="experience-user">
-															<div class="before-circle"></div>
-														</div>
-														<div class="experience-content">
-															<div class="timeline-content">
-																<a href="#/" class="name">International College of Arts and Science (PG)</a>
-																<div>Msc Computer Science</div>
-																<span class="time">2000 - 2003</span>
-															</div>
-														</div>
-													</li>
+													{% endfor %}
 												</ul>
 											</div>
 										</div>
@@ -171,43 +161,23 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
-											<button class="edit-icon" onclick="editExperienceInfo({{user_details.id}})"><i class="fa fa-pencil"></i></button>
+											<button class="edit-icon" onclick="addExperienceInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
 											<h3 class="card-title">Experience</h3>
 											<div class="experience-box">
 												<ul class="experience-list">
+													{% for exp in view_experience_info %}
 													<li>
 														<div class="experience-user">
 															<div class="before-circle"></div>
 														</div>
 														<div class="experience-content">
 															<div class="timeline-content">
-																<a href="#/" class="name">Web Designer at Zen Corporation</a>
-																<span class="time">Jan 2013 - Present (5 years 2 months)</span>
+																<h4 class="text-dark cursor_pointer" onclick="editExperienceInfo({{user_details.id}}, {{exp.id}})" title="Edit">{{exp.company_name}}</h4>
+																<span class="">{{exp.start_date|date:'M , Y'}} - {{exp.end_date|date:'M , Y'}}</span>
 															</div>
 														</div>
 													</li>
-													<li>
-														<div class="experience-user">
-															<div class="before-circle"></div>
-														</div>
-														<div class="experience-content">
-															<div class="timeline-content">
-																<a href="#/" class="name">Web Designer at Ron-tech</a>
-																<span class="time">Jan 2013 - Present (5 years 2 months)</span>
-															</div>
-														</div>
-													</li>
-													<li>
-														<div class="experience-user">
-															<div class="before-circle"></div>
-														</div>
-														<div class="experience-content">
-															<div class="timeline-content">
-																<a href="#/" class="name">Web Designer at Dalt Technology</a>
-																<span class="time">Jan 2013 - Present (5 years 2 months)</span>
-															</div>
-														</div>
-													</li>
+													{% endfor %}
 												</ul>
 											</div>
 										</div>
@@ -218,39 +188,41 @@
 								<div class="col-md-12 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
-											<h3 class="card-title">Emergency Contact</h3>
+											<button class="edit-icon ml-2" onclick="addEmergencyInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
+											<button class="edit-icon mr-1" onclick="editEmergencyInfo({{user_details.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
+											<h2 class="card-title">Emergency Contact</h2>
 											<div class="d-flex">
 												<div class="col-md-6 border-right">
-													<h5 class="section-title">Primary</h5>
+													<h4 class="section-title">Primary</h4>
 													<ul class="personal-info">
 														<li>
 															<div class="title">Name</div>
-															<div class="text">John Doe</div>
+															<div class="text">{{view_emergency_contact.primary_name}}</div>
 														</li>
 														<li>
 															<div class="title">Relationship</div>
-															<div class="text">Father</div>
+															<div class="text">{{view_emergency_contact.primary_con_relationship}}</div>
 														</li>
 														<li>
 															<div class="title">Phone </div>
-															<div class="text">9876543210, 9876543210</div>
+															<div class="text">{{view_emergency_contact.primary_phone1}} , {{view_emergency_contact.primary_phone2}}</div>
 														</li>
 													</ul>
 												</div>
 												<div class="col-md-6">
-													<h5 class="section-title">Secondary</h5>
+													<h4 class="section-title">Secondary</h4>
 													<ul class="personal-info">
 														<li>
 															<div class="title">Name</div>
-															<div class="text">Karen Wills</div>
+															<div class="text">{{view_emergency_contact.secondary_name}}</div>
 														</li>
 														<li>
 															<div class="title">Relationship</div>
-															<div class="text">Brother</div>
+															<div class="text">{{view_emergency_contact.secondary_con_relationship}}</div>
 														</li>
 														<li>
 															<div class="title">Phone </div>
-															<div class="text">9876543210, 9876543210</div>
+															<div class="text">{{view_emergency_contact.secondary_phone1}} , {{view_emergency_contact.secondary_phone2}}</div>
 														</li>
 													</ul>
 												</div>
@@ -268,8 +240,12 @@
 
 				<div id="edit-profile-info-form"></div>
 				<div id="edit-personal-info-form"></div>
+				<div id="add-education-info-form"></div>
 				<div id="edit-education-info-form"></div>
+				<div id="add-experience-info-form"></div>
 				<div id="edit-experience-info-form"></div>
+				<div id="add-emergency-contact-form"></div>
+				<div id="edit-emergency-contact-form"></div>
 
             </div>
 			<!-- /Page Wrapper -->
@@ -295,9 +271,19 @@ function editPersonalInfo(UserId) {
     });
 }
 
-function editEducationInfo(UserId) {
+function addEducationInfo(UserId) {
     $.ajax({
-        url: "{% url 'EmpEditEducationInfo' id=0 %}".replace(0, UserId),
+        url: "{% url 'EmpAddEducationInfo' id=0 %}".replace(0, UserId),
+        success: function(response) {
+            $("#add-education-info-form").html(response);
+            $("#add_education_info_model").modal('show');
+        }
+    });
+}
+
+function editEducationInfo(UserId, EduId) {
+    $.ajax({
+        url: "{% url 'EmpEditEducationInfo' id=0 edu_id=1 %}".replace(0, UserId).replace(1, EduId),
         success: function(response) {
             $("#edit-education-info-form").html(response);
             $("#edit_education_info_model").modal('show');
@@ -305,15 +291,46 @@ function editEducationInfo(UserId) {
     });
 }
 
-function editExperienceInfo(UserId) {
+function addExperienceInfo(UserId) {
     $.ajax({
-        url: "{% url 'EmpEditExperienceInfo' id=0 %}".replace(0, UserId),
+        url: "{% url 'EmpAddExperienceInfo' id=0 %}".replace(0, UserId),
+        success: function(response) {
+            $("#add-experience-info-form").html(response);
+            $("#add_experience_info_model").modal('show');
+        }
+    });
+}
+
+function editExperienceInfo(UserId, ExpId) {
+    $.ajax({
+        url: "{% url 'EmpEditExperienceInfo' id=0 exp_id=1 %}".replace(0, UserId).replace(1, ExpId),
         success: function(response) {
             $("#edit-experience-info-form").html(response);
             $("#edit_experience_info_model").modal('show');
         }
     });
 }
+
+function addEmergencyInfo(UserId) {
+    $.ajax({
+        url: "{% url 'EmpAddEmergencyInfo' id=0 %}".replace(0, UserId),
+        success: function(response) {
+            $("#add-emergency-contact-form").html(response);
+            $("#add_emergency_contact_modal").modal('show');
+        }
+    });
+}
+function editEmergencyInfo(UserId, EmgId) {
+    $.ajax({
+        url: "{% url 'EmpEditEmergencyInfo' id=0 emg_id=1 %}".replace(0, UserId).replace(1, EmgId),
+        success: function(response) {
+            $("#edit-emergency-contact-form").html(response);
+            $("#edit_emergency_contact_modal").modal('show');
+        }
+    });
+}
+
+
 </script>
 
 {% endblock body %}

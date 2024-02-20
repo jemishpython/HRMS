@@ -14,12 +14,20 @@ urlpatterns = [
     path("employee", views.EmployeeView, name="AdminEmployeeView"),
     path("employee_list", views.EmployeeListView, name="AdminEmployeeListView"),
     path("employee/add", views.AddEmployee, name="AdminAddEmployee"),
-    # path("employee/edit/<int:id>", views.EditEmployee, name="AdminEditEmployee"),
+    path("employee/edit/<int:id>", views.EditEmployee, name="AdminEditEmployee"),
     path("employee/delete/<int:id>", views.DeleteEmployee, name="AdminDeleteEmployee"),
     path("employee_list/delete/<int:id>", views.DeleteEmployeeList, name="AdminDeleteEmployeeList"),
 
 
     path("employee/profile/<int:id>", views.ProfileView, name="AdminProfileView"),
+    path("employee/profile-info-edit/<int:id>", views.EditProfileInfo, name="EmpEditProfileInfo"),
+    path("employee/personal-info-edit/<int:id>", views.EditPersonalInfo, name="EmpEditPersonalInfo"),
+    path("employee/education-info-add/<int:id>", views.AddEducationInfo, name="EmpAddEducationInfo"),
+    path("employee/education-info-edit/<int:id>/<int:edu_id>", views.EditEducationInfo, name="EmpEditEducationInfo"),
+    path("employee/experience-info-add/<int:id>", views.AddExperienceInfo, name="EmpAddExperienceInfo"),
+    path("employee/experience-info-edit/<int:id>/<int:exp_id>", views.EditExperienceInfo, name="EmpEditExperienceInfo"),
+    path("employee/emergency-contact-add/<int:id>", views.AddEmergencyInfo, name="EmpAddEmergencyInfo"),
+    path("employee/emergency-contact-edit/<int:id>/<int:emg_id>", views.EditEmergencyInfo, name="EmpEditEmergencyInfo"),
 
 
     path("holidays", views.Holidays, name="AdminHolidays"),
@@ -64,4 +72,3 @@ urlpatterns = [
     path("project-assignee/<int:id>", views.AddProjectAssignee, name='AdminAddProjectAssignee'),
 
 ]
-

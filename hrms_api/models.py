@@ -98,10 +98,43 @@ class User(AbstractUser):
 
 class Education_Info(models.Model):
     institution = models.CharField(verbose_name='Institution Name', max_length=50, null=True, blank=True)
+    location = models.CharField(verbose_name='Location Name', max_length=50, null=True, blank=True)
     start_year = models.DateField(verbose_name='Starting Year', max_length=10, null=True, blank=True)
     complete_year = models.DateField(verbose_name='Complete Year', max_length=10, null=True, blank=True)
     degree = models.CharField(verbose_name='Degree Name', max_length=60, null=True, blank=True)
     grade = models.CharField(verbose_name='Grade', max_length=20, null=True, blank=True)
+    employee = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.institution
+
+
+class Experience_Info(models.Model):
+    company_name = models.CharField(verbose_name='Company Name', max_length=50, null=True, blank=True)
+    location = models.CharField(verbose_name='Location Name', max_length=50, null=True, blank=True)
+    start_date = models.DateField(verbose_name='Starting Date', max_length=10, null=True, blank=True)
+    end_date = models.DateField(verbose_name='End Date', max_length=10, null=True, blank=True)
+    role = models.CharField(verbose_name='Role Name', max_length=60, null=True, blank=True)
+    employee = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.company_name
+
+
+class Emergency_Contact(models.Model):
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="phone number entered in format +910987654321 .")
+    primary_name = models.CharField(verbose_name='Name', max_length=50, null=True, blank=True)
+    primary_con_relationship = models.CharField(verbose_name='relationship', max_length=50, null=True, blank=True)
+    primary_phone1 = models.CharField(validators=[phone_regex], max_length=13, null=True)
+    primary_phone2 = models.CharField(validators=[phone_regex], max_length=13, null=True)
+    secondary_name = models.CharField(verbose_name='Name', max_length=50, null=True, blank=True)
+    secondary_con_relationship = models.CharField(verbose_name='relationship', max_length=50, null=True, blank=True)
+    secondary_phone1 = models.CharField(validators=[phone_regex], max_length=13, null=True)
+    secondary_phone2 = models.CharField(validators=[phone_regex], max_length=13, null=True)
+    employee = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.primary_name
 
 
 class Holiday(models.Model):

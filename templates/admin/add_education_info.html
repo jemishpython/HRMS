@@ -1,23 +1,23 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-<!-- Experience Modal -->
-<div class="modal custom-modal fade" id="edit_experience_info_model" role="dialog" tabindex="-1" aria-hidden="true" aria-labelledby="editModelToggleLabel">
+<!-- Education Modal -->
+<div id="add_education_info_model" class="modal custom-modal fade" role="dialog" tabindex="-1" aria-hidden="true" aria-labelledby="editModelToggleLabel">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">Add Experience Informations</h2>
+                <h2 class="modal-title">Add Education Informations</h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'EmpEditExperienceInfo' user.id edit_experience_info.id %}" method="post">
+                <form action="{% url 'EmpAddEducationInfo' user.id %}" method="post">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                {{ form.company_name|as_crispy_field }}
+                                {{ form.institution|as_crispy_field }}
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -25,19 +25,24 @@
                                 {{ form.location|as_crispy_field }}
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                {{ form.role|as_crispy_field }}
+                                {{ form.start_year|as_crispy_field }}
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                {{ form.start_date|as_crispy_field }}
+                                {{ form.complete_year|as_crispy_field }}
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
-                                {{ form.end_date|as_crispy_field }}
+                                {{ form.degree|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                {{ form.grade|as_crispy_field }}
                             </div>
                         </div>
                     </div>
@@ -49,4 +54,4 @@
         </div>
     </div>
 </div>
-<!-- /Experience Modal -->
+<!-- /Education Modal -->

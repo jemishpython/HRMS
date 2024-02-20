@@ -2,7 +2,7 @@
 {% load static %}
 
 <!-- Experience Modal -->
-<div class="modal custom-modal fade" id="edit_experience_info_model" role="dialog" tabindex="-1" aria-hidden="true" aria-labelledby="editModelToggleLabel">
+<div class="modal custom-modal fade" id="add_experience_info_model" role="dialog" tabindex="-1" aria-hidden="true" aria-labelledby="editModelToggleLabel">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -12,7 +12,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'EmpEditExperienceInfo' user.id edit_experience_info.id %}" method="post">
+                <form action="{% url 'EmpAddExperienceInfo' user.id %}" method="post">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6">

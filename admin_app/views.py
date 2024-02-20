@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth import logout, login
 from django.contrib import messages
+from django.contrib.auth.hashers import make_password
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -76,7 +77,9 @@ def AddEmployee(request):
     if request.method == 'POST':
         try:
             if form.is_valid():
-                form.save()
+                add_emp = form.save(commit=False)
+                add_emp.password = make_password(form.cleaned_data['password'])
+                add_emp.save()
                 messages.success(request, 'Employee add successfully')
                 return redirect('AdminEmployeeView')
         except Exception as e:
@@ -143,7 +146,6 @@ def DeleteHolidays(request, id):
     delete_holiday = Holiday.objects.get(id=id)
     delete_holiday.delete()
     return redirect('AdminHolidays')
-
 
 
 def DepartmentView(request):
@@ -361,7 +363,6 @@ def AddProjectTask(request, id):
     add_project_id = Project.objects.get(id=id)
     form = AddTaskForm(request.POST or None)
     if request.method == 'POST':
-        # form = AddTaskForm(request.POST or None)
         if form.is_valid():
             task = form.save(commit=False)
             task.task_project = Project.objects.get(id=id)
