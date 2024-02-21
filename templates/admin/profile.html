@@ -30,35 +30,35 @@
 											<div class="row">
 												<div class="col-md-5">
 													<div class="profile-info-left">
-														<h3 class="user-name m-t-0 mb-0">{{user_details.username}}</h3>
-														<h6 class="text-muted">{{user_details.department}}</h6>
-														<small class="text-muted">{{user_details.designation}}</small>.
-														<small class="text-muted">{{user_details.technology}}</small>
+														<h3 class="user-name m-t-0 mb-0">{{profile.username}}</h3>
+														<h6 class="text-muted">{{profile.department}}</h6>
+														<small class="text-muted">{{profile.designation}}</small>.
+														<small class="text-muted">{{profile.technology}}</small>
 														<div class="staff-id">Employee ID : FT-0001</div>
-														<div class="small doj text-muted">Date of Join : {{user_details.date_joined|date:'d F Y'}}</div>
+														<div class="small doj text-muted">Date of Join : {{profile.date_joined|date:'d F Y'}}</div>
 													</div>
 												</div>
 												<div class="col-md-7">
 													<ul class="personal-info">
 														<li>
 															<div class="title">Phone</div>
-															<div class="text"><a href="">{{user_details.phone}}</a></div>
+															<div class="text"><a href="">{{profile.phone}}</a></div>
 														</li>
 														<li>
 															<div class="title">Email</div>
-															<div class="text"><a href="">{{user_details.email}}</a></div>
+															<div class="text"><a href="">{{profile.email}}</a></div>
 														</li>
 														<li>
 															<div class="title">Birthday</div>
-															<div class="text">{{user_details.dob|date:'d F Y'}}</div>
+															<div class="text">{{profile.dob|date:'d F Y'}}</div>
 														</li>
 														<li>
 															<div class="title">Address</div>
-															<div class="text">{{user_details.address}}</div>
+															<div class="text">{{profile.address}}</div>
 														</li>
 														<li>
 															<div class="title">Gender</div>
-															<div class="text">{{user_details.gender}}</div>
+															<div class="text">{{profile.gender}}</div>
 														</li>
 													</ul>
 												</div>
@@ -87,15 +87,15 @@
 											<ul class="personal-info">
 												<li>
 													<div class="title">Nationality</div>
-													<div class="text">{{user_details.nationality}}</div>
+													<div class="text">{{profile.nationality}}</div>
 												</li>
 												<li>
 													<div class="title">Religion</div>
-													<div class="text">{{user_details.religion}}</div>
+													<div class="text">{{profile.religion}}</div>
 												</li>
 												<li>
 													<div class="title">Marital status</div>
-													<div class="text">{{user_details.marital_status}}</div>
+													<div class="text">{{profile.marital_status}}</div>
 												</li>
 											</ul>
 										</div>

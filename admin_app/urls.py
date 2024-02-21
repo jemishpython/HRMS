@@ -14,7 +14,6 @@ urlpatterns = [
     path("employee", views.EmployeeView, name="AdminEmployeeView"),
     path("employee_list", views.EmployeeListView, name="AdminEmployeeListView"),
     path("employee/add", views.AddEmployee, name="AdminAddEmployee"),
-    path("employee/edit/<int:id>", views.EditEmployee, name="AdminEditEmployee"),
     path("employee/delete/<int:id>", views.DeleteEmployee, name="AdminDeleteEmployee"),
     path("employee_list/delete/<int:id>", views.DeleteEmployeeList, name="AdminDeleteEmployeeList"),
 
