@@ -12,7 +12,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'EmpEditEducationInfo' user.id edit_education_info.id%}" method="post">
+                <form action="{% url 'AdminEditEducationInfo' user.id edit_education_info.id%}" method="post">
                     {% csrf_token %}
                     <div class="card">
                         <h3 class="card-title">Education Information <a href="javascript:void(0);" class="delete-icon"><i class="fa fa-trash-o"></i></a></h3>

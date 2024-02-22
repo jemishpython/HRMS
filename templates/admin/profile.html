@@ -1,4 +1,4 @@
-{% extends 'employee/base.html' %}
+{% extends 'admin/base.html' %}
 {% load static %}
 {% block body %}
 			<!-- Page Wrapper -->
@@ -26,9 +26,16 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="profile-view">
+										<div class="profile-img-wrap">
+											<div class="profile-img">
+												{% if profile.avatar %}
+												<img alt="Profile Image" src="{{profile.avatar.url}}" class="object-fit-cover">
+												{% endif %}
+											</div>
+										</div>
 										<div class="profile-basic">
 											<div class="row">
-												<div class="col-md-5">
+												<div class="col-md-4 ml-4">
 													<div class="profile-info-left">
 														<h3 class="user-name m-t-0 mb-0">{{profile.username}}</h3>
 														<h6 class="text-muted">{{profile.department}}</h6>
@@ -65,7 +72,7 @@
 											</div>
 										</div>
 										<div class="pro-edit">
-											<button class="edit-icon" onclick="editProfileInfo({{user_details.id}})"><i class="fa fa-pencil"></i></button>
+											<button class="edit-icon" onclick="editProfileInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
 										</div>
 									</div>
 								</div>
@@ -82,7 +89,7 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
-											<button class="edit-icon" onclick="editPersonalInfo({{user_details.id}})"><i class="fa fa-pencil"></i></button>
+											<button class="edit-icon" onclick="editPersonalInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
 											<h3 class="card-title">Personal Information</h3>
 											<ul class="personal-info">
 												<li>
@@ -135,7 +142,7 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
-											<button class="edit-icon ml-2" onclick="addEducationInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
+											<button class="edit-icon ml-2" onclick="addEducationInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
 											<h3 class="card-title">Education Information</h3>
 											<div class="experience-box">
 												<ul class="experience-list">
@@ -146,7 +153,7 @@
 														</div>
 														<div class="experience-content">
 															<div class="timeline-content">
-																<h4 class="text-dark cursor_pointer" onclick="editEducationInfo({{user_details.id}}, {{edu_info.id}})" title="Edit">{{edu_info.institution}}</h4>
+																<h4 class="text-dark cursor_pointer" onclick="editEducationInfo({{profile.id}}, {{edu_info.id}})" title="Edit">{{edu_info.institution}}</h4>
 																<div class="text-dark">{{edu_info.degree}}<span class="ml-2">| Grade :  {{edu_info.grade}}</span></div>
 																<span class="">{{edu_info.start_year|date:'F - Y'}} - {{edu_info.complete_year|date:'F - Y'}}</span>
 															</div>
@@ -161,7 +168,7 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
-											<button class="edit-icon" onclick="addExperienceInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
+											<button class="edit-icon" onclick="addExperienceInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
 											<h3 class="card-title">Experience</h3>
 											<div class="experience-box">
 												<ul class="experience-list">
@@ -172,7 +179,7 @@
 														</div>
 														<div class="experience-content">
 															<div class="timeline-content">
-																<h4 class="text-dark cursor_pointer" onclick="editExperienceInfo({{user_details.id}}, {{exp.id}})" title="Edit">{{exp.company_name}}</h4>
+																<h4 class="text-dark cursor_pointer" onclick="editExperienceInfo({{profile.id}}, {{exp.id}})" title="Edit">{{exp.company_name}}</h4>
 																<span class="">{{exp.start_date|date:'M , Y'}} - {{exp.end_date|date:'M , Y'}}</span>
 															</div>
 														</div>
@@ -188,8 +195,8 @@
 								<div class="col-md-12 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
-											<button class="edit-icon ml-2" onclick="addEmergencyInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
-											<button class="edit-icon mr-1" onclick="editEmergencyInfo({{user_details.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
+											<button class="edit-icon ml-2" onclick="addEmergencyInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
+											<button class="edit-icon mr-1" onclick="editEmergencyInfo({{profile.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
 											<h2 class="card-title">Emergency Contact</h2>
 											<div class="d-flex">
 												<div class="col-md-6 border-right">
@@ -253,7 +260,7 @@
 <script>
 function editProfileInfo(UserId) {
     $.ajax({
-        url: "{% url 'EmpEditProfileInfo' id=0 %}".replace(0, UserId),
+        url: "{% url 'AdminEditProfileInfo' id=0 %}".replace(0, UserId),
         success: function(response) {
             $("#edit-profile-info-form").html(response);
             $("#edit_profile_info_model").modal('show');
@@ -263,7 +270,7 @@ function editProfileInfo(UserId) {
 
 function editPersonalInfo(UserId) {
     $.ajax({
-        url: "{% url 'EmpEditPersonalInfo' id=0 %}".replace(0, UserId),
+        url: "{% url 'AdminEditPersonalInfo' id=0 %}".replace(0, UserId),
         success: function(response) {
             $("#edit-personal-info-form").html(response);
             $("#edit_personal_info_model").modal('show');
@@ -273,7 +280,7 @@ function editPersonalInfo(UserId) {
 
 function addEducationInfo(UserId) {
     $.ajax({
-        url: "{% url 'EmpAddEducationInfo' id=0 %}".replace(0, UserId),
+        url: "{% url 'AdminAddEducationInfo' id=0 %}".replace(0, UserId),
         success: function(response) {
             $("#add-education-info-form").html(response);
             $("#add_education_info_model").modal('show');
@@ -283,7 +290,7 @@ function addEducationInfo(UserId) {
 
 function editEducationInfo(UserId, EduId) {
     $.ajax({
-        url: "{% url 'EmpEditEducationInfo' id=0 edu_id=1 %}".replace(0, UserId).replace(1, EduId),
+        url: "{% url 'AdminEditEducationInfo' id=0 edu_id=1 %}".replace(0, UserId).replace(1, EduId),
         success: function(response) {
             $("#edit-education-info-form").html(response);
             $("#edit_education_info_model").modal('show');
@@ -293,7 +300,7 @@ function editEducationInfo(UserId, EduId) {
 
 function addExperienceInfo(UserId) {
     $.ajax({
-        url: "{% url 'EmpAddExperienceInfo' id=0 %}".replace(0, UserId),
+        url: "{% url 'AdminAddExperienceInfo' id=0 %}".replace(0, UserId),
         success: function(response) {
             $("#add-experience-info-form").html(response);
             $("#add_experience_info_model").modal('show');
@@ -303,7 +310,7 @@ function addExperienceInfo(UserId) {
 
 function editExperienceInfo(UserId, ExpId) {
     $.ajax({
-        url: "{% url 'EmpEditExperienceInfo' id=0 exp_id=1 %}".replace(0, UserId).replace(1, ExpId),
+        url: "{% url 'AdminEditExperienceInfo' id=0 exp_id=1 %}".replace(0, UserId).replace(1, ExpId),
         success: function(response) {
             $("#edit-experience-info-form").html(response);
             $("#edit_experience_info_model").modal('show');
@@ -313,7 +320,7 @@ function editExperienceInfo(UserId, ExpId) {
 
 function addEmergencyInfo(UserId) {
     $.ajax({
-        url: "{% url 'EmpAddEmergencyInfo' id=0 %}".replace(0, UserId),
+        url: "{% url 'AdminAddEmergencyInfo' id=0 %}".replace(0, UserId),
         success: function(response) {
             $("#add-emergency-contact-form").html(response);
             $("#add_emergency_contact_modal").modal('show');
@@ -322,7 +329,7 @@ function addEmergencyInfo(UserId) {
 }
 function editEmergencyInfo(UserId, EmgId) {
     $.ajax({
-        url: "{% url 'EmpEditEmergencyInfo' id=0 emg_id=1 %}".replace(0, UserId).replace(1, EmgId),
+        url: "{% url 'AdminEditEmergencyInfo' id=0 emg_id=1 %}".replace(0, UserId).replace(1, EmgId),
         success: function(response) {
             $("#edit-emergency-contact-form").html(response);
             $("#edit_emergency_contact_modal").modal('show');

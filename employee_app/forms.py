@@ -26,7 +26,7 @@ class EditLeaveForm(forms.ModelForm):
 class EditProfileInfoForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'phone', 'dob', 'email', 'address', 'gender', 'date_joined', 'department', 'designation', 'technology']
+        fields = ['username', 'phone', 'dob', 'email', 'address', 'gender', 'date_joined', 'department', 'designation', 'technology', 'avatar']
         widgets = {
             'dob': forms.DateInput(attrs={'type': 'date'}),
             'date_joined': forms.DateInput(attrs={'type': 'date'}),

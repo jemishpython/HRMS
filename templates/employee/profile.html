@@ -26,6 +26,13 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="profile-view">
+										<div class="profile-img-wrap">
+											<div class="profile-img">
+												{% if user_details.avatar %}
+												<img alt="Profile Image" src="{{user_details.avatar.url}}" class="object-fit-fill">
+												{% endif %}
+											</div>
+										</div>
 										<div class="profile-basic">
 											<div class="row">
 												<div class="col-md-5">

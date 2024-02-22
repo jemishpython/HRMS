@@ -107,7 +107,7 @@ def ProfileView(request, id):
     profile = User.objects.get(id=id)
     view_education_info = Education_Info.objects.filter(employee=id).order_by('start_year')
     view_experience_info = Experience_Info.objects.filter(employee=id).order_by('start_date')
-    view_emergency_contact = Emergency_Contact.objects.get(employee=id)
+    view_emergency_contact = Emergency_Contact.objects.filter(employee=id).first()
 
     context = {
         'profile': profile,
@@ -120,7 +120,7 @@ def ProfileView(request, id):
 
 def EditProfileInfo(request, id):
     edit_profile_info = User.objects.get(id=id)
-    form = EditProfileInfoForm(request.POST or None, instance=edit_profile_info)
+    form = EditProfileInfoForm(request.POST or None, request.FILES, instance=edit_profile_info)
     if request.method == 'POST':
         try:
             if form.is_valid():
@@ -227,7 +227,7 @@ def AddEmergencyInfo(request, id):
         except Exception as e:
             form = AddEmergencyContactForm()
     context = {'form': form}
-    return render(request, "employee/add_emergency_contact.html", context)
+    return render(request, "admin/add_emergency_contact.html", context)
 
 
 def EditEmergencyInfo(request, id, emg_id):

@@ -83,7 +83,7 @@ def ProfileView(request, id):
 
 def EditProfileInfo(request, id):
     edit_profile_info = User.objects.get(id=id)
-    form = EditProfileInfoForm(request.POST or None, instance=edit_profile_info)
+    form = EditProfileInfoForm(request.POST or None, request.FILES, instance=edit_profile_info)
     if request.method == 'POST':
         try:
             if form.is_valid():

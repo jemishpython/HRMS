@@ -12,14 +12,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'EmpEditProfileInfo' edit_profile_info.id %}" method="POST" id="form" enctype="multipart/form-data">
+                <form action="{% url 'AdminEditProfileInfo' edit_profile_info.id %}" method="POST" id="form" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-12">
                             <div class="profile-img-wrap edit-img">
-                                <div class="fileupload btn">
-                                    {{ form.avatar|as_crispy_field }}
-                                </div>
+<!--                                <img class="inline-block" src="assets/img/profiles/avatar-02.jpg" alt="user">-->
+                                
                             </div>
                             <div class="row">
                                 <div class="col-md-6">

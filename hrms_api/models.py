@@ -76,7 +76,7 @@ class User(AbstractUser):
     report_to = models.CharField(verbose_name='Report to', blank=True, null=True, max_length=255)
     is_admin = models.BooleanField(verbose_name='is admin', default=False, blank=True)
     is_staff = models.BooleanField(verbose_name='is staff', default=False, blank=True)
-    avatar = models.ImageField(verbose_name='Profile Image', upload_to='avatars', blank=True, null=True)
+    avatar = models.ImageField(verbose_name='Profile Image', upload_to='avatars/', blank=True, null=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     designation = models.ForeignKey(Designation, on_delete=models.CASCADE, null=True, blank=True)
     date_joined = models.DateField(verbose_name='Date of Joining', null=True, blank=True)

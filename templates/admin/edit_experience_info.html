@@ -12,7 +12,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'EmpEditExperienceInfo' user.id edit_experience_info.id %}" method="post">
+                <form action="{% url 'AdminEditExperienceInfo' user.id edit_experience_info.id %}" method="post">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6">
