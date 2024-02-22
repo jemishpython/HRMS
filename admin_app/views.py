@@ -107,13 +107,13 @@ def ProfileView(request, id):
     profile = User.objects.get(id=id)
     view_education_info = Education_Info.objects.filter(employee=id).order_by('start_year')
     view_experience_info = Experience_Info.objects.filter(employee=id).order_by('start_date')
-    # view_emergency_contact = Emergency_Contact.objects.get(employee=id)
+    view_emergency_contact = Emergency_Contact.objects.get(employee=id)
 
     context = {
         'profile': profile,
         'view_education_info': view_education_info,
         'view_experience_info': view_experience_info,
-        # 'view_emergency_contact': view_emergency_contact
+        'view_emergency_contact': view_emergency_contact
     }
     return render(request, "admin/profile.html", context)
 
@@ -126,7 +126,7 @@ def EditProfileInfo(request, id):
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Profile Info Update successfully')
-                return redirect('EmpProfileView', id=id)
+                return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = EditProfileInfoForm(instance=edit_profile_info)
     context = {'form': form, 'edit_profile_info': edit_profile_info}
@@ -141,7 +141,7 @@ def EditPersonalInfo(request, id):
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Personal Info Update successfully')
-                return redirect('EmpProfileView', id=id)
+                return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = EditPersonalInfoForm(instance=edit_personal_info)
     context = {'form': form, 'edit_personal_info': edit_personal_info}
@@ -157,7 +157,7 @@ def AddEducationInfo(request, id):
                 education.employee = User.objects.get(id=id)
                 education.save()
                 messages.success(request, 'Education Info Add successfully')
-                return redirect('EmpProfileView', id=id)
+                return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = AddEducationInfoForm()
     context = {'form': form}
@@ -174,7 +174,7 @@ def EditEducationInfo(request, id, edu_id):
                 education.employee = User.objects.get(id=id)
                 education.save()
                 messages.success(request, 'Education Info Update successfully')
-                return redirect('EmpProfileView', id=id)
+                return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = EditEducationInfoForm(instance=edit_education_info)
     context = {'form': form, 'edit_education_info': edit_education_info}
@@ -190,7 +190,7 @@ def AddExperienceInfo(request, id):
                 experience.employee = User.objects.get(id=id)
                 experience.save()
                 messages.success(request, 'Experience Info Add successfully')
-                return redirect('EmpProfileView', id=id)
+                return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = AddExperienceInfoForm()
     context = {'form': form}
@@ -207,7 +207,7 @@ def EditExperienceInfo(request, id, exp_id):
                 experience.employee = User.objects.get(id=id)
                 experience.save()
                 messages.success(request, 'Experience Info Update successfully')
-                return redirect('EmpProfileView', id=id)
+                return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = EditExperienceInfoForm(instance=edit_experience_info)
     context = {'form': form, 'edit_experience_info': edit_experience_info}
@@ -223,7 +223,7 @@ def AddEmergencyInfo(request, id):
                 emergency_contact.employee = User.objects.get(id=id)
                 emergency_contact.save()
                 messages.success(request, 'Experience Info Add successfully')
-                return redirect('EmpProfileView', id=id)
+                return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = AddEmergencyContactForm()
     context = {'form': form}
@@ -240,11 +240,11 @@ def EditEmergencyInfo(request, id, emg_id):
                 emergency_contact.employee = User.objects.get(id=id)
                 emergency_contact.save()
                 messages.success(request, 'Experience Info Update successfully')
-                return redirect('EmpProfileView', id=id)
+                return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = EditEmergencyContactForm(instance=edit_emergency_contact)
     context = {'form': form, 'edit_emergency_contact': edit_emergency_contact}
-    return render(request, "employee/edit_emergency_contact.html", context)
+    return render(request, "admin/edit_emergency_contact.html", context)
 
 
 def Holidays(request):
@@ -537,7 +537,7 @@ def DeleteProjectTask(request, id, projectid):
     project_id = Project.objects.get(id=projectid)
     delete_leave = Task.objects.get(id=id)
     delete_leave.delete()
-    return redirect('EmpLeaves', id=project_id.id)
+    return redirect('AdminProjectTaskList', id=project_id.id)
 
 
 def AddTaskAssign(request, id):
