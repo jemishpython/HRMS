@@ -3,7 +3,6 @@ from datetime import datetime
 from django.contrib.auth import logout, login
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, AddDepartmentForm, EditDepartmentForm, \
@@ -33,10 +32,10 @@ def Login(request):
         adminpassword = request.POST.get('adminpassword')
         try:
             user = User.objects.get(phone=adminphone)
-        except:
+        except User.DoesNotExist:
             messages.error(request, "Invalid credentials")
             return redirect('AdminLogin')
-        if user.is_active:
+        if user.is_active or user.is_admin:
             if user.check_password(adminpassword):
                 login(request, user)
                 return redirect('AdminIndex')
@@ -120,7 +119,7 @@ def ProfileView(request, id):
 
 def EditProfileInfo(request, id):
     edit_profile_info = User.objects.get(id=id)
-    form = EditProfileInfoForm(request.POST or None, request.FILES, instance=edit_profile_info)
+    form = EditProfileInfoForm(request.POST or None, request.FILES or None, instance=edit_profile_info)
     if request.method == 'POST':
         try:
             if form.is_valid():
@@ -370,7 +369,7 @@ def UpdateDesignation(request, id):
     return render(request, "admin/edit_designation.html", context)
 
 
-def DeleteDesignation(request,id):
+def DeleteDesignation(request, id):
     delete_designation = Designation.objects.get(id=id)
     delete_designation.delete()
     return redirect('AdminDesignationView')
@@ -413,7 +412,7 @@ def UpdateTechnology(request, id):
     return render(request, "admin/edit_technology.html", context)
 
 
-def DeleteTechnology(request,id):
+def DeleteTechnology(request, id):
     delete_technology = Technology.objects.get(id=id)
     delete_technology.delete()
     return redirect('AdminTechnologyView')
@@ -457,7 +456,7 @@ def UpdateProject(request, id):
     return render(request, "admin/edit_project.html", context)
 
 
-def DeleteProject(request,id):
+def DeleteProject(request, id):
     delete_project = Project.objects.get(id=id)
     delete_project.delete()
     return redirect('AdminProjectsView')
@@ -513,7 +512,7 @@ def AddProjectTask(request, id):
             return redirect('AdminProjectTaskList', id=id)
     else:
         form = AddTaskForm()
-    context = {'form': form, 'add_project_id':add_project_id}
+    context = {'form': form, 'add_project_id': add_project_id}
     return render(request, "admin/add_task.html", context)
 
 
@@ -529,7 +528,7 @@ def EditProjectTask(request, id, projectid):
                 return redirect('AdminProjectTaskList', id=projectid.id)
         except Exception as e:
             form = EditTaskForm(instance=edit_task)
-    context = {'form': form, 'edit_task': edit_task, 'projectid':projectid}
+    context = {'form': form, 'edit_task': edit_task, 'projectid': projectid}
     return render(request, "admin/edit_task.html", context)
 
 

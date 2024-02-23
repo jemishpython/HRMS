@@ -9,7 +9,7 @@
           name="keywords">
     <meta content="Dreamguys - Bootstrap Admin Template" name="author">
     <meta content="noindex, nofollow" name="robots">
-    <title>Login - Webmigrates HRMS</title>
+    <title>Register -Webmigrates HRMS</title>
 
     <!-- Favicon -->
     <link href="{% static 'img/favicon.png' %}" rel="shortcut icon" type="image/x-icon">
@@ -49,77 +49,64 @@
     <script src="{% static 'js/html5shiv.min.js' %}"></script>
     <script src="{% static 'js/respond.min.js"' %}></script>
     <![endif]-->
-
-    <style>
-        *{
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          user-select: none;
-        }
-        .bg-img{
-            background: url('/media/landing_page.jpg');
-            height: 100vh;
-            background-size: cover;
-            background-position: center;
-        }
-        .bg-img:after{
-          position: absolute;
-          content: '';
-          top: 0;
-          left: 0;
-          height: 100%;
-          width: 100%;
-          background: rgba(0,0,0,0.0);
-        }
-        .content{
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          z-index: 999;
-          text-align: center;
-          padding: 5rem 6rem;
-          width: 30rem;
-          transform: translate(-50%,-50%);
-          background: rgba(0,0,0,0.5);
-          box-shadow: -2px 5px 5px 0px rgba(0,0,0,0.8);
-        }
-        .content header{
-          color: white;
-          font-size: 33px;
-          font-weight: 600;
-          margin: 0 0 35px 0;
-          font-family: 'Montserrat',sans-serif;
-        }
-    </style>
 </head>
 <body>
-<div class="bg-img">
-    <div class="content">
-        <header>Employee Login</header>
-        <form action="{% url 'EmployeeLogin' %}" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <input class="form-control" name="employeephone" type="number" placeholder="Phone">
-            </div>
-            <div class="form-group">
-                <div class="row mb-2">
-                    <div class="col"></div>
-                    <div class="col-auto">
-                        <a class="text-light" href="forgot-password.html">Forgot password ?</a>
+
+<div class="account-page mt-5 pt-5">
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+        <div class="account-content">
+            <!--				<a href="job-list.html" class="btn btn-primary apply-btn">Apply Job</a>-->
+            <div class="container">
+
+                <!-- Account Logo -->
+                <div class="account-logo">
+                    <a href=""><img alt="Dreamguy's Technologies" src="{% static 'img/logo2.png' %}"></a>
+                </div>
+                <!-- /Account Logo -->
+
+                <div class="account-box">
+                    <div class="account-wrapper">
+                        <h3 class="account-title">Employee Login</h3>
+                        <!--							<p class="account-subtitle">Access to our dashboard</p>-->
+
+                        <!-- Account Form -->
+                        <form action="{% url 'EmployeeLogin' %}" method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <input class="form-control" name="employeephone" type="number">
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col">
+                                        <label>Password</label>
+                                    </div>
+                                    <div class="col-auto">
+                                        <a class="text-muted" href="forgot-password.html">
+                                            Forgot password?
+                                        </a>
+                                    </div>
+                                </div>
+                                <input class="form-control" name="employeepassword" type="password">
+                            </div>
+                            <div class="form-group text-center">
+                                <button class="btn btn-primary account-btn" type="submit">Login</button>
+                            </div>
+                            <div class="account-footer">
+                                <p>Don't have an account yet? <a href="admin_register">Register</a></p>
+                            </div>
+                        </form>
+                        <!-- /Account Form -->
+
                     </div>
                 </div>
-                <input class="form-control" name="employeepassword" type="password" placeholder="Password">
             </div>
-            <div class="form-group text-center">
-                <button class="btn btn-primary account-btn form-control" type="submit">Login</button>
-            </div>
-            <div class="account-footer text-light">
-                <p>Don't have an account yet? <a href="admin_register">Register</a></p>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+<!-- /Main Wrapper -->
 
 
 <!-- jQuery -->

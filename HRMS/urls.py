@@ -19,13 +19,15 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
+from admin_app import views
 from employee_app.views import landing
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", landing, name='landing'),
-    path("hrms_admin/", include('admin_app.urls')),
-    path("hrms_employee/", include('employee_app.urls')),
+    path("hrms/admin/", include('admin_app.urls')),
+    path("hrms/employee/", include('employee_app.urls')),
+    path('login/', views.Login, name="Login"),
 ]
 
 if settings.DEBUG:

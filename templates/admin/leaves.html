@@ -95,8 +95,9 @@
 										<tr>
 											<td>
 												<h2 class="table-avatar">
-													<a href="profile.html" class="avatar"><img alt="" src="assets/img/profiles/avatar-09.jpg"></a>
-													<a href="#">{{leave.leave_user}} <span>{{leave.leave_user.designation}}. {{leave.leave_user.technology}}</span></a>
+													<a href="profile.html" class="avatar"><img alt="" src="{{leave.leave_user.avatar.url}}"></a>
+													<a href="#">{{leave.leave_user.username}}<span>{{leave.leave_user.designation|default:""}}. {{leave.leave_user.technology|default:""}}</span></a>
+
 												</h2>
 											</td>
 											<td>{{leave.leave_type}}</td>

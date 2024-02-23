@@ -65,7 +65,7 @@
 						<div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
 							<div class="profile-widget">
 								<div class="profile-img">
-									<a href="{% url 'AdminProfileView' employee.id %}" class="avatar"><img src="" alt="employee image"></a>
+									<a href="{% url 'AdminProfileView' employee.id %}" class="avatar"><img src="{{employee.avatar.url}}" alt="employee image"></a>
 								</div>
 								<div class="dropdown profile-action">
 									<button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger" onclick="deleteEmployee({{employee.id}})"><i class="las la-lg la-trash"></i></button>

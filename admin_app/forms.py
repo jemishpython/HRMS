@@ -110,9 +110,10 @@ class EditTaskForm(forms.ModelForm):
 
 
 class EditProfileInfoForm(forms.ModelForm):
+    avatar = forms.ImageField(label='')
     class Meta:
         model = User
-        fields = ['username', 'phone', 'dob', 'email', 'address', 'gender', 'date_joined', 'department', 'designation', 'technology']
+        fields = ['username', 'phone', 'dob', 'email', 'address', 'gender', 'date_joined', 'department', 'designation', 'technology','avatar']
         widgets = {
             'dob': forms.DateInput(attrs={'type': 'date'}),
             'date_joined': forms.DateInput(attrs={'type': 'date'}),
@@ -133,6 +134,7 @@ class AddEducationInfoForm(forms.ModelForm):
             'start_year': forms.DateInput(attrs={'type': 'date'}),
             'complete_year': forms.DateInput(attrs={'type': 'date'}),
         }
+
 
 
 class EditEducationInfoForm(forms.ModelForm):

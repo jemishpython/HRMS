@@ -76,7 +76,7 @@ class User(AbstractUser):
     report_to = models.CharField(verbose_name='Report to', blank=True, null=True, max_length=255)
     is_admin = models.BooleanField(verbose_name='is admin', default=False, blank=True)
     is_staff = models.BooleanField(verbose_name='is staff', default=False, blank=True)
-    avatar = models.ImageField(verbose_name='Profile Image', upload_to='avatars/', blank=True, null=True)
+    avatar = models.ImageField(verbose_name='Profile Image', upload_to='avatars/', default='avatars/306473.png')
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     designation = models.ForeignKey(Designation, on_delete=models.CASCADE, null=True, blank=True)
     date_joined = models.DateField(verbose_name='Date of Joining', null=True, blank=True)
@@ -125,13 +125,13 @@ class Emergency_Contact(models.Model):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="phone number entered in format +910987654321 .")
     primary_name = models.CharField(verbose_name='Name', max_length=50, null=True, blank=True)
     primary_con_relationship = models.CharField(verbose_name='relationship', max_length=50, null=True, blank=True)
-    primary_phone1 = models.CharField(validators=[phone_regex], max_length=13, null=True)
-    primary_phone2 = models.CharField(validators=[phone_regex], max_length=13, null=True)
+    primary_phone1 = models.CharField(validators=[phone_regex], max_length=13, null=True, blank=True)
+    primary_phone2 = models.CharField(validators=[phone_regex], max_length=13, null=True, blank=True)
     secondary_name = models.CharField(verbose_name='Name', max_length=50, null=True, blank=True)
     secondary_con_relationship = models.CharField(verbose_name='relationship', max_length=50, null=True, blank=True)
-    secondary_phone1 = models.CharField(validators=[phone_regex], max_length=13, null=True)
-    secondary_phone2 = models.CharField(validators=[phone_regex], max_length=13, null=True)
-    employee = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    secondary_phone1 = models.CharField(validators=[phone_regex], max_length=13, null=True, blank=True)
+    secondary_phone2 = models.CharField(validators=[phone_regex], max_length=13, null=True, blank=True)
+    employee = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.primary_name
@@ -153,12 +153,26 @@ class Project(models.Model):
     project_cost = models.CharField(verbose_name='Project Cost', max_length=50, null=True, blank=True)
     project_priority = models.CharField(verbose_name='Project Priority', choices=ProjectPriorityChoice.choices, default=ProjectPriorityChoice.HIGH, max_length=255, null=True, blank=True)
     project_summary = models.TextField(verbose_name='Project Summary', max_length=1000, null=True, blank=True)
-    project_image = models.ImageField(verbose_name='Project Image', max_length=255, null=True, blank=True)
-    project_file = models.FileField(verbose_name='Project File', max_length=255, null=True, blank=True)
     project_status = models.CharField(verbose_name='Project Status', choices=ProjectStatusChoice.choices, default=ProjectStatusChoice.NOT_STARTED, max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.project_name
+
+
+class ProjectImages(models.Model):
+    project_image = models.ImageField(verbose_name='Project Image', upload_to='project_images/')
+    project = models.ForeignKey(Project, verbose_name='Project Id', on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.project
+
+
+class ProjectFile(models.Model):
+    project_file = models.FileField(verbose_name='Project Image', upload_to='project_images/')
+    project = models.ForeignKey(Project, verbose_name='Project Id', on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.project
 
 
 class Task(models.Model):
@@ -178,10 +192,10 @@ class Leave(models.Model):
     leave_days = models.IntegerField(verbose_name='Leave Days', null=True, blank=True)
     leave_reason = models.CharField(verbose_name='Leave Reason', max_length=255, null=True, blank=True)
     leave_status = models.CharField(verbose_name='Leave Status', max_length=100, choices=LeaveStatusChoice.choices, default=LeaveStatusChoice.NEW, null=True, blank=True)
-    leave_user = models.ForeignKey(User, verbose_name='User Name', on_delete=models.DO_NOTHING, null=True)
+    leave_user = models.ForeignKey(User, verbose_name='User Name', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.leave_type
+        return self.leave_type or "Leave"
 
 
 class ProjectAssign(models.Model):

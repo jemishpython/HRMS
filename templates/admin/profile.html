@@ -29,7 +29,7 @@
 										<div class="profile-img-wrap">
 											<div class="profile-img">
 												{% if profile.avatar %}
-												<img alt="Profile Image" src="{{profile.avatar.url}}" class="object-fit-cover">
+												<img alt="Profile Image" src="{{profile.avatar.url}}">
 												{% endif %}
 											</div>
 										</div>
@@ -198,6 +198,7 @@
 											<button class="edit-icon ml-2" onclick="addEmergencyInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
 											<button class="edit-icon mr-1" onclick="editEmergencyInfo({{profile.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
 											<h2 class="card-title">Emergency Contact</h2>
+											{% if view_emergency_contact %}
 											<div class="d-flex">
 												<div class="col-md-6 border-right">
 													<h4 class="section-title">Primary</h4>
@@ -234,6 +235,7 @@
 													</ul>
 												</div>
 											</div>
+											{% endif %}
 										</div>
 									</div>
 								</div>

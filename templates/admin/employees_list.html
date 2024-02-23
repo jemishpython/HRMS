@@ -76,23 +76,23 @@
 										</tr>
 									</thead>
 									<tbody>
-									{% for x in employeedetails %}
+									{% for emp in employeedetails %}
 										<tr>
 											<td>
 												<h2 class="table-avatar">
-													<a href="admin_profile" class="avatar"><img alt="" src="assets/img/profiles/avatar-02.jpg"></a>
-													<a href="admin_profile">{{x.username}} <span>{{x.designation}}</span></a>
+													<a href="admin_profile" class="avatar"><img alt="" src="{{emp.avatar.url}}"></a>
+													<a href="admin_profile">{{emp.username}} <span>{{emp.designation}}</span></a>
 												</h2>
 											</td>
-											<td>EMP-{{x.id}}</td>
-											<td>{{x.email}}</td>
-											<td>{{x.phone}}</td>
-											<td>{{x.date_joined|date:"d M Y"}}</td>
-											<td>{{x.department}}</td>
+											<td>EMP-{{emp.id}}</td>
+											<td>{{emp.email}}</td>
+											<td>{{emp.phone}}</td>
+											<td>{{emp.date_joined|date:"d M Y"}}</td>
+											<td>{{emp.department}}</td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
 														<a class="p-0 mr-4 text-info" href="#" data-toggle="modal" data-target="#edit_employee">Edit</a>
-														<a class="px-1 py-0 text-danger" href="employee/delete/{{x.id}}" data-toggle="modal" data-target="#delete_employee" data-href="{% url 'AdminDeleteEmployeeList' x.id %}">Delete</a>
+														<a class="px-1 py-0 text-danger" href="employee/delete/{{emp.id}}" data-toggle="modal" data-target="#delete_employee" data-href="{% url 'AdminDeleteEmployeeList' emp.id %}">Delete</a>
 												</div>
 											</td>
 										</tr>

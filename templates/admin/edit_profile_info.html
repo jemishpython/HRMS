@@ -16,9 +16,15 @@
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="profile-img-wrap edit-img">
-<!--                                <img class="inline-block" src="assets/img/profiles/avatar-02.jpg" alt="user">-->
-                                
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="profile-img-wrap edit-img">
+                                        <img class="inline-block" src="{{edit_profile_info.avatar.url}}" alt="user">
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    {{ form.avatar|as_crispy_field }}
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -84,4 +90,13 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('avatar-clear_id').addEventListener('change', function() {
+        var button = document.getElementById('id_avatar');
+        button.disabled = this.checked;
+        document.getElementById("form").reset();
+    });
+</script>
+
 <!-- /Profile Modal -->

@@ -48,13 +48,73 @@
 			<script src="{% static 'js/html5shiv.min.js' %}"></script>
 			<script src="{% static 'js/respond.min.js"' %}></script>
 		<![endif]-->
-    </head>
-    <body>
-
-        <div class="m-5">
-                <a href="{% url 'Login' %}" class="mx-5 ">Admin Login</a>
-                <a href="{% url 'EmployeeLogin' %}" class="mx-5">Employee Login</a>
-        </div>
+    <style>
+          @import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700|Poppins:400,500&display=swap');
+        *{
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+          user-select: none;
+        }
+        .bg-img{
+          background: url('media/landing_page.jpg');
+          height: 100vh;
+          background-size: cover;
+          background-position: center;
+        }
+        .bg-img:after{
+          position: absolute;
+          content: '';
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          background: rgba(0,0,0,0.5);
+        }
+        .content{
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          z-index: 999;
+          text-align: center;
+          padding: 5rem 6rem;
+          width: 40rem;
+          transform: translate(-50%,-50%);
+          background: rgba(255,255,255,0.05);
+          box-shadow: -1px 4px 28px 0px rgba(0,0,0,0.9);
+        }
+        .field2{
+            margin: 0 0 3rem 0 ;
+        }
+        .field1{
+            margin: 3rem 0 0 0 ;
+        }
+        .link {
+            border-radius:2rem;
+            padding: 1rem 0;
+            background-color:rgba(246, 244, 244, 0.7);
+        }
+        a {
+            color:#2C2727;
+            font-size: 1.2rem;
+        }
+      </style>
+  </head>
+  <body>
+    <div class="bg-img">
+      <div class="content">
+          <div class="field2 space">
+              <div class="link">
+                <a href="{% url 'Login' %}" class=" mb-3">Login As Admin</a>
+              </div>
+          </div>
+          <div class="field1">
+              <div class="link">
+                <a href="{% url 'EmployeeLogin' %}" class=" mb-3">Login As Employee</a>
+              </div>
+          </div>
+      </div>
+    </div>
 
 
         <!-- jQuery -->
