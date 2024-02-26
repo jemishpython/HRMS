@@ -10,7 +10,6 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     EditTaskForm, EditTechnologyForm, AddTechnologyForm, AddExperienceInfoForm, EditProfileInfoForm, \
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
     EditEmergencyContactForm
-# Create your views here.
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact
 
@@ -31,18 +30,18 @@ def Login(request):
         adminphone = request.POST.get('adminphone')
         adminpassword = request.POST.get('adminpassword')
         try:
-            user = User.objects.get(phone=adminphone)
-        except User.DoesNotExist:
-            messages.error(request, "Invalid credentials")
-            return redirect('AdminLogin')
-        if user.is_active or user.is_admin:
+            user = User.objects.get(phone=adminphone, is_admin=True)
+        except Exception as e:
+            messages.error(request, "Login user is not Admin.", extra_tags='danger')
+            return redirect('Login')
+        if user.is_active:
             if user.check_password(adminpassword):
                 login(request, user)
                 return redirect('AdminIndex')
-            messages.error(request, "Invalid credentials")
-            return redirect('AdminLogin')
-        messages.error(request, "Please wait for admin is approve your request")
-        return redirect('AdminLogin')
+            messages.error(request, "Invalid credentials", extra_tags='danger')
+            return redirect('Login')
+        messages.warning(request, "Please wait for admin is approve your request")
+        return redirect('Login')
     return render(request, "admin/login.html")
 
 

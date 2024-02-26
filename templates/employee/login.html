@@ -96,6 +96,9 @@
 <body>
 <div class="bg-img">
     <div class="content">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+        {% endfor %}
         <header>Employee Login</header>
         <form action="{% url 'EmployeeLogin' %}" method="post">
             {% csrf_token %}
@@ -159,5 +162,14 @@
 
 <!-- Custom JS -->
 <script src="{% static 'js/app.js' %}"></script>
+
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
+</script>
+
 </body>
 </html>

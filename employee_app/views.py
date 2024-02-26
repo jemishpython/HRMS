@@ -20,9 +20,9 @@ def EmployeeLogin(request):
         employeephone = request.POST.get('employeephone')
         employeepassword = request.POST.get('employeepassword')
         try:
-            user = User.objects.get(phone=employeephone)
+            user = User.objects.get(phone=employeephone,is_admin=False)
         except:
-            messages.error(request, "Invalid credentials")
+            messages.error(request, "Login user is not Employee.", extra_tags='danger')
             return redirect('EmployeeLogin')
         if user.is_active:
             if user.check_password(employeepassword):
@@ -30,7 +30,7 @@ def EmployeeLogin(request):
                 return redirect('EmployeeIndex')
             messages.error(request, "Invalid credentials")
             return redirect('EmployeeLogin')
-        messages.error(request, "Please wait for admin is approve your request")
+        messages.warning(request, "Please wait for admin is approve your request")
         return redirect('EmployeeLogin')
     return render(request, "employee/login.html")
 
@@ -70,7 +70,7 @@ def ProfileView(request, id):
     user_details = User.objects.get(id=id)
     view_education_info = Education_Info.objects.filter(employee=id).order_by('start_year')
     view_experience_info = Experience_Info.objects.filter(employee=id).order_by('start_date')
-    view_emergency_contact = Emergency_Contact.objects.get(employee=id)
+    view_emergency_contact = Emergency_Contact.objects.filter(employee=id)
 
     context = {
         'user_details': user_details,
