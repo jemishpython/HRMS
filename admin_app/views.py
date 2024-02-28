@@ -84,7 +84,7 @@ def AddEmployee(request):
                 messages.success(request, 'Employee add successfully')
                 return redirect('AdminEmployeeView')
         except Exception as e:
-            form = AddEmployeeForm()
+            print(e,"-----ERROR-----")
     context = {'form': form}
     return render(request, "admin/add_employee.html", context)
 

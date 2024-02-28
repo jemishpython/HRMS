@@ -4,7 +4,7 @@ from . import views
 
 
 urlpatterns = [
-    path("hrms/employee/login/", views.EmployeeLogin, name="EmployeeLogin"),
+    path("login/", views.EmployeeLogin, name="EmployeeLogin"),
     path("employee_index", views.EmployeeIndex, name="EmployeeIndex"),
     path("employee_logout", views.EmployeeLogout, name="EmployeeLogout"),
 
