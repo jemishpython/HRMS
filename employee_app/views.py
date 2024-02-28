@@ -88,7 +88,7 @@ def EditProfileInfo(request, id):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Profile Info Update successfully')
+                messages.info(request, 'Profile Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
             form = EditProfileInfoForm(instance=edit_profile_info)
@@ -103,7 +103,7 @@ def EditPersonalInfo(request, id):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Personal Info Update successfully')
+                messages.info(request, 'Personal Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
             form = EditPersonalInfoForm(instance=edit_personal_info)
@@ -136,7 +136,7 @@ def EditEducationInfo(request, id, edu_id):
                 education = form.save(commit=False)
                 education.employee = User.objects.get(id=id)
                 education.save()
-                messages.success(request, 'Education Info Update successfully')
+                messages.info(request, 'Education Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
             form = EditEducationInfoForm(instance=edit_education_info)
@@ -169,7 +169,7 @@ def EditExperienceInfo(request, id, exp_id):
                 experience = form.save(commit=False)
                 experience.employee = User.objects.get(id=id)
                 experience.save()
-                messages.success(request, 'Experience Info Update successfully')
+                messages.info(request, 'Experience Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
             form = EditExperienceInfoForm(instance=edit_experience_info)
@@ -202,7 +202,7 @@ def EditEmergencyInfo(request, id, emg_id):
                 emergency_contact = form.save(commit=False)
                 emergency_contact.employee = User.objects.get(id=id)
                 emergency_contact.save()
-                messages.success(request, 'Experience Info Update successfully')
+                messages.info(request, 'Experience Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
             form = EditEmergencyContactForm(instance=edit_emergency_contact)
@@ -279,7 +279,7 @@ def EditLeave(request, id, userid):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Leave Update successfully')
+                messages.info(request, 'Leave Update successfully')
                 return redirect('EmpLeaves', id=userid.id)
         except Exception as e:
             form = EditLeaveForm(instance=edit_leave)
@@ -291,4 +291,5 @@ def DeleteLeave(request, id):
     userid = request.user.id
     delete_leave = Leave.objects.get(id=id)
     delete_leave.delete()
+    messages.error(request, 'Leave Delete successfully')
     return redirect('EmpLeaves', id=userid)
