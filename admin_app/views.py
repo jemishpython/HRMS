@@ -92,12 +92,14 @@ def AddEmployee(request):
 def DeleteEmployee(request, id):
     delete_employee = User.objects.get(id=id)
     delete_employee.delete()
+    messages.error(request, 'Employee Delete successfully')
     return redirect('AdminEmployeeView')
 
 
 def DeleteEmployeeList(id):
     delete_employee = User.objects.get(id=id)
     delete_employee.delete()
+    messages.error('Employee Delete successfully')
     return redirect('AdminEmployeeListView')
 
 
@@ -123,7 +125,7 @@ def EditProfileInfo(request, id):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Profile Info Update successfully')
+                messages.info(request, 'Profile Info Update successfully')
                 return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = EditProfileInfoForm(instance=edit_profile_info)
@@ -138,7 +140,7 @@ def EditPersonalInfo(request, id):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Personal Info Update successfully')
+                messages.info(request, 'Personal Info Update successfully')
                 return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = EditPersonalInfoForm(instance=edit_personal_info)
@@ -171,7 +173,7 @@ def EditEducationInfo(request, id, edu_id):
                 education = form.save(commit=False)
                 education.employee = User.objects.get(id=id)
                 education.save()
-                messages.success(request, 'Education Info Update successfully')
+                messages.info(request, 'Education Info Update successfully')
                 return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = EditEducationInfoForm(instance=edit_education_info)
@@ -204,7 +206,7 @@ def EditExperienceInfo(request, id, exp_id):
                 experience = form.save(commit=False)
                 experience.employee = User.objects.get(id=id)
                 experience.save()
-                messages.success(request, 'Experience Info Update successfully')
+                messages.info(request, 'Experience Info Update successfully')
                 return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = EditExperienceInfoForm(instance=edit_experience_info)
@@ -237,7 +239,7 @@ def EditEmergencyInfo(request, id, emg_id):
                 emergency_contact = form.save(commit=False)
                 emergency_contact.employee = User.objects.get(id=id)
                 emergency_contact.save()
-                messages.success(request, 'Experience Info Update successfully')
+                messages.info(request, 'Experience Info Update successfully')
                 return redirect('AdminProfileView', id=id)
         except Exception as e:
             form = EditEmergencyContactForm(instance=edit_emergency_contact)
@@ -274,7 +276,7 @@ def UpdateHolidays(request, id):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Holiday Update successfully')
+                messages.info(request, 'Holiday Update successfully')
                 return redirect('AdminHolidays')
         except Exception as e:
             form = EditHolidaysForm(instance=edit_holiday)
@@ -285,6 +287,7 @@ def UpdateHolidays(request, id):
 def DeleteHolidays(request, id):
     delete_holiday = Holiday.objects.get(id=id)
     delete_holiday.delete()
+    messages.error(request, 'Holiday Delete successfully')
     return redirect('AdminHolidays')
 
 
@@ -317,7 +320,7 @@ def UpdateDepartment(request, id):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Department Update successfully')
+                messages.info(request, 'Department Update successfully')
                 return redirect('AdminDepartmentView')
         except Exception as e:
             form = EditDepartmentForm(instance=edit_department)
@@ -328,6 +331,7 @@ def UpdateDepartment(request, id):
 def DeleteDepartment(request, id):
     delete_department = Department.objects.get(id=id)
     delete_department.delete()
+    messages.error(request, 'Department Delete successfully')
     return redirect('AdminDepartmentView')
 
 
@@ -360,7 +364,7 @@ def UpdateDesignation(request, id):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Designation Update successfully')
+                messages.info(request, 'Designation Update successfully')
                 return redirect('AdminDesignationView')
         except Exception as e:
             form = EditDesignationForm(instance=edit_designation)
@@ -371,6 +375,7 @@ def UpdateDesignation(request, id):
 def DeleteDesignation(request, id):
     delete_designation = Designation.objects.get(id=id)
     delete_designation.delete()
+    messages.error(request, 'Designation Delete successfully')
     return redirect('AdminDesignationView')
 
 
@@ -403,7 +408,7 @@ def UpdateTechnology(request, id):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Designation Update successfully')
+                messages.info(request, 'Designation Update successfully')
                 return redirect('AdminTechnologyView')
         except Exception as e:
             form = EditTechnologyForm(instance=edit_technology)
@@ -414,6 +419,7 @@ def UpdateTechnology(request, id):
 def DeleteTechnology(request, id):
     delete_technology = Technology.objects.get(id=id)
     delete_technology.delete()
+    messages.error(request, 'Technology Delete successfully')
     return redirect('AdminTechnologyView')
 
 
@@ -447,7 +453,7 @@ def UpdateProject(request, id):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Project Update successfully')
+                messages.info(request, 'Project Update successfully')
                 return redirect('AdminProjectDetailsView', id=id)
         except Exception as e:
             messages.error(request, "Invalid credentials")
@@ -458,6 +464,7 @@ def UpdateProject(request, id):
 def DeleteProject(request, id):
     delete_project = Project.objects.get(id=id)
     delete_project.delete()
+    messages.error(request, 'Project Delete successfully')
     return redirect('AdminProjectsView')
 
 
@@ -523,7 +530,7 @@ def EditProjectTask(request, id, projectid):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, 'Task Update successfully')
+                messages.info(request, 'Task Update successfully')
                 return redirect('AdminProjectTaskList', id=projectid.id)
         except Exception as e:
             form = EditTaskForm(instance=edit_task)
@@ -535,6 +542,7 @@ def DeleteProjectTask(request, id, projectid):
     project_id = Project.objects.get(id=projectid)
     delete_leave = Task.objects.get(id=id)
     delete_leave.delete()
+    messages.error(request, 'Project Task Delete successfully')
     return redirect('AdminProjectTaskList', id=project_id.id)
 
 
@@ -561,6 +569,7 @@ def UpdateLeaveStatus(request, id):
         leave_status_update = Leave.objects.get(id=id)
         leave_status_update.leave_status = update_leave_status
         leave_status_update.save()
+        messages.info(request, 'Leave status update successfully')
         return redirect('AdminLeaveList')
     return render(request, "admin/leaves.html")
 
