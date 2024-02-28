@@ -70,7 +70,7 @@ def ProfileView(request, id):
     user_details = User.objects.get(id=id)
     view_education_info = Education_Info.objects.filter(employee=id).order_by('start_year')
     view_experience_info = Experience_Info.objects.filter(employee=id).order_by('start_date')
-    view_emergency_contact = Emergency_Contact.objects.filter(employee=id)
+    view_emergency_contact = Emergency_Contact.objects.filter(employee=id).first()
 
     context = {
         'user_details': user_details,

@@ -334,7 +334,7 @@ function addEmergencyInfo(UserId) {
 }
 function editEmergencyInfo(UserId, EmgId) {
     $.ajax({
-        url: `/hrms/employee/emp-profile/emergency-info-edit/${UserId}/${EmgId}`,
+        url: `/hrms/employee/emp-profile/emergency-contact-edit/${UserId}/${EmgId}`,
         success: function(response) {
             $("#edit-emergency-contact-form").html(response);
             $("#edit_emergency_contact_modal").modal('show');
