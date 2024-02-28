@@ -10,15 +10,15 @@ urlpatterns = [
 
     path("employee-list", views.EmployeeListView, name="EmployeeListView"),
 
-    path("profile/<int:id>", views.ProfileView, name="EmpProfileView"),
-    path("profile/profile-info-edit/<int:id>", views.EditProfileInfo, name="EmpEditProfileInfo"),
-    path("profile/personal-info-edit/<int:id>", views.EditPersonalInfo, name="EmpEditPersonalInfo"),
-    path("profile/education-info-add/<int:id>", views.AddEducationInfo, name="EmpAddEducationInfo"),
-    path("profile/education-info-edit/<int:id>/<int:edu_id>", views.EditEducationInfo, name="EmpEditEducationInfo"),
-    path("profile/experience-info-add/<int:id>", views.AddExperienceInfo, name="EmpAddExperienceInfo"),
-    path("profile/experience-info-edit/<int:id>/<int:exp_id>", views.EditExperienceInfo, name="EmpEditExperienceInfo"),
-    path("profile/emergency-contact-add/<int:id>", views.AddEmergencyInfo, name="EmpAddEmergencyInfo"),
-    path("profile/emergency-contact-edit/<int:id>/<int:emg_id>", views.EditEmergencyInfo, name="EmpEditEmergencyInfo"),
+    path("emp-profile/<int:id>", views.ProfileView, name="EmpProfileView"),
+    path("emp-profile/profile-info-edit/<int:id>", views.EditProfileInfo, name="EmpEditProfileInfo"),
+    path("emp-profile/personal-info-edit/<int:id>", views.EditPersonalInfo, name="EmpEditPersonalInfo"),
+    path("emp-profile/education-info-add/<int:id>", views.AddEducationInfo, name="EmpAddEducationInfo"),
+    path("emp-profile/education-info-edit/<int:user_id>/<int:edu_id>", views.EmpEditEducationInfo, name="EmpEditEducationInfo"),
+    path("emp-profile/experience-info-add/<int:id>", views.AddExperienceInfo, name="EmpAddExperienceInfo"),
+    path("emp-profile/experience-info-edit/<int:id>/<int:exp_id>", views.EditExperienceInfo, name="EmpEditExperienceInfo"),
+    path("emp-profile/emergency-contact-add/<int:id>", views.AddEmergencyInfo, name="EmpAddEmergencyInfo"),
+    path("emp-profile/emergency-contact-edit/<int:id>/<int:emg_id>", views.EditEmergencyInfo, name="EmpEditEmergencyInfo"),
 
     path("holidays", views.Holidays, name="EmpHolidays"),
 

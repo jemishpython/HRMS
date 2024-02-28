@@ -294,13 +294,14 @@ function addEducationInfo(UserId) {
 
 function editEducationInfo(UserId, EduId) {
     $.ajax({
-        url: "{% url 'EmpEditEducationInfo' id=0 edu_id=1 %}".replace(0, UserId).replace(1, EduId),
+        url: `/hrms/employee/emp-profile/education-info-edit/${UserId}/${EduId}`,
         success: function(response) {
             $("#edit-education-info-form").html(response);
             $("#edit_education_info_model").modal('show');
         }
     });
 }
+
 
 function addExperienceInfo(UserId) {
     $.ajax({
@@ -314,7 +315,7 @@ function addExperienceInfo(UserId) {
 
 function editExperienceInfo(UserId, ExpId) {
     $.ajax({
-        url: "{% url 'EmpEditExperienceInfo' id=0 exp_id=1 %}".replace(0, UserId).replace(1, ExpId),
+        url: `/hrms/employee/emp-profile/experience-info-edit/${UserId}/${ExpId}`,
         success: function(response) {
             $("#edit-experience-info-form").html(response);
             $("#edit_experience_info_model").modal('show');
@@ -333,7 +334,7 @@ function addEmergencyInfo(UserId) {
 }
 function editEmergencyInfo(UserId, EmgId) {
     $.ajax({
-        url: "{% url 'EmpEditEmergencyInfo' id=0 emg_id=1 %}".replace(0, UserId).replace(1, EmgId),
+        url: `/hrms/employee/emp-profile/emergency-info-edit/${UserId}/${EmgId}`,
         success: function(response) {
             $("#edit-emergency-contact-form").html(response);
             $("#edit_emergency_contact_modal").modal('show');

@@ -127,17 +127,17 @@ def AddEducationInfo(request, id):
     return render(request, "employee/add_education_info.html", context)
 
 
-def EditEducationInfo(request, id, edu_id):
+def EmpEditEducationInfo(request, user_id, edu_id):
     edit_education_info = Education_Info.objects.filter(id=edu_id).first()
     form = EditEducationInfoForm(request.POST or None, instance=edit_education_info)
     if request.method == 'POST':
         try:
             if form.is_valid():
                 education = form.save(commit=False)
-                education.employee = User.objects.get(id=id)
+                education.employee = User.objects.get(id=user_id)
                 education.save()
                 messages.info(request, 'Education Info Update successfully')
-                return redirect('EmpProfileView', id=id)
+                return redirect('EmpProfileView', id=user_id)
         except Exception as e:
             form = EditEducationInfoForm(instance=edit_education_info)
     context = {'form': form, 'edit_education_info': edit_education_info}
