@@ -8,6 +8,11 @@ urlpatterns = [
     path("employee_index", views.EmployeeIndex, name="EmployeeIndex"),
     path("employee_logout", views.EmployeeLogout, name="EmployeeLogout"),
 
+    # Forget Password
+    path('emp-password-reset-mail/', views.forget_password_mail, name='emp_forget_password_mail'),
+    path('emp-password-reset/<int:pk>/', views.reset_page, name='emp_forgot_password'),
+    path('emp-password-reset-successfully/<int:pk>/', views.update_password, name='emp_update_password'),
+
     path("employee-list", views.EmployeeListView, name="EmployeeListView"),
 
     path("emp-profile/<int:id>", views.ProfileView, name="EmpProfileView"),

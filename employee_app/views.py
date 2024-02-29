@@ -1,6 +1,11 @@
 from django.contrib.auth import login, logout
 from django.contrib import messages
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.template import loader
 from django import forms
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 
 from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm, EditPersonalInfoForm, \
@@ -35,7 +40,63 @@ def EmployeeLogin(request):
     return render(request, "employee/login.html")
 
 
-# @login_required(login_url="EmployeeLogin")
+def forget_password_mail(request):
+    forget_password_phone = request.POST.get('employeephone')
+    print(forget_password_phone,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>USER PHONE")
+    user = User.objects.filter(phone=forget_password_phone, is_active=True).first()
+    print(user.username,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>USER NAME")
+    print(user.email,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>USER EMAIL")
+
+    forget_password_email = user.email
+
+    context = {
+        'username': user.username,
+        'user_id': user.id,
+        # 'request_url': request.get_host(), #For Liveproject
+    }
+
+    from_email = settings.EMAIL_HOST_USER
+    mail_subject = f"HRMS Forget Password : {user.username}"
+
+    email = loader.render_to_string('employee/forgot_password_email_template.html', context)
+    send_mail(
+        subject=mail_subject,
+        message=email,
+        from_email=from_email,
+        recipient_list=[forget_password_email],
+        html_message=email,
+    )
+    return redirect('EmployeeLogin')
+
+
+def reset_page(request, pk):
+    user = User.objects.get(id=pk)
+    context = {
+        'pk': pk,
+        'user_id': user.id,
+    }
+    return render(request, 'employee/forgot_password.html', context)
+
+
+def update_password(request, pk):
+    user_pass = User.objects.get(id=pk)
+    id = user_pass.id
+    if request.method == 'POST':
+        password = request.POST.get('employee_password')
+        conf_password = request.POST.get('employee_confirm_password')
+        if password == conf_password:
+            user = User.objects.get(id=pk)
+            user.password = make_password(password)
+            user.save()
+            return redirect('EmployeeLogin')
+        else:
+            messages.error(request, "Passwords do not match.")
+            return redirect('emp_forgot_password', pk=id)
+    else:
+        return redirect('EmployeeLogin')
+
+
+@login_required(login_url="EmployeeLogin")
 def EmployeeIndex(request):
     user = request.user
     task_list = Task.objects.filter(task_assign=user.id)
@@ -50,6 +111,7 @@ def EmployeeIndex(request):
     return render(request, "employee/employee-dashboard.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def EmployeeListView(request):
     emp_list = User.objects.all()
     return render(request, "employee/employees_list.html",{'emp_list':emp_list})
@@ -66,6 +128,7 @@ def EmployeeListView(request):
 #     return years, months, days
 
 
+@login_required(login_url="EmployeeLogin")
 def ProfileView(request, id):
     user_details = User.objects.get(id=id)
     view_education_info = Education_Info.objects.filter(employee=id).order_by('start_year')
@@ -81,6 +144,7 @@ def ProfileView(request, id):
     return render(request, "employee/profile.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def EditProfileInfo(request, id):
     edit_profile_info = User.objects.get(id=id)
     form = EditProfileInfoForm(request.POST or None, request.FILES, instance=edit_profile_info)
@@ -96,6 +160,7 @@ def EditProfileInfo(request, id):
     return render(request, "employee/edit_profile_info.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def EditPersonalInfo(request, id):
     edit_personal_info = User.objects.get(id=id)
     form = EditPersonalInfoForm(request.POST or None, instance=edit_personal_info)
@@ -111,6 +176,7 @@ def EditPersonalInfo(request, id):
     return render(request, "employee/edit_personal_info.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def AddEducationInfo(request, id):
     form = AddEducationInfoForm(request.POST or None)
     if request.method == 'POST':
@@ -127,6 +193,7 @@ def AddEducationInfo(request, id):
     return render(request, "employee/add_education_info.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def EmpEditEducationInfo(request, user_id, edu_id):
     edit_education_info = Education_Info.objects.filter(id=edu_id).first()
     form = EditEducationInfoForm(request.POST or None, instance=edit_education_info)
@@ -144,6 +211,7 @@ def EmpEditEducationInfo(request, user_id, edu_id):
     return render(request, "employee/edit_education_info.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def AddExperienceInfo(request, id):
     form = AddExperienceInfoForm(request.POST or None)
     if request.method == 'POST':
@@ -160,6 +228,7 @@ def AddExperienceInfo(request, id):
     return render(request, "employee/add_experience_info.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def EditExperienceInfo(request, id, exp_id):
     edit_experience_info = Experience_Info.objects.filter(id=exp_id).first()
     form = EditExperienceInfoForm(request.POST or None, instance=edit_experience_info)
@@ -177,6 +246,7 @@ def EditExperienceInfo(request, id, exp_id):
     return render(request, "employee/edit_experience_info.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def AddEmergencyInfo(request, id):
     form = AddEmergencyContactForm(request.POST or None)
     if request.method == 'POST':
@@ -193,6 +263,7 @@ def AddEmergencyInfo(request, id):
     return render(request, "employee/add_emergency_contact.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def EditEmergencyInfo(request, id, emg_id):
     edit_emergency_contact = Emergency_Contact.objects.get(id=emg_id)
     form = EditEmergencyContactForm(request.POST or None, instance=edit_emergency_contact)
@@ -210,11 +281,13 @@ def EditEmergencyInfo(request, id, emg_id):
     return render(request, "employee/edit_emergency_contact.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def EmployeeLogout(request):
     logout(request)
     return render(request, "employee/login.html")
 
 
+@login_required(login_url="EmployeeLogin")
 def Holidays(request):
     holidaylist = Holiday.objects.all().order_by('holiday_date')
     context = {
@@ -223,6 +296,7 @@ def Holidays(request):
     return render(request, "employee/holidays_list.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def DepartmentView(request):
     departmentlist = Department.objects.all()
     context = {
@@ -231,6 +305,7 @@ def DepartmentView(request):
     return render(request, "employee/departments.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def DesignationView(request):
     designationlist = Designation.objects.all()
     context = {
@@ -239,6 +314,7 @@ def DesignationView(request):
     return render(request, "employee/designations.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def TechnologyView(request):
     technologylist = Technology.objects.all()
     context = {
@@ -247,6 +323,7 @@ def TechnologyView(request):
     return render(request, "employee/technology.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def Leaves(request, id):
     leave_list = Leave.objects.filter(leave_user=id)
     context = {
@@ -255,6 +332,7 @@ def Leaves(request, id):
     return render(request, "employee/leaves-employee.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def AddLeave(request, id):
     userid = User.objects.get(id=id)
     if request.method == 'POST':
@@ -271,6 +349,7 @@ def AddLeave(request, id):
     return render(request, "employee/add_leave.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def EditLeave(request, id, userid):
     userid = User.objects.get(id=userid)
     edit_leave = Leave.objects.get(id=id)
@@ -287,6 +366,7 @@ def EditLeave(request, id, userid):
     return render(request, "employee/edit_leave.html", context)
 
 
+@login_required(login_url="EmployeeLogin")
 def DeleteLeave(request, id):
     userid = request.user.id
     delete_leave = Leave.objects.get(id=id)

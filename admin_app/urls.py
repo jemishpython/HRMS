@@ -8,7 +8,9 @@ urlpatterns = [
     # path("admin_register", views.AdminRegister, name="AdminRegister"),
     path("admin_index", views.AdminIndex, name="AdminIndex"),
     path("admin_logout", views.AdminLogout, name="AdminLogout"),
-
+    path('admin-password-reset-mail/', views.forget_password_mail, name='forget_password_mail'),
+    path('admin-password-reset/<int:pk>/', views.reset_page, name='forgot_password'),
+    path('admin-password-reset-successfully/<int:pk>/', views.update_password, name='update_password'),
 
     path("employee", views.EmployeeView, name="AdminEmployeeView"),
     path("employee_list", views.EmployeeListView, name="AdminEmployeeListView"),

@@ -3,9 +3,11 @@
 {% block body %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
-				{% for message in messages %}
-				<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-				{% endfor %}
+				<div class="show_message">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
 
 				<!-- Page Content -->
                 <div class="content container-fluid">

@@ -1,3 +1,7 @@
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
+from django.template import loader
 from datetime import datetime
 
 from django.contrib.auth import logout, login
@@ -45,6 +49,60 @@ def Login(request):
     return render(request, "admin/login.html")
 
 
+def forget_password_mail(request):
+    forget_password_phone = request.POST.get('adminphone')
+    user = User.objects.filter(phone=forget_password_phone, is_admin=True, is_active=True).first()
+
+    forget_password_email = user.email
+
+    context = {
+        'username': user.username,
+        'user_id': user.id,
+        # 'request_url': request.get_host(), #For Liveproject
+    }
+
+    from_email = settings.EMAIL_HOST_USER
+    mail_subject = f"HRMS Forget Password : {user.username}"
+
+    email = loader.render_to_string('admin/forgot_password_email_template.html', context)
+    send_mail(
+        subject=mail_subject,
+        message=email,
+        from_email=from_email,
+        recipient_list=[forget_password_email],
+        html_message=email,
+    )
+    return redirect('Login')
+
+
+def reset_page(request, pk):
+    user = User.objects.get(id=pk)
+    context = {
+        'pk': pk,
+        'user_id': user.id,
+    }
+    return render(request, 'admin/forgot_password.html', context)
+
+
+def update_password(request, pk):
+    user_pass = User.objects.get(id=pk)
+    id = user_pass.id
+    if request.method == 'POST':
+        password = request.POST.get('admin_password')
+        conf_password = request.POST.get('admin_confirm_password')
+        if password == conf_password:
+            user = User.objects.get(id=pk)
+            user.password = make_password(password)
+            user.save()
+            return redirect('Login')
+        else:
+            messages.error(request, "Passwords do not match.")
+            return redirect('forgot_password', pk=id)
+    else:
+        return redirect('Login')
+
+
+@login_required(login_url="Login")
 def AdminIndex(request):
     users = User.objects.all()
     projects = Project.objects.all()
@@ -58,21 +116,25 @@ def AdminIndex(request):
     return render(request, "admin/index.html", context)
 
 
+@login_required(login_url="Login")
 def AdminLogout(request):
     logout(request)
     return render(request, "admin/login.html")
 
 
+@login_required(login_url="Login")
 def EmployeeView(request):
     employeedetails = User.objects.all()
     return render(request, "admin/employees.html", {'employeedetails': employeedetails})
 
 
+@login_required(login_url="Login")
 def EmployeeListView(request):
     employeedetails = User.objects.all()
     return render(request, "admin/employees_list.html", {'employeedetails': employeedetails})
 
 
+@login_required(login_url="Login")
 def AddEmployee(request):
     form = AddEmployeeForm(request.POST or None)
     if request.method == 'POST':
@@ -84,11 +146,12 @@ def AddEmployee(request):
                 messages.success(request, 'Employee add successfully')
                 return redirect('AdminEmployeeView')
         except Exception as e:
-            print(e,"-----ERROR-----")
+            print(e, "-----ERROR-----")
     context = {'form': form}
     return render(request, "admin/add_employee.html", context)
 
 
+@login_required(login_url="Login")
 def DeleteEmployee(request, id):
     delete_employee = User.objects.get(id=id)
     delete_employee.delete()
@@ -96,6 +159,7 @@ def DeleteEmployee(request, id):
     return redirect('AdminEmployeeView')
 
 
+@login_required(login_url="Login")
 def DeleteEmployeeList(id):
     delete_employee = User.objects.get(id=id)
     delete_employee.delete()
@@ -103,6 +167,7 @@ def DeleteEmployeeList(id):
     return redirect('AdminEmployeeListView')
 
 
+@login_required(login_url="Login")
 def ProfileView(request, id):
     profile = User.objects.get(id=id)
     view_education_info = Education_Info.objects.filter(employee=id).order_by('start_year')
@@ -118,6 +183,7 @@ def ProfileView(request, id):
     return render(request, "admin/profile.html", context)
 
 
+@login_required(login_url="Login")
 def EditProfileInfo(request, id):
     edit_profile_info = User.objects.get(id=id)
     form = EditProfileInfoForm(request.POST or None, request.FILES or None, instance=edit_profile_info)
@@ -133,6 +199,7 @@ def EditProfileInfo(request, id):
     return render(request, "admin/edit_profile_info.html", context)
 
 
+@login_required(login_url="Login")
 def EditPersonalInfo(request, id):
     edit_personal_info = User.objects.get(id=id)
     form = EditPersonalInfoForm(request.POST or None, instance=edit_personal_info)
@@ -148,6 +215,7 @@ def EditPersonalInfo(request, id):
     return render(request, "admin/edit_personal_info.html", context)
 
 
+@login_required(login_url="Login")
 def AddEducationInfo(request, id):
     form = AddEducationInfoForm(request.POST or None)
     if request.method == 'POST':
@@ -164,6 +232,7 @@ def AddEducationInfo(request, id):
     return render(request, "admin/add_education_info.html", context)
 
 
+@login_required(login_url="Login")
 def EditEducationInfo(request, id, edu_id):
     edit_education_info = Education_Info.objects.filter(id=edu_id).first()
     form = EditEducationInfoForm(request.POST or None, instance=edit_education_info)
@@ -181,6 +250,7 @@ def EditEducationInfo(request, id, edu_id):
     return render(request, "admin/edit_education_info.html", context)
 
 
+@login_required(login_url="Login")
 def AddExperienceInfo(request, id):
     form = AddExperienceInfoForm(request.POST or None)
     if request.method == 'POST':
@@ -197,6 +267,7 @@ def AddExperienceInfo(request, id):
     return render(request, "admin/add_experience_info.html", context)
 
 
+@login_required(login_url="Login")
 def EditExperienceInfo(request, id, exp_id):
     edit_experience_info = Experience_Info.objects.filter(id=exp_id).first()
     form = EditExperienceInfoForm(request.POST or None, instance=edit_experience_info)
@@ -214,6 +285,7 @@ def EditExperienceInfo(request, id, exp_id):
     return render(request, "admin/edit_experience_info.html", context)
 
 
+@login_required(login_url="Login")
 def AddEmergencyInfo(request, id):
     form = AddEmergencyContactForm(request.POST or None)
     if request.method == 'POST':
@@ -230,6 +302,7 @@ def AddEmergencyInfo(request, id):
     return render(request, "admin/add_emergency_contact.html", context)
 
 
+@login_required(login_url="Login")
 def EditEmergencyInfo(request, id, emg_id):
     edit_emergency_contact = Emergency_Contact.objects.get(id=emg_id)
     form = EditEmergencyContactForm(request.POST or None, instance=edit_emergency_contact)
@@ -247,6 +320,7 @@ def EditEmergencyInfo(request, id, emg_id):
     return render(request, "admin/edit_emergency_contact.html", context)
 
 
+@login_required(login_url="Login")
 def Holidays(request):
     holidaylist = Holiday.objects.all().order_by('holiday_date')
     context = {
@@ -255,6 +329,7 @@ def Holidays(request):
     return render(request, "admin/holidays_list.html", context)
 
 
+@login_required(login_url="Login")
 def AddHolidays(request):
     form = AddHolidaysForm(request.POST or None)
     if request.method == 'POST':
@@ -269,6 +344,7 @@ def AddHolidays(request):
     return render(request, "admin/add_holidays.html", context)
 
 
+@login_required(login_url="Login")
 def UpdateHolidays(request, id):
     edit_holiday = Holiday.objects.get(id=id)
     form = EditHolidaysForm(request.POST or None, instance=edit_holiday)
@@ -284,6 +360,7 @@ def UpdateHolidays(request, id):
     return render(request, "admin/edit_holidays.html", context)
 
 
+@login_required(login_url="Login")
 def DeleteHolidays(request, id):
     delete_holiday = Holiday.objects.get(id=id)
     delete_holiday.delete()
@@ -291,6 +368,7 @@ def DeleteHolidays(request, id):
     return redirect('AdminHolidays')
 
 
+@login_required(login_url="Login")
 def DepartmentView(request):
     departmentlist = Department.objects.all()
     context = {
@@ -299,6 +377,7 @@ def DepartmentView(request):
     return render(request, "admin/departments.html", context)
 
 
+@login_required(login_url="Login")
 def AddDepartment(request):
     form = AddDepartmentForm(request.POST or None)
     if request.method == 'POST':
@@ -313,6 +392,7 @@ def AddDepartment(request):
     return render(request, "admin/add_department.html", context)
 
 
+@login_required(login_url="Login")
 def UpdateDepartment(request, id):
     edit_department = Department.objects.get(id=id)
     form = EditDepartmentForm(request.POST or None, instance=edit_department)
@@ -328,6 +408,7 @@ def UpdateDepartment(request, id):
     return render(request, "admin/edit_department.html", context)
 
 
+@login_required(login_url="Login")
 def DeleteDepartment(request, id):
     delete_department = Department.objects.get(id=id)
     delete_department.delete()
@@ -335,6 +416,7 @@ def DeleteDepartment(request, id):
     return redirect('AdminDepartmentView')
 
 
+@login_required(login_url="Login")
 def DesignationView(request):
     designationlist = Designation.objects.all()
     context = {
@@ -343,6 +425,7 @@ def DesignationView(request):
     return render(request, "admin/designations.html", context)
 
 
+@login_required(login_url="Login")
 def AddDesignation(request):
     form = AddDesignationForm(request.POST or None)
     if request.method == 'POST':
@@ -357,6 +440,7 @@ def AddDesignation(request):
     return render(request, "admin/add_designation.html", context)
 
 
+@login_required(login_url="Login")
 def UpdateDesignation(request, id):
     edit_designation = Designation.objects.get(id=id)
     form = EditDesignationForm(request.POST or None, instance=edit_designation)
@@ -372,6 +456,7 @@ def UpdateDesignation(request, id):
     return render(request, "admin/edit_designation.html", context)
 
 
+@login_required(login_url="Login")
 def DeleteDesignation(request, id):
     delete_designation = Designation.objects.get(id=id)
     delete_designation.delete()
@@ -379,6 +464,7 @@ def DeleteDesignation(request, id):
     return redirect('AdminDesignationView')
 
 
+@login_required(login_url="Login")
 def TechnologyView(request):
     technologylist = Technology.objects.all()
     context = {
@@ -387,6 +473,7 @@ def TechnologyView(request):
     return render(request, "admin/technology.html", context)
 
 
+@login_required(login_url="Login")
 def AddTechnology(request):
     form = AddTechnologyForm(request.POST or None)
     if request.method == 'POST':
@@ -401,6 +488,7 @@ def AddTechnology(request):
     return render(request, "admin/add_technology.html", context)
 
 
+@login_required(login_url="Login")
 def UpdateTechnology(request, id):
     edit_technology = Technology.objects.get(id=id)
     form = EditTechnologyForm(request.POST or None, instance=edit_technology)
@@ -416,6 +504,7 @@ def UpdateTechnology(request, id):
     return render(request, "admin/edit_technology.html", context)
 
 
+@login_required(login_url="Login")
 def DeleteTechnology(request, id):
     delete_technology = Technology.objects.get(id=id)
     delete_technology.delete()
@@ -423,15 +512,18 @@ def DeleteTechnology(request, id):
     return redirect('AdminTechnologyView')
 
 
+@login_required(login_url="Login")
 def ClientsView(request):
     return render(request, "admin/clients.html")
 
 
+@login_required(login_url="Login")
 def ProjectsView(request):
     projectlist = Project.objects.all()
     return render(request, "admin/projects.html", {'projectlist': projectlist})
 
 
+@login_required(login_url="Login")
 def AddProject(request):
     form = AddProjectForm(request.POST or None)
     if request.method == 'POST':
@@ -446,6 +538,7 @@ def AddProject(request):
     return render(request, "admin/add_project.html", context)
 
 
+@login_required(login_url="Login")
 def UpdateProject(request, id):
     edit_project = Project.objects.get(id=id)
     form = EditProjectForm(request.POST or None, instance=edit_project)
@@ -461,6 +554,7 @@ def UpdateProject(request, id):
     return render(request, "admin/edit_project.html", context)
 
 
+@login_required(login_url="Login")
 def DeleteProject(request, id):
     delete_project = Project.objects.get(id=id)
     delete_project.delete()
@@ -468,6 +562,7 @@ def DeleteProject(request, id):
     return redirect('AdminProjectsView')
 
 
+@login_required(login_url="Login")
 def ProjectDetailsView(request, id):
     projectdetailview = Project.objects.get(id=id)
     task_list = Task.objects.filter(task_project=id)
@@ -485,11 +580,13 @@ def ProjectDetailsView(request, id):
     return render(request, "admin/project-view.html", context)
 
 
+@login_required(login_url="Login")
 def ProjectTask(request):
     projectlist = Project.objects.all()
     return render(request, "admin/task-nav.html", {'projectlist': projectlist})
 
 
+@login_required(login_url="Login")
 def ProjectTaskList(request, id):
     projectlist = Project.objects.all()
     project_id = id
@@ -506,6 +603,7 @@ def ProjectTaskList(request, id):
     return render(request, "admin/tasks.html", context)
 
 
+@login_required(login_url="Login")
 def AddProjectTask(request, id):
     add_project_id = Project.objects.get(id=id)
     form = AddTaskForm(request.POST or None)
@@ -522,6 +620,7 @@ def AddProjectTask(request, id):
     return render(request, "admin/add_task.html", context)
 
 
+@login_required(login_url="Login")
 def EditProjectTask(request, id, projectid):
     projectid = Project.objects.get(id=projectid)
     edit_task = Task.objects.get(id=id)
@@ -538,6 +637,7 @@ def EditProjectTask(request, id, projectid):
     return render(request, "admin/edit_task.html", context)
 
 
+@login_required(login_url="Login")
 def DeleteProjectTask(request, id, projectid):
     project_id = Project.objects.get(id=projectid)
     delete_leave = Task.objects.get(id=id)
@@ -546,6 +646,7 @@ def DeleteProjectTask(request, id, projectid):
     return redirect('AdminProjectTaskList', id=project_id.id)
 
 
+@login_required(login_url="Login")
 def AddTaskAssign(request, id):
     task_id = Task.objects.get(id=id)
     if request.method == "POST":
@@ -555,6 +656,7 @@ def AddTaskAssign(request, id):
     return render(request, "admin/tasks.html")
 
 
+@login_required(login_url="Login")
 def LeaveList(request):
     leave_list = Leave.objects.all()
     context = {
@@ -563,6 +665,7 @@ def LeaveList(request):
     return render(request, "admin/leaves.html", context)
 
 
+@login_required(login_url="Login")
 def UpdateLeaveStatus(request, id):
     if request.method == 'POST':
         update_leave_status = request.POST.get('leave_status')
@@ -574,6 +677,7 @@ def UpdateLeaveStatus(request, id):
     return render(request, "admin/leaves.html")
 
 
+@login_required(login_url="Login")
 def AddProjectAssignee(request, id):
     users_list = User.objects.all()
     project_id = Project.objects.get(id=id)
