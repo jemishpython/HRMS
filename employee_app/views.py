@@ -10,10 +10,10 @@ from django.shortcuts import render, redirect
 
 from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm, EditPersonalInfoForm, \
     AddEducationInfoForm, EditEducationInfoForm, AddExperienceInfoForm, EditExperienceInfoForm, \
-    EditEmergencyContactForm, AddEmergencyContactForm
+    EditEmergencyContactForm, AddEmergencyContactForm, AddTicketsForm, EditTicketsForm
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact
+    Education_Info, Experience_Info, Emergency_Contact, Ticket
 
 
 def landing(request):
@@ -42,10 +42,7 @@ def EmployeeLogin(request):
 
 def forget_password_mail(request):
     forget_password_phone = request.POST.get('employeephone')
-    print(forget_password_phone,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>USER PHONE")
     user = User.objects.filter(phone=forget_password_phone, is_active=True).first()
-    print(user.username,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>USER NAME")
-    print(user.email,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>USER EMAIL")
 
     forget_password_email = user.email
 
@@ -373,3 +370,46 @@ def DeleteLeave(request, id):
     delete_leave.delete()
     messages.error(request, 'Leave Delete successfully')
     return redirect('EmpLeaves', id=userid)
+
+
+@login_required(login_url="EmployeeLogin")
+def Tickets(request, id):
+    tickets_list = Ticket.objects.filter(ticket_user=id)
+    context = {
+        'tickets_list': tickets_list
+    }
+    return render(request, "employee/employee-tickets.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def AddTicket(request, id):
+    userid = User.objects.get(id=id)
+    if request.method == 'POST':
+        form = AddTicketsForm(request.POST)
+        if form.is_valid():
+            ticket = form.save(commit=False)
+            ticket.ticket_user =  User.objects.get(id=id)
+            ticket.save()
+            messages.success(request, 'Ticket generate successfully')
+            return redirect('EmpTickets', id=userid.id)
+    else:
+        form = AddTicketsForm()
+    context = {'form': form}
+    return render(request, "employee/add_tickets.html", context)
+
+@login_required(login_url="EmployeeLogin")
+def EditTicket(request, id, emg_id):
+    edit_tickets = Ticket.objects.get(id=emg_id)
+    form = EditTicketsForm(request.POST or None, instance=edit_tickets)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                ticket = form.save(commit=False)
+                ticket.employee = User.objects.get(id=id)
+                ticket.save()
+                messages.info(request, 'Experience Info Update successfully')
+                return redirect('EmpProfileView', id=id)
+        except Exception as e:
+            form = EditTicketsForm(instance=edit_tickets)
+    context = {'form': form, 'edit_tickets': edit_tickets}
+    return render(request, "employee/edit_tickets.html", context)

@@ -701,4 +701,4 @@ def AddProjectAssignee(request, id):
 
 @login_required(login_url="Login")
 def TicketList(request):
-    return render(request, 'admin/tickets.html')
+    return render(request, 'admin/employee-tickets.html')
