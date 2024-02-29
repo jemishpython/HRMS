@@ -1,0 +1,10 @@
+Client Side Pages
+
+Client Register
+Client Profile
+Client Project
+Client Project View
+Client > Task 
+
+
+NOTE : Do minor changes based client side

@@ -697,3 +697,8 @@ def AddProjectAssignee(request, id):
             form = ProjectAssignForm(instance=project_id)
     context = {'form': form, 'users_list': users_list, 'project_id': project_id}
     return render(request, "admin/add_project_assignee.html", context)
+
+
+@login_required(login_url="Login")
+def TicketList(request):
+    return render(request, 'admin/tickets.html')
