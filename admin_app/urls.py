@@ -50,7 +50,7 @@ urlpatterns = [
     path("designation/update/<int:id>", views.UpdateDesignation, name="AdminUpdateDesignation"),
     path("designation/delete/<int:id>", views.DeleteDesignation, name="AdminDeleteDesignation"),
 
-    # path("clients", views.ClientsView, name="AdminClientsView"),
+    path("clients", views.ClientsView, name="AdminClientsView"),
 
     path("projects", views.ProjectsView, name="AdminProjectsView"),
     path("projects/add", views.AddProject, name="AdminAddProjects"),
