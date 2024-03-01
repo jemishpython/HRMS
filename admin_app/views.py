@@ -217,107 +217,139 @@ def EditPersonalInfo(request, id):
 
 @login_required(login_url="Login")
 def AddEducationInfo(request, id):
+    user = User.objects.get(id=id)
+    user_id = user.id
     form = AddEducationInfoForm(request.POST or None)
     if request.method == 'POST':
         try:
             if form.is_valid():
                 education = form.save(commit=False)
-                education.employee = User.objects.get(id=id)
+                education.employee = User.objects.get(id=user_id)
                 education.save()
                 messages.success(request, 'Education Info Add successfully')
-                return redirect('AdminProfileView', id=id)
+                return redirect('AdminProfileView', id=user_id)
         except Exception as e:
             form = AddEducationInfoForm()
-    context = {'form': form}
+    context = {'form': form, 'user_id':user_id}
     return render(request, "admin/add_education_info.html", context)
 
 
 @login_required(login_url="Login")
 def EditEducationInfo(request, id, edu_id):
+    user = User.objects.get(id=id)
+    user_id = user.id
     edit_education_info = Education_Info.objects.filter(id=edu_id).first()
     form = EditEducationInfoForm(request.POST or None, instance=edit_education_info)
     if request.method == 'POST':
         try:
             if form.is_valid():
-                education = form.save(commit=False)
-                education.employee = User.objects.get(id=id)
-                education.save()
+                form.save()
                 messages.info(request, 'Education Info Update successfully')
-                return redirect('AdminProfileView', id=id)
+                return redirect('AdminProfileView', id=user_id)
         except Exception as e:
             form = EditEducationInfoForm(instance=edit_education_info)
-    context = {'form': form, 'edit_education_info': edit_education_info}
+    context = {'form': form, 'edit_education_info': edit_education_info, 'user_id': user_id}
     return render(request, "admin/edit_education_info.html", context)
 
 
 @login_required(login_url="Login")
+def DeleteEducation(request, id, edu_id):
+    user_id = User.objects.get(id=id)
+    delete_edu = Education_Info.objects.get(id=edu_id)
+    delete_edu.delete()
+    messages.error(request, 'Education information Delete successfully')
+    return redirect('AdminProfileView', id=user_id.id)
+
+
+@login_required(login_url="Login")
 def AddExperienceInfo(request, id):
+    user = User.objects.get(id=id)
+    user_id = user.id
     form = AddExperienceInfoForm(request.POST or None)
     if request.method == 'POST':
         try:
             if form.is_valid():
                 experience = form.save(commit=False)
-                experience.employee = User.objects.get(id=id)
+                experience.employee = User.objects.get(id=user_id)
                 experience.save()
                 messages.success(request, 'Experience Info Add successfully')
-                return redirect('AdminProfileView', id=id)
+                return redirect('AdminProfileView', id=user_id)
         except Exception as e:
             form = AddExperienceInfoForm()
-    context = {'form': form}
+    context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_experience_info.html", context)
 
 
 @login_required(login_url="Login")
 def EditExperienceInfo(request, id, exp_id):
+    user = User.objects.get(id=id)
+    user_id = user.id
     edit_experience_info = Experience_Info.objects.filter(id=exp_id).first()
     form = EditExperienceInfoForm(request.POST or None, instance=edit_experience_info)
     if request.method == 'POST':
         try:
             if form.is_valid():
-                experience = form.save(commit=False)
-                experience.employee = User.objects.get(id=id)
-                experience.save()
+                form.save()
                 messages.info(request, 'Experience Info Update successfully')
-                return redirect('AdminProfileView', id=id)
+                return redirect('AdminProfileView', id=user_id)
         except Exception as e:
             form = EditExperienceInfoForm(instance=edit_experience_info)
-    context = {'form': form, 'edit_experience_info': edit_experience_info}
+    context = {'form': form, 'edit_experience_info': edit_experience_info, 'user_id': user_id}
     return render(request, "admin/edit_experience_info.html", context)
+
+@login_required(login_url="Login")
+def DeleteExperience(request, id, exp_id):
+    user_id = User.objects.get(id=id)
+    delete_exp = Experience_Info.objects.get(id=exp_id)
+    delete_exp.delete()
+    messages.error(request, 'Experience information Delete successfully')
+    return redirect('AdminProfileView', id=user_id.id)
 
 
 @login_required(login_url="Login")
 def AddEmergencyInfo(request, id):
+    user = User.objects.get(id=id)
+    user_id = user.id
     form = AddEmergencyContactForm(request.POST or None)
     if request.method == 'POST':
         try:
             if form.is_valid():
                 emergency_contact = form.save(commit=False)
-                emergency_contact.employee = User.objects.get(id=id)
+                emergency_contact.employee = User.objects.get(id=user_id)
                 emergency_contact.save()
                 messages.success(request, 'Experience Info Add successfully')
-                return redirect('AdminProfileView', id=id)
+                return redirect('AdminProfileView', id=user_id)
         except Exception as e:
             form = AddEmergencyContactForm()
-    context = {'form': form}
+    context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_emergency_contact.html", context)
 
 
 @login_required(login_url="Login")
 def EditEmergencyInfo(request, id, emg_id):
+    user = User.objects.get(id=id)
+    user_id = user.id
     edit_emergency_contact = Emergency_Contact.objects.get(id=emg_id)
     form = EditEmergencyContactForm(request.POST or None, instance=edit_emergency_contact)
     if request.method == 'POST':
         try:
             if form.is_valid():
-                emergency_contact = form.save(commit=False)
-                emergency_contact.employee = User.objects.get(id=id)
-                emergency_contact.save()
+                form.save()
                 messages.info(request, 'Experience Info Update successfully')
-                return redirect('AdminProfileView', id=id)
+                return redirect('AdminProfileView', id=user_id)
         except Exception as e:
             form = EditEmergencyContactForm(instance=edit_emergency_contact)
-    context = {'form': form, 'edit_emergency_contact': edit_emergency_contact}
+    context = {'form': form, 'edit_emergency_contact': edit_emergency_contact, 'user_id': user_id}
     return render(request, "admin/edit_emergency_contact.html", context)
+
+
+@login_required(login_url="Login")
+def DeleteEmergency(request, id, emg_id):
+    user_id = User.objects.get(id=id)
+    delete_emg = Emergency_Contact.objects.get(id=emg_id)
+    delete_emg.delete()
+    messages.error(request, 'Emergency information Delete successfully')
+    return redirect('AdminProfileView', id=user_id.id)
 
 
 @login_required(login_url="Login")

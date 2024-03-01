@@ -60,7 +60,7 @@
                                             </li>
                                             <li>
                                                 <div class="title">Email</div>
-                                                <div class="text"><a href="">{{profile.email}}</a></div>
+                                                <div class="text"><a href="{{profile.email}}">{{profile.email}}</a></div>
                                             </li>
                                             <li>
                                                 <div class="title">Birthday</div>
@@ -97,8 +97,7 @@
                     <div class="col-md-6 d-flex">
                         <div class="card user_details-box flex-fill">
                             <div class="card-body">
-                                <button class="edit-icon" onclick="editPersonalInfo({{profile.id}})"><i
-                                        class="fa fa-pencil"></i></button>
+                                <button class="edit-icon" onclick="editPersonalInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
                                 <h3 class="card-title">Personal Information</h3>
                                 <ul class="personal-info">
                                     <li>
@@ -318,7 +317,7 @@
 
     function editEducationInfo(UserId, EduId) {
         $.ajax({
-            url: "{% url 'AdminEditEducationInfo' id=0 edu_id=1 %}".replace(0, UserId).replace(1, EduId),
+            url: '/hrms-admin/employee/'+UserId+'/education-info-edit/'+EduId,
             success: function(response) {
                 $("#edit-education-info-form").html(response);
                 $("#edit_education_info_model").modal('show');
@@ -338,7 +337,7 @@
 
     function editExperienceInfo(UserId, ExpId) {
         $.ajax({
-            url: "{% url 'AdminEditExperienceInfo' id=0 exp_id=1 %}".replace(0, UserId).replace(1, ExpId),
+            url: '/hrms-admin/employee/'+UserId+'/experience-info-edit/'+ExpId,
             success: function(response) {
                 $("#edit-experience-info-form").html(response);
                 $("#edit_experience_info_model").modal('show');
@@ -357,7 +356,7 @@
     }
     function editEmergencyInfo(UserId, EmgId) {
         $.ajax({
-            url: "{% url 'AdminEditEmergencyInfo' id=0 emg_id=1 %}".replace(0, UserId).replace(1, EmgId),
+            url: '/hrms-admin/employee/'+UserId+'/emergency-contact-edit/'+EmgId,
             success: function(response) {
                 $("#edit-emergency-contact-form").html(response);
                 $("#edit_emergency_contact_modal").modal('show');

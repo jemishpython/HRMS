@@ -75,9 +75,11 @@
 												</div>
 											</div>
 										</div>
+										{% if user.id == user_details.id %}
 										<div class="pro-edit">
 											<button class="edit-icon" onclick="editProfileInfo({{user_details.id}})"><i class="fa fa-pencil"></i></button>
 										</div>
+										{% endif %}
 									</div>
 								</div>
 							</div>
@@ -93,7 +95,9 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
+											{% if user.id == user_details.id %}
 											<button class="edit-icon" onclick="editPersonalInfo({{user_details.id}})"><i class="fa fa-pencil"></i></button>
+											{% endif %}
 											<h3 class="card-title">Personal Information</h3>
 											<ul class="personal-info">
 												<li>
@@ -146,7 +150,9 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
+											{% if user.id == user_details.id %}
 											<button class="edit-icon ml-2" onclick="addEducationInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
+											{% endif %}
 											<h3 class="card-title">Education Information</h3>
 											<div class="experience-box">
 												<ul class="experience-list">
@@ -157,7 +163,11 @@
 														</div>
 														<div class="experience-content">
 															<div class="timeline-content">
+																{% if user.id == user_details.id %}
 																<h4 class="text-dark cursor_pointer" onclick="editEducationInfo({{user_details.id}}, {{edu_info.id}})" title="Edit">{{edu_info.institution}}</h4>
+																{% else %}
+																<h4 class="text-dark">{{edu_info.institution}}</h4>
+																{% endif %}
 																<div class="text-dark">{{edu_info.degree}}<span class="ml-2">| Grade :  {{edu_info.grade}}</span></div>
 																<span class="">{{edu_info.start_year|date:'F - Y'}} - {{edu_info.complete_year|date:'F - Y'}}</span>
 															</div>
@@ -172,7 +182,9 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
+											{% if user.id == user_details.id %}
 											<button class="edit-icon" onclick="addExperienceInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
+											{% endif %}
 											<h3 class="card-title">Experience</h3>
 											<div class="experience-box">
 												<ul class="experience-list">
@@ -183,7 +195,11 @@
 														</div>
 														<div class="experience-content">
 															<div class="timeline-content">
+																{% if user.id == user_details.id %}
 																<h4 class="text-dark cursor_pointer" onclick="editExperienceInfo({{user_details.id}}, {{exp.id}})" title="Edit">{{exp.company_name}}</h4>
+																{% else %}
+																<h4 class="text-dark">{{exp.company_name}}</h4>
+																{% endif %}
 																<span class="">{{exp.start_date|date:'M , Y'}} - {{exp.end_date|date:'M , Y'}}</span>
 															</div>
 														</div>
@@ -199,8 +215,10 @@
 								<div class="col-md-12 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
+											{% if user.id == user_details.id %}
 											<button class="edit-icon ml-2" onclick="addEmergencyInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
 											<button class="edit-icon mr-1" onclick="editEmergencyInfo({{user_details.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
+											{% endif %}
 											<h2 class="card-title">Emergency Contact</h2>
 											{% if view_emergency_contact %}
 											<div class="d-flex">

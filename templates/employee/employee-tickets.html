@@ -254,9 +254,9 @@ function addTicket(UserId) {
     });
 }
 
-function editTicket(UserId,editTicketId) {=
+function editTicket(UserId,editTicketId) {
     $.ajax({
-        url: '/hrms/employee/'+UserId+'/tickets-update/'+editTicketId,
+        url: "{% url 'EmpEditTicket' id=0 userid=1 %}".replace(0, editTicketId).replace(1,UserId),
         success: function(response) {
             $("#edit-ticket-form").html(response);
             $("#edit_ticket_model").modal('show');

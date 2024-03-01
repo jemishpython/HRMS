@@ -197,9 +197,7 @@ def EmpEditEducationInfo(request, user_id, edu_id):
     if request.method == 'POST':
         try:
             if form.is_valid():
-                education = form.save(commit=False)
-                education.employee = User.objects.get(id=user_id)
-                education.save()
+                form.save()
                 messages.info(request, 'Education Info Update successfully')
                 return redirect('EmpProfileView', id=user_id)
         except Exception as e:
@@ -216,7 +214,6 @@ def AddExperienceInfo(request, id):
             if form.is_valid():
                 experience = form.save(commit=False)
                 experience.employee = User.objects.get(id=id)
-                experience.save()
                 messages.success(request, 'Experience Info Add successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
@@ -233,8 +230,6 @@ def EditExperienceInfo(request, id, exp_id):
         try:
             if form.is_valid():
                 experience = form.save(commit=False)
-                experience.employee = User.objects.get(id=id)
-                experience.save()
                 messages.info(request, 'Experience Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
@@ -405,11 +400,9 @@ def EditTicket(request, id, userid):
     if request.method == 'POST':
         try:
             if form.is_valid():
-                ticket = form.save(commit=False)
-                ticket.employee = User.objects.get(id=userid)
-                ticket.save()
+                form.save()
                 messages.info(request, 'Ticket Update successfully')
-                return redirect('EmpTickets', id=userid)
+                return redirect('EmpTickets', id=userid.id)
         except Exception as e:
             form = EditTicketsForm(instance=edit_tickets)
     context = {'form': form, 'edit_tickets': edit_tickets}

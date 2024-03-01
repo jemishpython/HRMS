@@ -107,7 +107,7 @@ class EditEmergencyContactForm(forms.ModelForm):
 class AddTicketsForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ['ticket_title', 'ticket_user', 'ticket_create_date', 'ticket_priority', 'ticket_description']
+        fields = ['ticket_title', 'ticket_create_date', 'ticket_priority', 'ticket_description']
         widgets = {
             'ticket_create_date': forms.DateInput(attrs={'type': 'date', 'value': date.today}),
         }
@@ -116,7 +116,7 @@ class AddTicketsForm(forms.ModelForm):
 class EditTicketsForm(forms.ModelForm):
     class Meta:
         model = Ticket
-        fields = ['ticket_title', 'ticket_user', 'ticket_create_date', 'ticket_priority', 'ticket_description']
+        fields = ['ticket_title', 'ticket_create_date', 'ticket_priority', 'ticket_description']
         widgets = {
             'ticket_create_date': forms.DateInput(attrs={'type': 'date', 'value': date.today}),
         }
