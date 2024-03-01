@@ -26,6 +26,8 @@ class EditLeaveForm(forms.ModelForm):
 
 
 class EditProfileInfoForm(forms.ModelForm):
+    avatar = forms.ImageField(label='')
+
     class Meta:
         model = User
         fields = ['username', 'phone', 'dob', 'email', 'address', 'gender', 'date_joined', 'department', 'designation',

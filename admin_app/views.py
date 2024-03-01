@@ -15,7 +15,7 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
     EditEmergencyContactForm
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact
+    Education_Info, Experience_Info, Emergency_Contact, Ticket
 
 
 def AdminRegister(request):
@@ -701,4 +701,20 @@ def AddProjectAssignee(request, id):
 
 @login_required(login_url="Login")
 def TicketList(request):
-    return render(request, 'admin/employee-tickets.html')
+    ticket_list = Ticket.objects.all()
+    context = {
+        'ticket_list': ticket_list
+    }
+    return render(request, 'admin/tickets.html',context)
+
+
+@login_required(login_url="Login")
+def UpdateTicketstatus(request, id):
+    if request.method == 'POST':
+        update_ticket_status = request.POST.get('ticket_status')
+        ticket_status_update = Ticket.objects.get(id=id)
+        ticket_status_update.ticket_status = update_ticket_status
+        ticket_status_update.save()
+        messages.info(request, 'Ticket status update successfully')
+        return redirect('AdminTicketList')
+    return render(request, "admin/tickets.html")

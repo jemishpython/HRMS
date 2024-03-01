@@ -72,5 +72,5 @@ urlpatterns = [
     path("project-assignee/<int:id>", views.AddProjectAssignee, name='AdminAddProjectAssignee'),
 
     path("tickets", views.TicketList, name='AdminTicketList'),
-    # path("leaves/status-update/<int:id>", views.UpdateLeaveStatus, name='AdminLeaveStatusUpdate'),
+    path("tickets/status-update/<int:id>", views.UpdateTicketstatus, name='AdminTicketStatusUpdate'),
 ]

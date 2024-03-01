@@ -144,7 +144,7 @@ def ProfileView(request, id):
 @login_required(login_url="EmployeeLogin")
 def EditProfileInfo(request, id):
     edit_profile_info = User.objects.get(id=id)
-    form = EditProfileInfoForm(request.POST or None, request.FILES, instance=edit_profile_info)
+    form = EditProfileInfoForm(request.POST or None, request.FILES or None, instance=edit_profile_info)
     if request.method == 'POST':
         try:
             if form.is_valid():
@@ -398,18 +398,28 @@ def AddTicket(request, id):
     return render(request, "employee/add_tickets.html", context)
 
 @login_required(login_url="EmployeeLogin")
-def EditTicket(request, id, emg_id):
-    edit_tickets = Ticket.objects.get(id=emg_id)
+def EditTicket(request, id, userid):
+    userid = User.objects.get(id=userid)
+    edit_tickets = Ticket.objects.get(id=id)
     form = EditTicketsForm(request.POST or None, instance=edit_tickets)
     if request.method == 'POST':
         try:
             if form.is_valid():
                 ticket = form.save(commit=False)
-                ticket.employee = User.objects.get(id=id)
+                ticket.employee = User.objects.get(id=userid)
                 ticket.save()
-                messages.info(request, 'Experience Info Update successfully')
-                return redirect('EmpProfileView', id=id)
+                messages.info(request, 'Ticket Update successfully')
+                return redirect('EmpTickets', id=userid)
         except Exception as e:
             form = EditTicketsForm(instance=edit_tickets)
     context = {'form': form, 'edit_tickets': edit_tickets}
     return render(request, "employee/edit_tickets.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def DeleteTicket(request, id):
+    userid = request.user.id
+    delete_ticket = Ticket.objects.get(id=id)
+    delete_ticket.delete()
+    messages.error(request, 'Ticket Delete successfully')
+    return redirect('EmpTickets', id=userid)

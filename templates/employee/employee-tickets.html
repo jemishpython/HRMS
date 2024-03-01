@@ -4,6 +4,11 @@
 			
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
+				<div class="show_message">
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+					{% endfor %}
+				</div>
 				
 				<!-- Page Content -->
                 <div class="content container-fluid">
@@ -185,7 +190,7 @@
 											<td>{{ticket.ticket_status_update_date|date:"j - M - Y"}}</td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
-													<button class="p-0 ml-4 text-info border-0 " onclick="editTicket({{ticket.id}},{{user.id}})">Edit</button>
+													<button class="p-0 ml-4 text-info border-0 " onclick="editTicket({{user.id}},{{ticket.id}})">Edit</button>
 													<button class="p-0 ml-4 text-danger border-0 " onclick="deleteTicket({{ticket.id}})">Delete</button>
 												</div>
 											</td>
@@ -202,6 +207,31 @@
 				<div id="add-ticket-form"></div>
 
 				<div id="edit-ticket-form"></div>
+
+				<!-- Delete Leave Modal -->
+				<div class="modal custom-modal fade" id="delete_ticket_model" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="form-header">
+									<h3>Delete Ticket</h3>
+									<p>Are you sure want to Cancel this ticket ?</p>
+								</div>
+								<div class="modal-btn delete-action">
+									<div class="row">
+										<div class="col-6">
+											<a id="confirmTicketDeleteBtn" href="#" class="btn btn-primary continue-btn" title="">Delete</a>
+										</div>
+										<div class="col-6">
+											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Delete Leave Modal -->
 
 				
             </div>
@@ -224,14 +254,22 @@ function addTicket(UserId) {
     });
 }
 
-function editTicket(editTicketId, UserId) {
+function editTicket(UserId,editTicketId) {=
     $.ajax({
-        url: '/hrms/employee/tickets/${UserId}/update/${editTicketId}',
+        url: '/hrms/employee/'+UserId+'/tickets-update/'+editTicketId,
         success: function(response) {
             $("#edit-ticket-form").html(response);
             $("#edit_ticket_model").modal('show');
         }
     });
+}
+
+function deleteTicket(deleteTicketId) {
+    $("#delete_ticket_model").modal('show');
+    if (deleteTicketId) {
+        var deleteUrl = "{% url 'EmpDeleteTicket' id=0 %}".replace(0, deleteTicketId);
+        $("#confirmTicketDeleteBtn").attr("href", deleteUrl);
+    }
 }
 
 </script>

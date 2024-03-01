@@ -41,5 +41,6 @@ urlpatterns = [
     path("tickets/<int:id>", views.Tickets, name="EmpTickets"),
     path("<int:id>/tickets/add", views.AddTicket, name="EmpAddTicket"),
     path("<int:userid>/tickets-update/<int:id>", views.EditTicket, name="EmpEditTicket"),
-    # path("<int:id>/tickets/delete", views.DeleteTicket, name="EmpDeleteTicket"),
+    path("<int:id>/tickets/delete", views.DeleteTicket, name="EmpDeleteTicket"),
+
 ]

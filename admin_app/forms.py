@@ -69,7 +69,8 @@ class EditTechnologyForm(forms.ModelForm):
 class AddProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['project_name', 'project_client_name', 'project_start_date', 'project_end_date', 'project_cost', 'project_priority', 'project_status', 'project_summary']
+        fields = ['project_name', 'project_client_name', 'project_start_date', 'project_end_date', 'project_cost',
+                  'project_priority', 'project_status', 'project_summary']
         widgets = {
             'project_start_date': forms.DateInput(attrs={'type': 'date'}),
             'project_end_date': forms.DateInput(attrs={'type': 'date'}),
@@ -79,7 +80,8 @@ class AddProjectForm(forms.ModelForm):
 class EditProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['project_name', 'project_client_name', 'project_start_date', 'project_end_date', 'project_cost', 'project_priority', 'project_status', 'project_summary']
+        fields = ['project_name', 'project_client_name', 'project_start_date', 'project_end_date', 'project_cost',
+                  'project_priority', 'project_status', 'project_summary']
         widgets = {
             'project_start_date': forms.DateInput(attrs={'type': 'date'}),
             'project_end_date': forms.DateInput(attrs={'type': 'date'}),
@@ -111,9 +113,11 @@ class EditTaskForm(forms.ModelForm):
 
 class EditProfileInfoForm(forms.ModelForm):
     avatar = forms.ImageField(label='')
+
     class Meta:
         model = User
-        fields = ['username', 'phone', 'dob', 'email', 'address', 'gender', 'date_joined', 'department', 'designation', 'technology','avatar']
+        fields = ['username', 'phone', 'dob', 'email', 'address', 'gender', 'date_joined', 'department', 'designation',
+                  'technology', 'avatar']
         widgets = {
             'dob': forms.DateInput(attrs={'type': 'date'}),
             'date_joined': forms.DateInput(attrs={'type': 'date'}),
@@ -134,7 +138,6 @@ class AddEducationInfoForm(forms.ModelForm):
             'start_year': forms.DateInput(attrs={'type': 'date'}),
             'complete_year': forms.DateInput(attrs={'type': 'date'}),
         }
-
 
 
 class EditEducationInfoForm(forms.ModelForm):
@@ -173,7 +176,8 @@ class AddEmergencyContactForm(forms.ModelForm):
 
     class Meta:
         model = Emergency_Contact
-        fields = ['primary_name', 'primary_con_relationship', 'primary_phone1', 'primary_phone2', 'secondary_name', 'secondary_con_relationship', 'secondary_phone1', 'secondary_phone2']
+        fields = ['primary_name', 'primary_con_relationship', 'primary_phone1', 'primary_phone2', 'secondary_name',
+                  'secondary_con_relationship', 'secondary_phone1', 'secondary_phone2']
 
 
 class EditEmergencyContactForm(forms.ModelForm):
@@ -182,4 +186,5 @@ class EditEmergencyContactForm(forms.ModelForm):
 
     class Meta:
         model = Emergency_Contact
-        fields = ['primary_name', 'primary_con_relationship', 'primary_phone1', 'primary_phone2', 'secondary_name', 'secondary_con_relationship', 'secondary_phone1', 'secondary_phone2']
+        fields = ['primary_name', 'primary_con_relationship', 'primary_phone1', 'primary_phone2', 'secondary_name',
+                  'secondary_con_relationship', 'secondary_phone1', 'secondary_phone2']

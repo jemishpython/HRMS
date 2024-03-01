@@ -12,7 +12,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'EmpEditTicket' user.id edit_tickets.id %}" method="post">
+                <form action="{% url 'EmpEditTicket' userid=user.id id=edit_tickets.id %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         {{ form.ticket_title|as_crispy_field }}
