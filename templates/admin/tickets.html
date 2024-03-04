@@ -159,6 +159,7 @@
 								<table class="table table-striped custom-table mb-0 datatable">
 									<thead>
 										<tr>
+											<th>Employee</th>
 											<th>Ticket Title</th>
 											<th>Ticket Description</th>
 											<th>Ticket Generate</th>
@@ -170,22 +171,28 @@
 									<tbody>
 										{% for ticket in ticket_list %}
 										<tr>
+											<td>
+												<h2 class="table-avatar">
+													<a href="profile.html" class="avatar"><img alt="" src="{{ticket.ticket_user.avatar.url}}"></a>
+													<a href="#">{{ticket.ticket_user.username}}<span>{{ticket.ticket_user.designation|default:""}}. {{ticket.ticket_user.technology|default:""}}</span></a>
+												</h2>
+											</td>
 											<td>{{ticket.ticket_title}}</td>
 											<td>{{ticket.ticket_description}}</td>
 											<td>{{ticket.ticket_create_date|date:"j - M - Y"}}</td>
 											<td class="text-center">
 												<div class="action-label">
-													<a class="border rounded-pill p-1 text-dark">{{ticket.ticket_priority}}</a>
+													<a class="border rounded-pill p-1 text-dark"><i class="fa fa-dot-circle-o {% if ticket.ticket_priority == 'High' %}text-danger{% elif ticket.ticket_priority == 'Medium' %}text-warning{% else %}text-info{% endif %}"></i> {{ticket.ticket_priority}}</a>
 												</div>
 											</td>
 											<td class="text-center">
 												<div class="dropdown action-label" >
 													<form action="{% url 'AdminTicketStatusUpdate' ticket.id %}" method="post">
 													{% csrf_token %}
-														<select class="px-2 py-1 border rounded-pill" onChange="this.form.submit();" name="ticket_status">
+														<select class="px-2 py-2 border rounded-pill" onChange="this.form.submit();" name="ticket_status">
 															<option selected disabled>New</option>
-															<option {% if ticket.ticket_status == "Approved" %}selected{% endif %}>Approved</option>
-															<option {% if ticket.ticket_status == "Declined" %}selected{% endif %}>Declined</option>
+															<option {% if ticket.ticket_status == 'Approved' %}selected{% endif %} >Approved</option>
+															<option {% if ticket.ticket_status == 'Declined' %}selected{% endif %} >Declined</option>
 														</select>
 													</form>
 												</div>

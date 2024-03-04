@@ -85,7 +85,7 @@
 											<td>{{leave.leave_reason}}</td>
 											<td class="text-center">
 												<div class="action-label">
-													<a class="border rounded-pill p-1 text-dark">{{leave.leave_status}}</a>
+													<a class="border rounded-pill p-1 text-dark"><i class="fa fa-dot-circle-o {% if leave.leave_status == 'Declined' %}text-danger{% elif leave.leave_status == 'Approved' %}text-success{% else %}text-info{% endif %}"></i> {{leave.leave_status}}</a>
 												</div>
 											</td>
 

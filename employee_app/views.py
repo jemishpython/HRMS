@@ -383,7 +383,7 @@ def AddTicket(request, id):
         form = AddTicketsForm(request.POST)
         if form.is_valid():
             ticket = form.save(commit=False)
-            ticket.ticket_user =  User.objects.get(id=id)
+            ticket.ticket_user = User.objects.get(id=id)
             ticket.save()
             messages.success(request, 'Ticket generate successfully')
             return redirect('EmpTickets', id=userid.id)

@@ -30,15 +30,15 @@
 					
 					<!-- Search Filter -->
 					<div class="row filter-row">
-					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
 							<div class="form-group form-focus">
 								<input type="text" class="form-control floating">
 								<label class="focus-label">Employee Name</label>
 							</div>
 					   </div>
-					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating"> 
+								<select class="select floating">
 									<option> -- Select -- </option>
 									<option>Casual Leave</option>
 									<option>Medical Leave</option>
@@ -47,9 +47,9 @@
 								<label class="focus-label">Leave Type</label>
 							</div>
 					   </div>
-					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12"> 
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating"> 
+								<select class="select floating">
 									<option> -- Select -- </option>
 									<option> Pending </option>
 									<option> Approved </option>
@@ -58,7 +58,7 @@
 								<label class="focus-label">Leave Status</label>
 							</div>
 					   </div>
-					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
 							<div class="form-group form-focus">
 								<div class="cal-icon">
 									<input class="form-control floating datetimepicker" type="text">
@@ -66,7 +66,7 @@
 								<label class="focus-label">From</label>
 							</div>
 						</div>
-					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
 							<div class="form-group form-focus">
 								<div class="cal-icon">
 									<input class="form-control floating datetimepicker" type="text">
@@ -74,9 +74,9 @@
 								<label class="focus-label">To</label>
 							</div>
 						</div>
-					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">  
-							<a href="#" class="btn btn-success btn-block"> Search </a>  
-					   </div>     
+					   <div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+							<a href="#" class="btn btn-success btn-block"> Search </a>
+					   </div>
                     </div>
 					<!-- /Search Filter -->
 					
@@ -114,7 +114,7 @@
 												<div class="dropdown action-label" >
 													<form action="{% url 'AdminLeaveStatusUpdate' leave.id %}" method="post">
 													{% csrf_token %}
-														<select class="px-2 py-1 border rounded-pill" onChange="this.form.submit();" name="leave_status">
+														<select class="px-2 py-2 border rounded-pill" onChange="this.form.submit();" name="leave_status">
 															<option selected disabled>New</option>
 															<option {% if leave.leave_status == "Approved" %}selected{% endif %}>Approved</option>
 															<option {% if leave.leave_status == "Declined" %}selected{% endif %}>Declined</option>

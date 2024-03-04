@@ -179,12 +179,12 @@
 											<td>{{ticket.ticket_create_date|date:"j - M - Y"}}</td>
 											<td class="text-center">
 												<div class="action-label">
-													<a class="border rounded-pill p-1 text-dark">{{ticket.ticket_priority}}</a>
+													<a class="border rounded-pill p-1 text-dark"><i class="fa fa-dot-circle-o {% if ticket.ticket_priority == 'High' %}text-danger{% elif ticket.ticket_priority == 'Medium' %}text-warning{% else %}text-info{% endif %}"></i> {{ticket.ticket_priority}}</a>
 												</div>
 											</td>
 											<td class="text-center">
 												<div class="action-label">
-													<a class="border rounded-pill p-1 text-dark">{{ticket.ticket_status}}</a>
+													<a class="border rounded-pill p-1 text-dark"><i class="fa fa-dot-circle-o {% if ticket.ticket_status == 'Declined' %}text-danger{% elif ticket.ticket_status == 'Approved' %}text-success{% else %}text-info{% endif %}"></i> {{ticket.ticket_status}}</a>
 												</div>
 											</td>
 											<td>{{ticket.ticket_status_update_date|date:"j - M - Y"}}</td>

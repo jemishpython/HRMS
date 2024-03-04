@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.template import loader
-from datetime import datetime
+from datetime import date
 
 from django.contrib.auth import logout, login
 from django.contrib import messages
@@ -704,6 +704,32 @@ def UpdateLeaveStatus(request, id):
         leave_status_update = Leave.objects.get(id=id)
         leave_status_update.leave_status = update_leave_status
         leave_status_update.save()
+
+        leave_status_update_email = leave_status_update.leave_user.email
+
+        context = {
+            'username': leave_status_update.leave_user.username,
+            'user_id': leave_status_update.leave_user.id,
+            'leave_status': leave_status_update.leave_status,
+            'leave_type': leave_status_update.leave_type,
+            'leave_from': leave_status_update.leave_from,
+            'leave_to': leave_status_update.leave_to,
+            'leave_days': leave_status_update.leave_days,
+            'current_date': date.today()
+            # 'request_url': request.get_host(), #For Liveproject
+        }
+
+        from_email = settings.EMAIL_HOST_USER
+        mail_subject = f"Leave : {leave_status_update.leave_type}"
+
+        email = loader.render_to_string('admin/leave_status_email_template.html', context)
+        send_mail(
+            subject=mail_subject,
+            message=email,
+            from_email=from_email,
+            recipient_list=[leave_status_update_email],
+            html_message=email,
+        )
         messages.info(request, 'Leave status update successfully')
         return redirect('AdminLeaveList')
     return render(request, "admin/leaves.html")
@@ -746,6 +772,7 @@ def UpdateTicketstatus(request, id):
         update_ticket_status = request.POST.get('ticket_status')
         ticket_status_update = Ticket.objects.get(id=id)
         ticket_status_update.ticket_status = update_ticket_status
+        ticket_status_update.ticket_status_update_date = date.today()
         ticket_status_update.save()
         messages.info(request, 'Ticket status update successfully')
         return redirect('AdminTicketList')
