@@ -14,6 +14,7 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     EditTaskForm, EditTechnologyForm, AddTechnologyForm, AddExperienceInfoForm, EditProfileInfoForm, \
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
     EditEmergencyContactForm
+from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket
 
@@ -691,8 +692,10 @@ def AddTaskAssign(request, id):
 @login_required(login_url="Login")
 def LeaveList(request):
     leave_list = Leave.objects.all()
+    leave_status = LeaveStatusChoice.choices
     context = {
-        'leave_list': leave_list
+        'leave_list': leave_list,
+        'leave_status': leave_status
     }
     return render(request, "admin/leaves.html", context)
 
@@ -760,8 +763,12 @@ def AddProjectAssignee(request, id):
 @login_required(login_url="Login")
 def TicketList(request):
     ticket_list = Ticket.objects.all()
+    ticket_priority = TicketPriorityChoice.choices
+    ticket_status = TicketStatusChoice.choices
     context = {
-        'ticket_list': ticket_list
+        'ticket_list': ticket_list,
+        'ticket_priority': ticket_priority,
+        'ticket_status': ticket_status,
     }
     return render(request, 'admin/tickets.html',context)
 

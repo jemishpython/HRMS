@@ -103,60 +103,71 @@
 
 					<!-- Search Filter -->
 					<div class="row filter-row">
-						<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-							<div class="form-group form-focus">
-								<input type="text" class="form-control floating">
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="emp_name">
 								<label class="focus-label">Employee Name</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="name-search">
+								<label class="focus-label">Ticket Title</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating">
-									<option> -- Select -- </option>
-									<option> Pending </option>
-									<option> Approved </option>
-									<option> Returned </option>
-								</select>
-								<label class="focus-label">Status</label>
+								<input type="date" class="form-control floating" id="ticket_from_date">
+								<label class="focus-label">Ticket Generate - From Date</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
+						<div class="col-sm-6 col-md-3">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating">
-									<option> -- Select -- </option>
-									<option> High </option>
-									<option> Low </option>
-									<option> Medium </option>
+								<input type="date" class="form-control floating" id="ticket_to_date">
+								<label class="focus-label">Ticket Generate - To Date</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control floating" id="ticket_priority_status">
+									<option value="">Select</option>
+									{% for priority in ticket_priority  %}
+										<option value="{{ priority.0 }}">{{ priority.1 }}</option>
+									{% endfor %}
 								</select>
-								<label class="focus-label">Priority</label>
+								<label class="focus-label">Ticket Status</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-							<div class="form-group form-focus">
-								<div class="cal-icon">
-									<input class="form-control floating datetimepicker" type="text">
-								</div>
-								<label class="focus-label">From</label>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control floating" id="ticket_status_check">
+									<option value="">Select</option>
+									{% for status in ticket_status %}
+										<option value="{{ status.0 }}">{{ status.1 }}</option>
+									{% endfor %}
+								</select>
+								<label class="focus-label">Priority Status</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-							<div class="form-group form-focus">
-								<div class="cal-icon">
-									<input class="form-control floating datetimepicker" type="text">
-								</div>
-								<label class="focus-label">To</label>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<input type="date" class="form-control floating" id="status_from_date">
+								<label class="focus-label">Ticket Status - From Date</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3 col-lg-3 col-xl-2 col-12">
-							<a href="#" class="btn btn-success btn-block"> Search </a>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<input type="date" class="form-control floating" id="status_to_date">
+								<label class="focus-label">Ticket Status - To Date</label>
+							</div>
 						</div>
-                    </div>
+					</div>
 					<!-- /Search Filter -->
 
 					<div class="row">
 						<div class="col-md-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table mb-0 datatable">
+								<table class="table table-striped custom-table mb-0" id="ticket_table">
 									<thead>
 										<tr>
 											<th>Employee</th>
@@ -177,8 +188,8 @@
 													<a href="#">{{ticket.ticket_user.username}}<span>{{ticket.ticket_user.designation|default:""}}. {{ticket.ticket_user.technology|default:""}}</span></a>
 												</h2>
 											</td>
-											<td>{{ticket.ticket_title}}</td>
-											<td>{{ticket.ticket_description}}</td>
+											<td class="w-25 text-wrap">{{ticket.ticket_title}}</td>
+											<td class="w-75 text-wrap">{{ticket.ticket_description}}</td>
 											<td>{{ticket.ticket_create_date|date:"j - M - Y"}}</td>
 											<td class="text-center">
 												<div class="action-label">
@@ -210,7 +221,30 @@
 
             </div>
 			<!-- /Page Wrapper -->
-
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+	var table = $('#ticket_table').DataTable({
+		dom: 'Blrtip',
+	});
+	 $('#emp_name').on('keyup', function () {
+		table.column(0).search(this.value).draw();
+	});
+	 $('#name-search').on('keyup', function () {
+		table.column(1).search(this.value).draw();
+	});
+	$('#ticket_priority_status').on('change', function () {
+		table.column(4).search(this.value).draw();
+	});
+	$('#ticket_status_check').on('change', function () {
+		table.column(5).search(this.value).draw();
+	});
+	$('#technology').on('change', function () {
+		table.column(6).search(this.value).draw();
+	});
+});
+</script>
 <script>
 window.setTimeout(function() {
 	$(".alert").fadeTo(500, 0).slideUp(500, function(){

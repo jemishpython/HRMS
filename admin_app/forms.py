@@ -99,6 +99,12 @@ class ProjectAssignForm(forms.ModelForm):
         )
 
 
+class TicketStatusUpdate(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ['ticket_status']
+
+
 class AddTaskForm(forms.ModelForm):
     class Meta:
         model = Task

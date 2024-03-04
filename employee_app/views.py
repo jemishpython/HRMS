@@ -11,6 +11,7 @@ from django.shortcuts import render, redirect
 from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm, EditPersonalInfoForm, \
     AddEducationInfoForm, EditEducationInfoForm, AddExperienceInfoForm, EditExperienceInfoForm, \
     EditEmergencyContactForm, AddEmergencyContactForm, AddTicketsForm, EditTicketsForm
+from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket
@@ -111,7 +112,16 @@ def EmployeeIndex(request):
 @login_required(login_url="EmployeeLogin")
 def EmployeeListView(request):
     emp_list = User.objects.all()
-    return render(request, "employee/employees_list.html",{'emp_list':emp_list})
+    emp_technology = Technology.objects.all()
+    emp_department = Department.objects.all()
+    emp_designation = Designation.objects.all()
+    context = {
+        'emp_list': emp_list,
+        'emp_technology': emp_technology,
+        'emp_department': emp_department,
+        'emp_designation': emp_designation,
+    }
+    return render(request, "employee/employees_list.html",context)
 
 
 # def day_month_year_converter(date1, date2):
@@ -318,8 +328,10 @@ def TechnologyView(request):
 @login_required(login_url="EmployeeLogin")
 def Leaves(request, id):
     leave_list = Leave.objects.filter(leave_user=id)
+    leave_status = LeaveStatusChoice.choices
     context = {
-        'leave_list': leave_list
+        'leave_list': leave_list,
+        'leave_status': leave_status
     }
     return render(request, "employee/leaves-employee.html", context)
 
@@ -370,8 +382,13 @@ def DeleteLeave(request, id):
 @login_required(login_url="EmployeeLogin")
 def Tickets(request, id):
     tickets_list = Ticket.objects.filter(ticket_user=id)
+    ticket_priority = TicketPriorityChoice.choices
+    ticket_status = TicketStatusChoice.choices
     context = {
-        'tickets_list': tickets_list
+        'tickets_list': tickets_list,
+        'ticket_priority': ticket_priority,
+        'ticket_status': ticket_status,
+
     }
     return render(request, "employee/employee-tickets.html", context)
 
