@@ -119,27 +119,29 @@
                     <div class="col-md-6 d-flex">
                         <div class="card user_details-box flex-fill">
                             <div class="card-body">
+                                <button class="edit-icon ml-2" onclick="addBankInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
+                                <button class="edit-icon mr-1" onclick="editBankInfo({{profile.id}}, {{view_bank_info.id}})"><i class="fa fa-pencil"></i></button>
                                 <h3 class="card-title">Bank information</h3>
                                 <ul class="personal-info">
                                     <li>
-                                        <div class="title">Bank name</div>
-                                        <div class="text">ICICI Bank</div>
+                                        <div class="title">Bank Name : </div>
+                                        <div class="text">{{view_bank_info.bank_name}}</div>
                                     </li>
                                     <li>
-                                        <div class="title">Bank account No.</div>
-                                        <div class="text">159843014641</div>
+                                        <div class="title">Bank Account Number : </div>
+                                        <div class="text">{{view_bank_info.bank_account_number}}</div>
                                     </li>
                                     <li>
-                                        <div class="title">IFSC Code</div>
-                                        <div class="text">ICI24504</div>
+                                        <div class="title">Bank IFSC Code : </div>
+                                        <div class="text">{{view_bank_info.bank_ifsc_code}}</div>
                                     </li>
                                     <li>
-                                        <div class="title">PAN No</div>
-                                        <div class="text">TC000Y56</div>
+                                        <div class="title">PAN Card Number : </div>
+                                        <div class="text">{{view_bank_info.user_pan_card_number}}</div>
                                     </li>
                                     <li>
-                                        <div class="title">ADHAR No</div>
-                                        <div class="text">TC000Y56</div>
+                                        <div class="title">Aadhar Number : </div>
+                                        <div class="text">{{view_bank_info.user_aadhar_card_number}}</div>
                                     </li>
                                 </ul>
                             </div>
@@ -150,8 +152,7 @@
                     <div class="col-md-6 d-flex">
                         <div class="card user_details-box flex-fill">
                             <div class="card-body">
-                                <button class="edit-icon ml-2" onclick="addEducationInfo({{profile.id}})"><i
-                                        class="fa fa-plus"></i></button>
+                                <button class="edit-icon ml-2" onclick="addEducationInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
                                 <h3 class="card-title">Education Information</h3>
                                 <div class="experience-box">
                                     <ul class="experience-list">
@@ -162,11 +163,8 @@
                                             </div>
                                             <div class="experience-content">
                                                 <div class="timeline-content">
-                                                    <h4 class="text-dark cursor_pointer"
-                                                        onclick="editEducationInfo({{profile.id}}, {{edu_info.id}})"
-                                                        title="Edit">{{edu_info.institution}}</h4>
-                                                    <div class="text-dark">{{edu_info.degree}}<span class="ml-2">| Grade :  {{edu_info.grade}}</span>
-                                                    </div>
+                                                    <h4 class="text-dark cursor_pointer" onclick="editEducationInfo({{profile.id}}, {{edu_info.id}})" title="Edit">{{edu_info.institution}}</h4>
+                                                    <div class="text-dark">{{edu_info.degree}}<span class="ml-2">| Grade :  {{edu_info.grade}}</span></div>
                                                     <span class="">{{edu_info.start_year|date:'F - Y'}} - {{edu_info.complete_year|date:'F - Y'}}</span>
                                                 </div>
                                             </div>
@@ -210,11 +208,8 @@
                     <div class="col-md-12 d-flex">
                         <div class="card user_details-box flex-fill">
                             <div class="card-body">
-                                <button class="edit-icon ml-2" onclick="addEmergencyInfo({{profile.id}})"><i
-                                        class="fa fa-plus"></i></button>
-                                <button class="edit-icon mr-1"
-                                        onclick="editEmergencyInfo({{profile.id}}, {{view_emergency_contact.id}})"><i
-                                        class="fa fa-pencil"></i></button>
+                                <button class="edit-icon ml-2" onclick="addEmergencyInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
+                                <button class="edit-icon mr-1" onclick="editEmergencyInfo({{profile.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
                                 <h2 class="card-title">Emergency Contact</h2>
                                 {% if view_emergency_contact %}
                                 <div class="d-flex">
@@ -276,6 +271,8 @@
     <div id="edit-personal-info-form"></div>
     <div id="add-education-info-form"></div>
     <div id="edit-education-info-form"></div>
+    <div id="add-bank-info-form"></div>
+    <div id="edit-bank-info-form"></div>
     <div id="add-experience-info-form"></div>
     <div id="edit-experience-info-form"></div>
     <div id="add-emergency-contact-form"></div>
@@ -321,6 +318,26 @@
             success: function(response) {
                 $("#edit-education-info-form").html(response);
                 $("#edit_education_info_model").modal('show');
+            }
+        });
+    }
+
+    function addBankInfo(UserId) {
+        $.ajax({
+            url: "{% url 'AdminAddBankInfo' id=0 %}".replace(0, UserId),
+            success: function(response) {
+                $("#add-bank-info-form").html(response);
+                $("#add_bank_info_model").modal('show');
+            }
+        });
+    }
+
+    function editBankInfo(UserId, BankId) {
+        $.ajax({
+            url: '/hrms-admin/employee/'+UserId+'/bank-info-edit/'+BankId,
+            success: function(response) {
+                $("#edit-bank-info-form").html(response);
+                $("#edit_bank_info_model").modal('show');
             }
         });
     }

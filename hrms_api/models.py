@@ -236,3 +236,15 @@ class Ticket(models.Model):
 
     def __str__(self):
         return self.ticket_title or "Tickets"
+
+
+class Bank(models.Model):
+    employee = models.ForeignKey(User, verbose_name='Bank User Name', on_delete=models.CASCADE, null=True, blank=True)
+    bank_name = models.CharField(verbose_name="Bank Name", max_length=50, null=True, blank=True)
+    bank_account_number = models.BigIntegerField(verbose_name="Bank Account Number", null=True, blank=True)
+    bank_ifsc_code = models.CharField(verbose_name="Bank IFSC Code", max_length=20, null=True, blank=True)
+    user_pan_card_number = models.CharField(verbose_name="Pan Card Number", max_length=20, null=True, blank=True)
+    user_aadhar_card_number = models.BigIntegerField(verbose_name="Aadhar Card Number", null=True, blank=True)
+
+    def __str__(self):
+        return self.employee or "Bank Information"

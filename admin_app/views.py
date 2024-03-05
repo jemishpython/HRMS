@@ -13,10 +13,10 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     AddDesignationForm, EditDesignationForm, EditProjectForm, AddProjectForm, ProjectAssignForm, AddTaskForm, \
     EditTaskForm, EditTechnologyForm, AddTechnologyForm, AddExperienceInfoForm, EditProfileInfoForm, \
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
-    EditEmergencyContactForm
+    EditEmergencyContactForm, AddBankForm, EditBankForm
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank
 
 
 def AdminRegister(request):
@@ -174,12 +174,14 @@ def ProfileView(request, id):
     view_education_info = Education_Info.objects.filter(employee=id).order_by('start_year')
     view_experience_info = Experience_Info.objects.filter(employee=id).order_by('start_date')
     view_emergency_contact = Emergency_Contact.objects.filter(employee=id).first()
+    view_bank_info = Bank.objects.filter(employee=id).first()
 
     context = {
         'profile': profile,
         'view_education_info': view_education_info,
         'view_experience_info': view_experience_info,
-        'view_emergency_contact': view_emergency_contact
+        'view_emergency_contact': view_emergency_contact,
+        'view_bank_info': view_bank_info,
     }
     return render(request, "admin/profile.html", context)
 
@@ -231,7 +233,7 @@ def AddEducationInfo(request, id):
                 return redirect('AdminProfileView', id=user_id)
         except Exception as e:
             form = AddEducationInfoForm()
-    context = {'form': form, 'user_id':user_id}
+    context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_education_info.html", context)
 
 
@@ -298,6 +300,7 @@ def EditExperienceInfo(request, id, exp_id):
     context = {'form': form, 'edit_experience_info': edit_experience_info, 'user_id': user_id}
     return render(request, "admin/edit_experience_info.html", context)
 
+
 @login_required(login_url="Login")
 def DeleteExperience(request, id, exp_id):
     user_id = User.objects.get(id=id)
@@ -350,6 +353,51 @@ def DeleteEmergency(request, id, emg_id):
     delete_emg = Emergency_Contact.objects.get(id=emg_id)
     delete_emg.delete()
     messages.error(request, 'Emergency information Delete successfully')
+    return redirect('AdminProfileView', id=user_id.id) @ login_required(login_url="Login")
+
+
+def AddBankInfo(request, id):
+    user = User.objects.get(id=id)
+    user_id = user.id
+    form = AddBankForm(request.POST or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                bank_info = form.save(commit=False)
+                bank_info.employee = User.objects.get(id=user_id)
+                bank_info.save()
+                messages.success(request, 'Banke Info Add successfully')
+                return redirect('AdminProfileView', id=user_id)
+        except Exception as e:
+            form = AddBankForm()
+    context = {'form': form, 'user_id': user_id}
+    return render(request, "admin/add_bank_info.html", context)
+
+
+@login_required(login_url="Login")
+def EditBankInfo(request, id, bank_id):
+    user = User.objects.get(id=id)
+    user_id = user.id
+    edit_bank_info = Bank.objects.get(id=bank_id)
+    form = EditBankForm(request.POST or None, instance=edit_bank_info)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.info(request, 'Banke Info Update successfully')
+                return redirect('AdminProfileView', id=user_id)
+        except Exception as e:
+            form = EditBankForm(instance=edit_bank_info)
+    context = {'form': form, 'edit_bank_info': edit_bank_info, 'user_id': user_id}
+    return render(request, "admin/edit_bank_info.html", context)
+
+
+@login_required(login_url="Login")
+def DeleteBank(request, id, emg_id):
+    user_id = User.objects.get(id=id)
+    delete_bank = Bank.objects.get(id=emg_id)
+    delete_bank.delete()
+    messages.error(request, 'Bank information Delete successfully')
     return redirect('AdminProfileView', id=user_id.id)
 
 
@@ -770,7 +818,7 @@ def TicketList(request):
         'ticket_priority': ticket_priority,
         'ticket_status': ticket_status,
     }
-    return render(request, 'admin/tickets.html',context)
+    return render(request, 'admin/tickets.html', context)
 
 
 @login_required(login_url="Login")
@@ -784,3 +832,13 @@ def UpdateTicketstatus(request, id):
         messages.info(request, 'Ticket status update successfully')
         return redirect('AdminTicketList')
     return render(request, "admin/tickets.html")
+
+
+@login_required(login_url="Login")
+def ChatView(request, id):
+    return render(request, "admin/chat.html")
+
+
+@login_required(login_url="Login")
+def AttendanceView(request):
+    return render(request, "admin/attendance.html")

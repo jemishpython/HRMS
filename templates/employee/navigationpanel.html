@@ -93,12 +93,14 @@
                 <li><a href="{% url 'EmployeeIndex' %}"><i class="las la-home"></i><span>Employees Dashboard</span></a></li>
                 <li class="menu-title"><span>Employee</span></li>
                 <li><a href="{% url 'EmployeeListView' %}"><i class="las la-user-tie"></i><span>Employee</span></a></li>
+                <li><a href="{% url 'EmpAttendanceView' user.id %}"><i class="las la-check-circle"></i><span>Attendance </span></a></li>
                 <li><a href="{% url 'EmpLeaves' user.id %}"><i class="las la-calendar-minus"></i><span>Leaves</span></a></li>
                 <li><a href="{% url 'EmpHolidays' %}"><i class="las la-calendar-day"></i><span>Holidays</span></a></li>
                 <li><a href="{% url 'EmpDepartmentView' %}"><i class="las la-building"></i><span>Departments</span></a></li>
                 <li><a href="{% url 'EmpDesignationView' %}"><i class="lab la-buffer"></i><span>Designation</span></a></li>
                 <li><a href="{% url 'EmpTechnologyView' %}"><i class="las la-code"></i><span>Technology</span></a></li>
                 <li><a href="{% url 'EmpTickets' user.id %}"><i class="la la-ticket"></i> <span>Tickets</span></a></li>
+                <li><a href="{% url 'EmpChatView' user.id %}"><i class="las la-comments"></i></i> <span>Chat</span></a></li>
                 <li><a href="{% url 'EmpProfileView' user.id %}"><i class="las la-user"></i><span>Profile</span></a></li>
 <!--                <li><a href="clients"><span>Clients</span></a></li>-->
 <!--                <li><a href="leads.html"><span>Leads</span></a></li>-->

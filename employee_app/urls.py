@@ -43,4 +43,8 @@ urlpatterns = [
     path("<int:userid>/tickets-update/<int:id>", views.EditTicket, name="EmpEditTicket"),
     path("<int:id>/tickets/delete", views.DeleteTicket, name="EmpDeleteTicket"),
 
+    path("chat/<int:id>", views.ChatView, name="EmpChatView"),
+
+    path("attendance/<int:id>", views.AttendanceView, name="EmpAttendanceView"),
+
 ]

@@ -7,12 +7,14 @@
                 <li><a href="{% url 'AdminIndex' %}"><i class="las la-home"></i><span>Admin Dashboard</span></a></li>
                 <li class="menu-title"><span>Employee</span></li>
                 <li><a href="{% url 'AdminEmployeeView' %}"><i class="las la-user-tie"></i><span>Employee List </span></a></li>
+                <li><a href="{% url 'AdminAttendanceView' %}"><i class="las la-check-circle"></i><span>Employee Attendance </span></a></li>
                 <li><a href="{% url 'AdminLeaveList' %}"><i class="las la-calendar-minus"></i><span>Leave List</span></a></li>
                 <li><a href="{% url 'AdminHolidays' %}"><i class="las la-calendar-day"></i><span>Holiday</span></a></li>
                 <li><a href="{% url 'AdminDepartmentView' %}"><i class="las la-building"></i><span>Department</span></a></li>
                 <li><a href="{% url 'AdminDesignationView' %}"><i class="lab la-buffer"></i><span>Designation</span></a></li>
                 <li><a href="{% url 'AdminTechnologyView' %}"><i class="las la-code"></i><span>Technology</span></a></li>
                 <li><a href="{% url 'AdminTicketList' %}"><i class="la la-ticket"></i> <span>Tickets</span></a></li>
+                <li><a href="{% url 'AdminChatView' user.id %}"><i class="las la-comments"></i><span>Chat</span></a></li>
 <!--                <li><a href="{% url 'AdminClientsView' %}"><span>Clients</span></a></li>-->
                 <li class="menu-title"><span>Project</span></li>
                 <li><a href="{% url 'AdminProjectsView' %}"><i class="las la-project-diagram"></i><span>Projects</span></a></li>

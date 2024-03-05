@@ -22,6 +22,8 @@ urlpatterns = [
     path("employee/profile/<int:id>", views.ProfileView, name="AdminProfileView"),
     path("employee/profile-info-edit/<int:id>", views.EditProfileInfo, name="AdminEditProfileInfo"),
     path("employee/personal-info-edit/<int:id>", views.EditPersonalInfo, name="AdminEditPersonalInfo"),
+    path("employee/bank-info-add/<int:id>", views.AddBankInfo, name="AdminAddBankInfo"),
+    path("employee/<int:id>/bank-info-edit/<int:bank_id>", views.EditBankInfo, name="AdminEditBankInfo"),
     path("employee/education-info-add/<int:id>", views.AddEducationInfo, name="AdminAddEducationInfo"),
     path("employee/<int:id>/education-info-edit/<int:edu_id>", views.EditEducationInfo, name="AdminEditEducationInfo"),
     path("employee/<int:id>/education-info-delete/<int:edu_id>", views.DeleteEducation, name="AdminDeleteEducationInfo"),
@@ -76,4 +78,8 @@ urlpatterns = [
 
     path("tickets", views.TicketList, name='AdminTicketList'),
     path("tickets/status-update/<int:id>", views.UpdateTicketstatus, name='AdminTicketStatusUpdate'),
+
+    path("chat/<int:id>", views.ChatView, name='AdminChatView'),
+
+    path("attendance/", views.AttendanceView, name='AdminAttendanceView'),
 ]

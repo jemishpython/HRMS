@@ -14,7 +14,7 @@ from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm,
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank
 
 
 def landing(request):
@@ -141,12 +141,14 @@ def ProfileView(request, id):
     view_education_info = Education_Info.objects.filter(employee=id).order_by('start_year')
     view_experience_info = Experience_Info.objects.filter(employee=id).order_by('start_date')
     view_emergency_contact = Emergency_Contact.objects.filter(employee=id).first()
+    view_bank_info = Bank.objects.filter(employee=id).first()
 
     context = {
         'user_details': user_details,
         'view_education_info': view_education_info,
         'view_experience_info': view_experience_info,
-        'view_emergency_contact':view_emergency_contact
+        'view_emergency_contact':view_emergency_contact,
+        'view_bank_info':view_bank_info,
     }
     return render(request, "employee/profile.html", context)
 
@@ -409,6 +411,7 @@ def AddTicket(request, id):
     context = {'form': form}
     return render(request, "employee/add_tickets.html", context)
 
+
 @login_required(login_url="EmployeeLogin")
 def EditTicket(request, id, userid):
     userid = User.objects.get(id=userid)
@@ -433,3 +436,13 @@ def DeleteTicket(request, id):
     delete_ticket.delete()
     messages.error(request, 'Ticket Delete successfully')
     return redirect('EmpTickets', id=userid)
+
+
+@login_required(login_url="EmployeeLogin")
+def ChatView(request, id):
+    return render(request, "employee/chat.html")
+
+
+@login_required(login_url="EmployeeLogin")
+def AttendanceView(request, id):
+    return render(request, "employee/attendance-employee.html")

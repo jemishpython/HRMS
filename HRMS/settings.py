@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "admin_app",
     "hrms_api",
     "employee_app",
-    'django_cleanup',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

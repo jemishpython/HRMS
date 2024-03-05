@@ -194,3 +194,15 @@ class EditEmergencyContactForm(forms.ModelForm):
         model = Emergency_Contact
         fields = ['primary_name', 'primary_con_relationship', 'primary_phone1', 'primary_phone2', 'secondary_name',
                   'secondary_con_relationship', 'secondary_phone1', 'secondary_phone2']
+
+
+class AddBankForm(forms.ModelForm):
+    class Meta:
+        model = Bank
+        fields = ['bank_name', 'bank_account_number', 'bank_ifsc_code', 'user_pan_card_number', 'user_aadhar_card_number']
+
+
+class EditBankForm(forms.ModelForm):
+    class Meta:
+        model = Bank
+        fields = ['bank_name', 'bank_account_number', 'bank_ifsc_code', 'user_pan_card_number', 'user_aadhar_card_number']
