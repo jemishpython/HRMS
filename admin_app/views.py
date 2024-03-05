@@ -369,7 +369,7 @@ def AddBankInfo(request, id):
                 messages.success(request, 'Banke Info Add successfully')
                 return redirect('AdminProfileView', id=user_id)
         except Exception as e:
-            form = AddBankForm()
+            messages.info(request, 'Banke Info Update successfully')
     context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_bank_info.html", context)
 

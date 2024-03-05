@@ -239,7 +239,7 @@ class Ticket(models.Model):
 
 
 class Bank(models.Model):
-    employee = models.ForeignKey(User, verbose_name='Bank User Name', on_delete=models.CASCADE, null=True, blank=True)
+    employee = models.ForeignKey(User, verbose_name='Bank User Name', on_delete=models.CASCADE, null=True, blank=True, unique=True)
     bank_name = models.CharField(verbose_name="Bank Name", max_length=50, null=True, blank=True)
     bank_account_number = models.BigIntegerField(verbose_name="Bank Account Number", null=True, blank=True)
     bank_ifsc_code = models.CharField(verbose_name="Bank IFSC Code", max_length=20, null=True, blank=True)
