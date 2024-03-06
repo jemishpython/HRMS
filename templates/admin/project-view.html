@@ -238,20 +238,22 @@
 									<h6 class="card-title m-b-20">Assigned Leader</h6>
 									<ul class="list-box">
 										{% for project_leader in project_leader_list %}
-										<li>
-											<a href="profile.html">
-												<div class="list-item">
-													<div class="list-left">
-														<span class="avatar"><img alt="" src="assets/img/profiles/avatar-11.jpg"></span>
-													</div>
-													<div class="list-body">
-														<span class="message-author">{{project_leader.employee_name}}</span>
-														<div class="clearfix"></div>
-														<span class="message-content">{{project_leader.employee_name.designation}}</span>
-													</div>
-												</div>
-											</a>
-										</li>
+											{% for employee in project_leader.employees.all %}
+												<li>
+													<a href="profile.html">
+														<div class="list-item">
+															<div class="list-left">
+																<img class="avatar" alt="" src="{{employee.avatar.url}}">
+															</div>
+															<div class="list-body">
+																<span class="message-author">{{employee}}</span>
+																<div class="clearfix"></div>
+																<span class="message-content">{{employee.technology}}</span>
+															</div>
+														</div>
+													</a>
+												</li>
+											{% endfor %}
 										{% endfor %}
 									</ul>
 								</div>
@@ -261,20 +263,22 @@
 									<h6 class="card-title m-b-20">Assigned users</h6>
 									<ul class="list-box">
 										{% for project_team_member in project_team_member_list %}
-										<li>
-											<a href="profile.html">
-												<div class="list-item">
-													<div class="list-left">
-														<span class="avatar"><img alt="" src="assets/img/profiles/avatar-11.jpg"></span>
-													</div>
-													<div class="list-body">
-														<span class="message-author">{{project_team_member.employee_name}}</span>
-														<div class="clearfix"></div>
-														<span class="message-content">{{project_team_member.employee_name.designation}}</span>
-													</div>
-												</div>
-											</a>
-										</li>
+											{% for employee in project_team_member.employees.all %}
+												<li>
+													<a href="profile.html">
+														<div class="list-item">
+															<div class="list-left">
+																<img class="avatar" alt="" src="{{employee.avatar.url}}">
+															</div>
+															<div class="list-body">
+																<span class="message-author">{{employee}}</span>
+																<div class="clearfix"></div>
+																<span class="message-content">{{employee.technology}}</span>
+															</div>
+														</div>
+													</a>
+												</li>
+											{% endfor %}
 										{% endfor %}
 									</ul>
 								</div>
@@ -304,7 +308,6 @@ function editProject(editProjectId) {
 }
 
 function addProjectAssignee(addAssigneeProjectId) {
-	alert(addAssigneeProjectId)
     $.ajax({
         url: "{% url 'AdminAddProjectAssignee' id=0 %}".replace(0, addAssigneeProjectId),
         success: function(response) {

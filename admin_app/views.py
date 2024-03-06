@@ -649,6 +649,7 @@ def ProjectDetailsView(request, id):
     task_list = Task.objects.filter(task_project=id)
     user_list = User.objects.all()
     project_leader_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Leader')
+    print(project_leader_list,"------------------------------------------project_leader_list")
     project_team_member_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Team Member')
 
     context = {
@@ -790,22 +791,29 @@ def UpdateLeaveStatus(request, id):
 def AddProjectAssignee(request, id):
     users_list = User.objects.all()
     project_id = Project.objects.get(id=id)
-    form = ProjectAssignForm(request.POST or None, instance=project_id)
+    form = ProjectAssignForm(request.POST or None)
     if request.method == 'POST':
         try:
             if form.is_valid():
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FORM VALID")
                 project_assign = form.save(commit=False)
-                selected_users_ids = request.POST.getlist('employee_name')
+                project_assign.project_name = project_id
+                project_assign.save()  # Save the ProjectAssign instance first
+                selected_users_ids = request.POST.getlist('employees')
+                print(selected_users_ids,"----------------------------------------------")
                 for user_id in selected_users_ids:
                     user = User.objects.get(id=user_id)
-                    project_assign.employee_name.add(user)
-                project_assign.save()
+                    project_assign.employees.add(user)  # Now you can add employees
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>add successfulyy")
                 messages.success(request, 'Project Assign successfully')
                 return redirect('AdminProjectDetailsView', id=id)
+            else:
+                print(print(form.errors),"--------------------------------------------")
         except Exception as e:
-            form = ProjectAssignForm(instance=project_id)
-    context = {'form': form, 'users_list': users_list, 'project_id': project_id}
+            print(e,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ASSINEE NOT ADD")
+    context = {'form': form, 'users_list': users_list, 'project_id': project_id.id}
     return render(request, "admin/add_project_assignee.html", context)
+
 
 
 @login_required(login_url="Login")

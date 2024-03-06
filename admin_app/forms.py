@@ -93,7 +93,7 @@ class ProjectAssignForm(forms.ModelForm):
         model = ProjectAssign
         fields = '__all__'
 
-        employee_name = forms.ModelMultipleChoiceField(
+        employees = forms.ModelMultipleChoiceField(
             queryset=User.objects.all(),
             widget=forms.CheckboxSelectMultiple
         )

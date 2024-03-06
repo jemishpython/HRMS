@@ -154,11 +154,9 @@ class Project(models.Model):
     project_start_date = models.DateField(verbose_name='Project Start Date', null=True, blank=True)
     project_end_date = models.DateField(verbose_name='Project End Date', null=True, blank=True)
     project_cost = models.CharField(verbose_name='Project Cost', max_length=50, null=True, blank=True)
-    project_priority = models.CharField(verbose_name='Project Priority', choices=ProjectPriorityChoice.choices,
-                                        default=ProjectPriorityChoice.HIGH, max_length=255, null=True, blank=True)
+    project_priority = models.CharField(verbose_name='Project Priority', choices=ProjectPriorityChoice.choices, default=ProjectPriorityChoice.HIGH, max_length=255, null=True, blank=True)
     project_summary = models.TextField(verbose_name='Project Summary', max_length=1000, null=True, blank=True)
-    project_status = models.CharField(verbose_name='Project Status', choices=ProjectStatusChoice.choices,
-                                      default=ProjectStatusChoice.NOT_STARTED, max_length=255, null=True, blank=True)
+    project_status = models.CharField(verbose_name='Project Status', choices=ProjectStatusChoice.choices, default=ProjectStatusChoice.NOT_STARTED, max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.project_name
@@ -208,21 +206,11 @@ class Leave(models.Model):
 
 class ProjectAssign(models.Model):
     project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
-    assignee_type = models.CharField(verbose_name='Assignee Type', max_length=50, blank=True, null=True,
-                                     choices=ProjectAssigneeTypeChoice.choices,
-                                     default=ProjectAssigneeTypeChoice.TEAM_MEMBER)
-    employee_name = models.ManyToManyField(User, verbose_name='Employee Name', through='Projectassign_Employee_Name')
+    assignee_type = models.CharField(verbose_name='Assignee Type', max_length=50, blank=True, null=True, choices=ProjectAssigneeTypeChoice.choices, default=ProjectAssigneeTypeChoice.TEAM_MEMBER)
+    employees = models.ManyToManyField(User, verbose_name='Employee Name', related_name='ProjectName')
 
     def __str__(self):
         return self.project_name.project_name
-
-
-class Projectassign_Employee_Name(models.Model):
-    projectassign = models.ForeignKey(ProjectAssign, on_delete=models.DO_NOTHING, null=True)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
-
-    def __str__(self):
-        return f"{self.projectassign.project_name.project_name} - {self.user.username}"
 
 
 class Ticket(models.Model):
