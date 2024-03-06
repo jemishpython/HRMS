@@ -3,82 +3,107 @@
 {% load static %}
 {% block body %}
 <!-- Sidebar -->
-	<div class="sidebar" id="sidebar">
-		<div class="sidebar-inner slimscroll">
-			<div class="sidebar-menu">
-				<ul>
-					<li><a href="{% url 'AdminProjectTask' %}"><span>Project List</span></a></li>
-					<li class="menu-title">Projects</li>
-					{% for project in projectlist %}
-					<li><a href="{% url 'AdminProjectTaskList' project.id %}"><span>{{project.project_name}}</span></a></li>
-					{% endfor %}
-				</ul>
-			</div>
-		</div>
-	</div>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div class="sidebar-menu">
+            <ul>
+                <li><a href="{% url 'AdminProjectTask' %}"><span>Project List</span></a></li>
+                <li class="menu-title">Projects</li>
+                {% for project in projectlist %}
+                <li><a href="{% url 'AdminProjectTaskList' project.id %}"><span>{{project.project_name}}</span></a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 <!-- /Sidebar -->
 
 <!-- Page Wrapper -->
-<div class="page-wrapper">
-    <div class="chat-main-row">
-        <div class="chat-main-wrapper">
-            <div class="col-lg-7 message-view task-view task-left-sidebar">
-                <div class="chat-window">
-                    <div class="fixed-header">
-                        <div class="navbar">
-                            <div class="add-task-btn-wrapper float-left mr-auto">
-                                <button class="add-task-btn btn btn-white btn-sm" onclick="addTask({{project_id}})"><i class="las la-plus"></i>Add Task</button>
+
+    <div class="page-wrapper">
+        <div class="show_message">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}hi</div>
+            {% endfor %}
+        </div>
+        <div class="chat-main-row">
+            <div class="chat-main-wrapper">
+                <div class="col-lg-7 message-view task-view task-left-sidebar">
+                    <div class="chat-window">
+                        <div class="fixed-header">
+                            <div class="navbar">
+                                <div class="add-task-btn-wrapper float-left mr-auto">
+                                    <button class="add-task-btn btn btn-white btn-sm" onclick="addTask({{project_id}})">
+                                        <i class="las la-plus"></i>Add Task
+                                    </button>
+                                </div>
+                                <ul class="nav custom-menu float-right">
+                                    <li class="nav-item dropdown dropdown-action">
+                                        <a aria-expanded="false" class="dropdown-toggle" data-toggle="dropdown"
+                                           href="#"><i class="fa fa-cog"></i></a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="javascript:void(0)">Pending Tasks</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">Completed Tasks</a>
+                                            <a class="dropdown-item" href="javascript:void(0)">All Tasks</a>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
-                            <ul class="nav custom-menu float-right">
-                                <li class="nav-item dropdown dropdown-action">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i></a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a class="dropdown-item" href="javascript:void(0)">Pending Tasks</a>
-                                        <a class="dropdown-item" href="javascript:void(0)">Completed Tasks</a>
-                                        <a class="dropdown-item" href="javascript:void(0)">All Tasks</a>
-                                    </div>
-                                </li>
-                            </ul>
                         </div>
-                    </div>
-                    <div class="chat-contents">
-                        <div class="chat-content-wrap">
-                            <div class="chat-wrap-inner">
-                                <div class="chat-box">
-                                    <div class="task-wrapper">
-                                        <div class="task-list-container">
-                                            <div class="task-list-body">
-                                                <ul id="task-list">
-                                                    {% for task_list in project_tasklist %}
-                                                    <li class="task">
-                                                        <div class="task-container">
+                        <div class="show_message">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="chat-contents">
+                            <div class="chat-content-wrap">
+                                <div class="chat-wrap-inner">
+                                    <div class="chat-box">
+                                        <div class="task-wrapper">
+                                            <div class="task-list-container">
+                                                <div class="task-list-body">
+                                                    <ul id="task-list">
+                                                        {% for task_list in project_tasklist %}
+                                                        <li class="task">
+                                                            <div class="task-container">
                                                             <span class="task-action-btn task-check">
-                                                                <span class="action-circle large complete-btn" title="Mark Complete">
+                                                                <span class="action-circle large complete-btn"
+                                                                      title="Mark Complete">
                                                                     <i class="material-icons">check</i>
                                                                 </span>
                                                             </span>
-                                                            <span class="task-label">{{task_list.task_title}}</span>
-                                                            <span class="task-action-btn task-btn-right">
-                                                                <button class="border border-info rounded-circle px-1 mx-1 text-info" onclick="addTaskAssign({{project_id}})" title="Task Assign"><i class="las la-user-plus"></i></button>
-                                                                <button class="border border-dark rounded-circle px-1 mx-1 text-dark" onclick="editTask({{task_list.id}},{{project_id}})" title="Edit Task"><i class="las la-edit"></i></button>
-                                                                <button class="border border-danger rounded-circle px-1 mx-1 text-danger" title="Delete Task" onclick="deleteTask({{task_list.id}},{{project_id}})"><i class="fa fa-trash"></i></button>
+                                                                <span class="task-label">{{task_list.task_title}}</span>
+                                                                <span class="task-action-btn task-btn-right">
+                                                                <button class="border border-info rounded-circle px-1 mx-1 text-info"
+                                                                        onclick="addTaskAssign({{task_list.id}})"
+                                                                        title="Task Assign"><i
+                                                                        class="las la-user-plus"></i></button>
+                                                                <button class="border border-dark rounded-circle px-1 mx-1 text-dark"
+                                                                        onclick="editTask({{task_list.id}},{{project_id}})"
+                                                                        title="Edit Task"><i
+                                                                        class="las la-edit"></i></button>
+                                                                <button class="border border-danger rounded-circle px-1 mx-1 text-danger"
+                                                                        onclick="deleteTask({{task_list.id}},{{project_id}})"
+                                                                        title="Delete Task"><i
+                                                                        class="fa fa-trash"></i></button>
                                                             </span>
-                                                        </div>
-                                                    </li>
-                                                    {% endfor %}
-                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+
+                                                <div id="add-task-assignee-model"></div>
+                                                <div id="add-task-form"></div>
+                                                <div id="edit-task-form"></div>
                                             </div>
-
-                                            <div id="add-task-form"> </div>
-
-                                            <div id="edit-task-form"> </div>
                                         </div>
-                                    </div>
-                                    <div class="notification-popup hide">
-                                        <p>
-                                            <span class="task"></span>
-                                            <span class="notification-text"></span>
-                                        </p>
+                                        <div class="notification-popup hide">
+                                            <p>
+                                                <span class="task"></span>
+                                                <span class="notification-text"></span>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -88,45 +113,59 @@
             </div>
         </div>
     </div>
-</div>
 <!-- /Page Wrapper -->
 
 
 <script>
-function addTask(ProjectId) {
-    $.ajax({
-        url: "{% url 'AdminAddProjectTask' id=0 %}".replace(0, ProjectId),
-        success: function(response) {
-            $("#add-task-form").html(response);
-            $("#add_task_model").modal('show');
-        }
-    });
+    function addTaskAssign(TaskId) {
+        $.ajax({
+            url: "{% url 'AdminAddTaskAssign' id=0 %}".replace(0, TaskId),
+            success: function(response) {
+                $("#add-task-assignee-model").html(response);
+                $("#add_task_assignee_model").modal('show');
+            }
+        });
 
-}
+    }
 
-function editTask(editTaskId, ProjectId) {
-    $.ajax({
-        url: "{% url 'AdminEditProjectTask' id=0 projectid=1 %}".replace(0, editTaskId).replace(1, ProjectId),
-        success: function(response) {
-            $("#edit-task-form").html(response);
-            $("#edit_task_model").modal('show');
-        }
-    });
-}
+    function addTask(ProjectId) {
+        $.ajax({
+            url: "{% url 'AdminAddProjectTask' id=0 %}".replace(0, ProjectId),
+            success: function(response) {
+                $("#add-task-form").html(response);
+                $("#add_task_model").modal('show');
+            }
+        });
 
-function deleteTask(deleteTaskId, ProjectId) {
-    $.ajax({
-        url: "{% url 'AdminDeleteProjectTask' id=0 projectid=1 %}".replace(0, deleteTaskId).replace(1,ProjectId),
-        success: function() {
-            location.reload();
-        }
-    });
-}
+    }
 
+    function editTask(editTaskId, ProjectId) {
+        $.ajax({
+            url: "{% url 'AdminEditProjectTask' id=0 projectid=1 %}".replace(0, editTaskId).replace(1, ProjectId),
+            success: function(response) {
+                $("#edit-task-form").html(response);
+                $("#edit_task_model").modal('show');
+            }
+        });
+    }
+
+    function deleteTask(deleteTaskId, ProjectId) {
+        $.ajax({
+            url: "{% url 'AdminDeleteProjectTask' id=0 projectid=1 %}".replace(0, deleteTaskId).replace(1,ProjectId),
+            success: function() {
+                location.reload();
+            }
+        });
+    }
 
 
 </script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
+</script>
 
 {% endblock body %}
-
-addTask

@@ -14,7 +14,7 @@ from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm,
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign
 
 
 def landing(request):
@@ -97,13 +97,13 @@ def update_password(request, pk):
 @login_required(login_url="EmployeeLogin")
 def EmployeeIndex(request):
     user = request.user
-    task_list = Task.objects.filter(task_assign=user.id)
-    project_list = ProjectAssign.objects.filter(employee_name=user.id)
+    user_task = TaskAssign.objects.filter(employees=user)
+    user_projects = ProjectAssign.objects.filter(employees=user)
 
     context = {
         'user': user,
-        'task_list': task_list,
-        'project_list':project_list,
+        'user_task': user_task,
+        'user_projects':user_projects,
     }
 
     return render(request, "employee/employee-dashboard.html", context)

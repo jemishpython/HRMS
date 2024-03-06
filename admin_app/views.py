@@ -13,7 +13,7 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     AddDesignationForm, EditDesignationForm, EditProjectForm, AddProjectForm, ProjectAssignForm, AddTaskForm, \
     EditTaskForm, EditTechnologyForm, AddTechnologyForm, AddExperienceInfoForm, EditProfileInfoForm, \
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
-    EditEmergencyContactForm, AddBankForm, EditBankForm
+    EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank
@@ -620,6 +620,32 @@ def AddProject(request):
 
 
 @login_required(login_url="Login")
+def AddProjectAssignee(request, id):
+    users_list = User.objects.all()
+    project_id = Project.objects.get(id=id)
+    form = ProjectAssignForm(request.POST or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                project_assign = form.save(commit=False)
+                project_assign.project_name = project_id
+                project_assign.save()
+                selected_users_ids = request.POST.getlist('employees')
+                for user_id in selected_users_ids:
+                    user = User.objects.get(id=user_id)
+                    project_assign.employees.add(user)
+                messages.success(request, 'Project Assign successfully')
+                return redirect('AdminProjectDetailsView', id=id)
+            else:
+                messages.error(request, 'Form is not valid | ERROR :', form.errors)
+        except Exception as e:
+            messages.error(request, "ERROR : ", e)
+    context = {'form': form, 'users_list': users_list, 'project_id': project_id}
+    return render(request, "admin/add_project_assignee.html", context)
+
+
+
+@login_required(login_url="Login")
 def UpdateProject(request, id):
     edit_project = Project.objects.get(id=id)
     form = EditProjectForm(request.POST or None, instance=edit_project)
@@ -729,12 +755,27 @@ def DeleteProjectTask(request, id, projectid):
 
 @login_required(login_url="Login")
 def AddTaskAssign(request, id):
+    users_list = User.objects.all()
     task_id = Task.objects.get(id=id)
-    if request.method == "POST":
-        task_assign_add = Task(task_id=task_id.id)
-        task_assign_add.save()
-        return redirect('AdminProjectTaskList', id=id)
-    return render(request, "admin/tasks.html")
+    form = TaskAssignForm(request.POST or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                task_assign = form.save(commit=False)
+                task_assign.task_name = task_id
+                task_assign.save()
+                selected_users_ids = request.POST.getlist('employees')
+                for user_id in selected_users_ids:
+                    user = User.objects.get(id=user_id)
+                    task_assign.employees.add(user)
+                messages.success(request, 'Task Assign successfully')
+                return redirect('AdminProjectTaskList', id=task_id.task_project.id)
+            else:
+                messages.error(request, 'Form is not valid | ERROR :', form.errors)
+        except Exception as e:
+            messages.error(request, "ERROR : ", e)
+    context = {'form': form, 'users_list': users_list, 'task_id': task_id}
+    return render(request, "admin/add_task_assignee.html", context)
 
 
 @login_required(login_url="Login")
@@ -784,32 +825,6 @@ def UpdateLeaveStatus(request, id):
         messages.info(request, 'Leave status update successfully')
         return redirect('AdminLeaveList')
     return render(request, "admin/leaves.html")
-
-
-@login_required(login_url="Login")
-def AddProjectAssignee(request, id):
-    users_list = User.objects.all()
-    project_id = Project.objects.get(id=id)
-    form = ProjectAssignForm(request.POST or None)
-    if request.method == 'POST':
-        try:
-            if form.is_valid():
-                project_assign = form.save(commit=False)
-                project_assign.project_name = project_id
-                project_assign.save()  # Save the ProjectAssign instance first
-                selected_users_ids = request.POST.getlist('employees')
-                for user_id in selected_users_ids:
-                    user = User.objects.get(id=user_id)
-                    project_assign.employees.add(user)  # Now you can add employees
-                messages.success(request, 'Project Assign successfully')
-                return redirect('AdminProjectDetailsView', id=id)
-            else:
-                messages.error(request, 'Form is not valid')
-        except Exception as e:
-            messages.error(request, "ERROR : ", e)
-    context = {'form': form, 'users_list': users_list, 'project_id': project_id.id}
-    return render(request, "admin/add_project_assignee.html", context)
-
 
 
 @login_required(login_url="Login")

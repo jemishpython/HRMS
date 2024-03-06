@@ -5,11 +5,10 @@
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
 				<div class="show_message">
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-            {% endfor %}
-        </div>
-				
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+					{% endfor %}
+        		</div>
 				<!-- Page Content -->
                 <div class="content container-fluid">
 				
@@ -248,7 +247,7 @@
 															<div class="list-body">
 																<span class="message-author">{{employee}}</span>
 																<div class="clearfix"></div>
-																<span class="message-content">{{employee.technology}}</span>
+																<span class="message-content text-secondary">{{employee.department}} | {{employee.designation}} | {{employee.technology}}</span>
 															</div>
 														</div>
 													</a>
@@ -273,7 +272,7 @@
 															<div class="list-body">
 																<span class="message-author">{{employee}}</span>
 																<div class="clearfix"></div>
-																<span class="message-content">{{employee.technology}}</span>
+																<span class="message-content text-secondary">{{employee.department}} | {{employee.designation}} | {{employee.technology}}</span>
 															</div>
 														</div>
 													</a>

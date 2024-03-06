@@ -62,19 +62,19 @@ urlpatterns = [
     path("projects/details-view/<int:id>", views.ProjectDetailsView, name="AdminProjectDetailsView"),
     path("projects/update/<int:id>", views.UpdateProject, name="AdminUpdateProject"),
     path("projects/delete/<int:id>", views.DeleteProject, name="AdminDeleteProject"),
+    path("project/<int:projectid>/task-delete/<int:id>", views.DeleteProjectTask, name="AdminDeleteProjectTask"),
+
+    path("project-assignee/<int:id>", views.AddProjectAssignee, name='AdminAddProjectAssignee'),
 
     path("projects/tasks", views.ProjectTask, name="AdminProjectTask"),
     path("project/<int:id>/tasks", views.ProjectTaskList, name="AdminProjectTaskList"),
     path("project/<int:id>/task-add", views.AddProjectTask, name="AdminAddProjectTask"),
     path("project/<int:projectid>/task-edit/<int:id>", views.EditProjectTask, name="AdminEditProjectTask"),
-    path("project/<int:projectid>/task-delete/<int:id>", views.DeleteProjectTask, name="AdminDeleteProjectTask"),
 
     path("project-task-assign/<int:id>", views.AddTaskAssign, name='AdminAddTaskAssign'),
 
     path("leaves", views.LeaveList, name='AdminLeaveList'),
     path("leaves/status-update/<int:id>", views.UpdateLeaveStatus, name='AdminLeaveStatusUpdate'),
-
-    path("project-assignee/<int:id>", views.AddProjectAssignee, name='AdminAddProjectAssignee'),
 
     path("tickets", views.TicketList, name='AdminTicketList'),
     path("tickets/status-update/<int:id>", views.UpdateTicketstatus, name='AdminTicketStatusUpdate'),

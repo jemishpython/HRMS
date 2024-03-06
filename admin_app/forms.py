@@ -91,7 +91,7 @@ class EditProjectForm(forms.ModelForm):
 class ProjectAssignForm(forms.ModelForm):
     class Meta:
         model = ProjectAssign
-        fields = '__all__'
+        fields = ['assignee_type', 'employees']
 
         employees = forms.ModelMultipleChoiceField(
             queryset=User.objects.all(),
@@ -115,6 +115,17 @@ class EditTaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['task_title']
+
+
+class TaskAssignForm(forms.ModelForm):
+    class Meta:
+        model = TaskAssign
+        fields = ['employees']
+
+        employees = forms.ModelMultipleChoiceField(
+            queryset=User.objects.all(),
+            widget=forms.CheckboxSelectMultiple
+        )
 
 
 class EditProfileInfoForm(forms.ModelForm):

@@ -2,16 +2,16 @@
 {% load static %}
 
 <!-- Assign Leader Modal -->
-<div id="add_project_assignee_model" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
+<div id="add_task_assignee_model" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Assign <span class="text-primary">{{project_id.project_name}} project</span> member</h3>
+                <h3 class="modal-title">Assign <span class="text-primary">{{task_id.task_name}} task</span> member</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{% url 'AdminAddProjectAssignee' id=project_id.id %}" method="post" id="form">
+            <form action="{% url 'AdminAddTaskAssign' id=task_id.id %}" method="post" id="form">
             {% csrf_token %}
                 <div class="modal-body">
                     <div class="input-group m-b-30">
@@ -21,7 +21,8 @@
                         </span>
                     </div>
                     <div class="form-group">
-                        {{ form.assignee_type|as_crispy_field }}
+                        <label for="task_title">Project Title</label>
+                        <input class="form-control" type="text" name="task_title" id="task_title" value="{{task_id.task_title}}" readonly >
                     </div>
                     <div class="overflow-auto">
                         {{ form.employees|as_crispy_field }}
