@@ -147,7 +147,7 @@ def AddEmployee(request):
                 messages.success(request, 'Employee add successfully')
                 return redirect('AdminEmployeeView')
         except Exception as e:
-            print(e, "-----ERROR-----")
+            messages.error(request, "User Not Add - ERROR : ", e)
     context = {'form': form}
     return render(request, "admin/add_employee.html", context)
 
@@ -197,7 +197,7 @@ def EditProfileInfo(request, id):
                 messages.info(request, 'Profile Info Update successfully')
                 return redirect('AdminProfileView', id=id)
         except Exception as e:
-            form = EditProfileInfoForm(instance=edit_profile_info)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_profile_info': edit_profile_info}
     return render(request, "admin/edit_profile_info.html", context)
 
@@ -213,7 +213,7 @@ def EditPersonalInfo(request, id):
                 messages.info(request, 'Personal Info Update successfully')
                 return redirect('AdminProfileView', id=id)
         except Exception as e:
-            form = EditPersonalInfoForm(instance=edit_personal_info)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_personal_info': edit_personal_info}
     return render(request, "admin/edit_personal_info.html", context)
 
@@ -232,7 +232,7 @@ def AddEducationInfo(request, id):
                 messages.success(request, 'Education Info Add successfully')
                 return redirect('AdminProfileView', id=user_id)
         except Exception as e:
-            form = AddEducationInfoForm()
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_education_info.html", context)
 
@@ -250,7 +250,7 @@ def EditEducationInfo(request, id, edu_id):
                 messages.info(request, 'Education Info Update successfully')
                 return redirect('AdminProfileView', id=user_id)
         except Exception as e:
-            form = EditEducationInfoForm(instance=edit_education_info)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_education_info': edit_education_info, 'user_id': user_id}
     return render(request, "admin/edit_education_info.html", context)
 
@@ -278,7 +278,7 @@ def AddExperienceInfo(request, id):
                 messages.success(request, 'Experience Info Add successfully')
                 return redirect('AdminProfileView', id=user_id)
         except Exception as e:
-            form = AddExperienceInfoForm()
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_experience_info.html", context)
 
@@ -296,7 +296,7 @@ def EditExperienceInfo(request, id, exp_id):
                 messages.info(request, 'Experience Info Update successfully')
                 return redirect('AdminProfileView', id=user_id)
         except Exception as e:
-            form = EditExperienceInfoForm(instance=edit_experience_info)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_experience_info': edit_experience_info, 'user_id': user_id}
     return render(request, "admin/edit_experience_info.html", context)
 
@@ -324,7 +324,7 @@ def AddEmergencyInfo(request, id):
                 messages.success(request, 'Experience Info Add successfully')
                 return redirect('AdminProfileView', id=user_id)
         except Exception as e:
-            form = AddEmergencyContactForm()
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_emergency_contact.html", context)
 
@@ -342,7 +342,7 @@ def EditEmergencyInfo(request, id, emg_id):
                 messages.info(request, 'Experience Info Update successfully')
                 return redirect('AdminProfileView', id=user_id)
         except Exception as e:
-            form = EditEmergencyContactForm(instance=edit_emergency_contact)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_emergency_contact': edit_emergency_contact, 'user_id': user_id}
     return render(request, "admin/edit_emergency_contact.html", context)
 
@@ -369,7 +369,7 @@ def AddBankInfo(request, id):
                 messages.success(request, 'Banke Info Add successfully')
                 return redirect('AdminProfileView', id=user_id)
         except Exception as e:
-            messages.info(request, 'Banke Info Update successfully')
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_bank_info.html", context)
 
@@ -387,7 +387,7 @@ def EditBankInfo(request, id, bank_id):
                 messages.info(request, 'Banke Info Update successfully')
                 return redirect('AdminProfileView', id=user_id)
         except Exception as e:
-            form = EditBankForm(instance=edit_bank_info)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_bank_info': edit_bank_info, 'user_id': user_id}
     return render(request, "admin/edit_bank_info.html", context)
 
@@ -420,7 +420,7 @@ def AddHolidays(request):
                 messages.success(request, 'Holiday add successfully')
                 return redirect('AdminHolidays')
         except Exception as e:
-            form = AddHolidaysForm()
+            messages.error(request, "ERROR : ", e)
     context = {'form': form}
     return render(request, "admin/add_holidays.html", context)
 
@@ -436,7 +436,7 @@ def UpdateHolidays(request, id):
                 messages.info(request, 'Holiday Update successfully')
                 return redirect('AdminHolidays')
         except Exception as e:
-            form = EditHolidaysForm(instance=edit_holiday)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_holiday': edit_holiday}
     return render(request, "admin/edit_holidays.html", context)
 
@@ -468,7 +468,7 @@ def AddDepartment(request):
                 messages.success(request, 'Department add successfully')
                 return redirect('AdminDepartmentView')
         except Exception as e:
-            form = AddDepartmentForm()
+            messages.error(request, "ERROR : ", e)
     context = {'form': form}
     return render(request, "admin/add_department.html", context)
 
@@ -484,7 +484,7 @@ def UpdateDepartment(request, id):
                 messages.info(request, 'Department Update successfully')
                 return redirect('AdminDepartmentView')
         except Exception as e:
-            form = EditDepartmentForm(instance=edit_department)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_department': edit_department}
     return render(request, "admin/edit_department.html", context)
 
@@ -516,7 +516,7 @@ def AddDesignation(request):
                 messages.success(request, 'Designation add successfully')
                 return redirect('AdminDesignationView')
         except Exception as e:
-            form = AddDesignationForm()
+            messages.error(request, "ERROR : ", e)
     context = {'form': form}
     return render(request, "admin/add_designation.html", context)
 
@@ -532,7 +532,7 @@ def UpdateDesignation(request, id):
                 messages.info(request, 'Designation Update successfully')
                 return redirect('AdminDesignationView')
         except Exception as e:
-            form = EditDesignationForm(instance=edit_designation)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_designation': edit_designation}
     return render(request, "admin/edit_designation.html", context)
 
@@ -564,7 +564,7 @@ def AddTechnology(request):
                 messages.success(request, 'Technology add successfully')
                 return redirect('AdminTechnologyView')
         except Exception as e:
-            form = AddTechnologyForm()
+            messages.error(request, "ERROR : ", e)
     context = {'form': form}
     return render(request, "admin/add_technology.html", context)
 
@@ -580,7 +580,7 @@ def UpdateTechnology(request, id):
                 messages.info(request, 'Designation Update successfully')
                 return redirect('AdminTechnologyView')
         except Exception as e:
-            form = EditTechnologyForm(instance=edit_technology)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_technology': edit_technology}
     return render(request, "admin/edit_technology.html", context)
 
@@ -614,7 +614,7 @@ def AddProject(request):
                 messages.success(request, 'Project add successfully')
                 return redirect('AdminProjectsView')
         except Exception as e:
-            form = AddProjectForm()
+            messages.error(request, "ERROR : ", e)
     context = {'form': form}
     return render(request, "admin/add_project.html", context)
 
@@ -630,7 +630,7 @@ def UpdateProject(request, id):
                 messages.info(request, 'Project Update successfully')
                 return redirect('AdminProjectDetailsView', id=id)
         except Exception as e:
-            messages.error(request, "Invalid credentials")
+            messages.error(request, "Invalid credentials | ERROR : ",e)
     context = {'form': form, 'edit_project': edit_project}
     return render(request, "admin/edit_project.html", context)
 
@@ -649,7 +649,6 @@ def ProjectDetailsView(request, id):
     task_list = Task.objects.filter(task_project=id)
     user_list = User.objects.all()
     project_leader_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Leader')
-    print(project_leader_list,"------------------------------------------project_leader_list")
     project_team_member_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Team Member')
 
     context = {
@@ -714,7 +713,7 @@ def EditProjectTask(request, id, projectid):
                 messages.info(request, 'Task Update successfully')
                 return redirect('AdminProjectTaskList', id=projectid.id)
         except Exception as e:
-            form = EditTaskForm(instance=edit_task)
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'edit_task': edit_task, 'projectid': projectid}
     return render(request, "admin/edit_task.html", context)
 
@@ -795,22 +794,19 @@ def AddProjectAssignee(request, id):
     if request.method == 'POST':
         try:
             if form.is_valid():
-                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FORM VALID")
                 project_assign = form.save(commit=False)
                 project_assign.project_name = project_id
                 project_assign.save()  # Save the ProjectAssign instance first
                 selected_users_ids = request.POST.getlist('employees')
-                print(selected_users_ids,"----------------------------------------------")
                 for user_id in selected_users_ids:
                     user = User.objects.get(id=user_id)
                     project_assign.employees.add(user)  # Now you can add employees
-                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>add successfulyy")
                 messages.success(request, 'Project Assign successfully')
                 return redirect('AdminProjectDetailsView', id=id)
             else:
-                print(print(form.errors),"--------------------------------------------")
+                messages.error(request, 'Form is not valid')
         except Exception as e:
-            print(e,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ASSINEE NOT ADD")
+            messages.error(request, "ERROR : ", e)
     context = {'form': form, 'users_list': users_list, 'project_id': project_id.id}
     return render(request, "admin/add_project_assignee.html", context)
 
