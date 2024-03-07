@@ -757,12 +757,14 @@ def DeleteProjectTask(request, id, projectid):
 def AddTaskAssign(request, id):
     users_list = User.objects.all()
     task_id = Task.objects.get(id=id)
+    project_id = Project.objects.get(id=task_id.task_project.id)
     form = TaskAssignForm(request.POST or None)
     if request.method == 'POST':
         try:
             if form.is_valid():
                 task_assign = form.save(commit=False)
                 task_assign.task_name = task_id
+                task_assign.task_project_name = project_id
                 task_assign.save()
                 selected_users_ids = request.POST.getlist('employees')
                 for user_id in selected_users_ids:
@@ -774,7 +776,7 @@ def AddTaskAssign(request, id):
                 messages.error(request, 'Form is not valid | ERROR :', form.errors)
         except Exception as e:
             messages.error(request, "ERROR : ", e)
-    context = {'form': form, 'users_list': users_list, 'task_id': task_id}
+    context = {'form': form, 'users_list': users_list, 'task_id': task_id, 'project_id':project_id}
     return render(request, "admin/add_task_assignee.html", context)
 
 

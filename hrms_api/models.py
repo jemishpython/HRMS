@@ -189,8 +189,7 @@ class ProjectFile(models.Model):
 
 class Task(models.Model):
     task_title = models.CharField(verbose_name='Task Title', max_length=100, null=True)
-    task_status = models.CharField(verbose_name='Task Status', choices=TaskStatusChoice.choices,
-                                   default=TaskStatusChoice.WORKING, max_length=255, null=True, blank=True)
+    task_status = models.CharField(verbose_name='Task Status', choices=TaskStatusChoice.choices, default=TaskStatusChoice.WORKING, max_length=255, null=True, blank=True)
     task_project = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
@@ -199,6 +198,7 @@ class Task(models.Model):
 
 class TaskAssign(models.Model):
     task_name = models.ForeignKey(Task, verbose_name='Task Name', on_delete=models.DO_NOTHING, null=True)
+    task_project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
     employees = models.ManyToManyField(User, verbose_name='Employee Name', related_name='TaskName')
 
     def __str__(self):

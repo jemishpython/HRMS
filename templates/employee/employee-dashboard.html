@@ -27,27 +27,29 @@
 								</div>
 							</section>
 							<section class="dash-section">
-								<h1 class="dash-sec-title">Today Task</h1>
+								<h2 class="dash-title m-0 "><span class="text-dark"><i class="las la-check-double"></i> </span> Task</h2>
 								<div class="task-wrapper">
-                                        <div class="task-list-container">
-                                            <div class="task-list-body">
-                                                <ul id="task-list">
-													{% for project in user_projects %}
+									<div class="task-list-container">
+										<div class="task-list-body">
+											{% for project in user_projects %}
+												<ul id="task-list" class="mb-3">
+													<h3><span class="text-secondary"><i class="las la-angle-right"></i> </span> {{project}}</h3>
 														<li class="task">
-															<h4>{{project}}</h4>
 															{% for task in user_task %}
-															<div class="task-container">
-																<span class="task-action-btn task-check">
-																	<span class="action-circle large complete-btn" title="Mark Complete">
-																		<i class="material-icons">check</i>
-																	</span>
-																</span>
-																<span class="task-label">{{task.task_name}}</span>
-															</div>
+																{% if task.task_project_name == project.project_name %}
+																	<div class="task-container">
+																		<span class="task-action-btn task-check">
+																			<span class="action-circle large complete-btn" title="Mark Complete">
+																				<i class="material-icons">check</i>
+																			</span>
+																		</span>
+																		<span class="task-label">{{task.task_name}}</span>
+																	</div>
+																{% endif %}
 															{% endfor %}
 														</li>
-													{% endfor %}
-                                                </ul>
+                                                	</ul>
+												{% endfor %}
                                             </div>
                                         </div>
                                     </div>
