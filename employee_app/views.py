@@ -330,10 +330,18 @@ def TechnologyView(request):
 @login_required(login_url="EmployeeLogin")
 def Leaves(request, id):
     leave_list = Leave.objects.filter(leave_user=id)
+    new_leaves_count = leave_list.filter(leave_status=LeaveStatusChoice.NEW).count()
+    approved_leaves_count = leave_list.filter(leave_status=LeaveStatusChoice.APPROVED).count()
+    decline_leaves_count = leave_list.filter(leave_status=LeaveStatusChoice.DECLINED).count()
+    remaining_leaves_count = (12 - approved_leaves_count)
     leave_status = LeaveStatusChoice.choices
     context = {
         'leave_list': leave_list,
-        'leave_status': leave_status
+        'leave_status': leave_status,
+        'new_leaves_count': new_leaves_count,
+        'approved_leaves_count': approved_leaves_count,
+        'decline_leaves_count': decline_leaves_count,
+        'remaining_leaves_count': remaining_leaves_count,
     }
     return render(request, "employee/leaves-employee.html", context)
 
@@ -384,13 +392,18 @@ def DeleteLeave(request, id):
 @login_required(login_url="EmployeeLogin")
 def Tickets(request, id):
     tickets_list = Ticket.objects.filter(ticket_user=id)
+    new_tickets_count = tickets_list.filter(ticket_status=TicketStatusChoice.NEW).count()
+    approved_tickets_count = tickets_list.filter(ticket_status=TicketStatusChoice.APPROVED).count()
+    decline_tickets_count = tickets_list.filter(ticket_status=TicketStatusChoice.DECLINED).count()
     ticket_priority = TicketPriorityChoice.choices
     ticket_status = TicketStatusChoice.choices
     context = {
         'tickets_list': tickets_list,
+        'new_tickets_count': new_tickets_count,
+        'approved_tickets_count': approved_tickets_count,
+        'decline_tickets_count': decline_tickets_count,
         'ticket_priority': ticket_priority,
         'ticket_status': ticket_status,
-
     }
     return render(request, "employee/employee-tickets.html", context)
 

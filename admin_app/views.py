@@ -832,10 +832,16 @@ def UpdateLeaveStatus(request, id):
 @login_required(login_url="Login")
 def TicketList(request):
     ticket_list = Ticket.objects.all()
+    new_tickets_count = ticket_list.filter(ticket_status=TicketStatusChoice.NEW).count()
+    approved_tickets_count = ticket_list.filter(ticket_status=TicketStatusChoice.APPROVED).count()
+    decline_tickets_count = ticket_list.filter(ticket_status=TicketStatusChoice.DECLINED).count()
     ticket_priority = TicketPriorityChoice.choices
     ticket_status = TicketStatusChoice.choices
     context = {
         'ticket_list': ticket_list,
+        'new_tickets_count': new_tickets_count,
+        'approved_tickets_count': approved_tickets_count,
+        'decline_tickets_count': decline_tickets_count,
         'ticket_priority': ticket_priority,
         'ticket_status': ticket_status,
     }

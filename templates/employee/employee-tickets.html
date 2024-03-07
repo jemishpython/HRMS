@@ -33,59 +33,46 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="card-group m-b-30">
-								<div class="card">
-									<div class="card-body">
-										<div class="d-flex justify-content-between mb-4">
-											<div>
-												<span class="d-block">Total Tickets</span>
-											</div>
-											<div>
-												<h3 class="mb-1">{{tickets_list.count}}</h3>
+									<div class="card mr-2" style="border-radius: 1rem; background-color:#e6e6e6;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h3 class="p-3">Total Tickets :  <span class="text-secondary ml-2">{{tickets_list.count}}</span></h3>
+												</div>
 											</div>
 										</div>
+									</div>
 
+									<div class="card mx-2" style="border-radius: 1rem; background-color:#e6e6e6;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h3 class="p-3">New Tickets : <span class="text-info ml-2">{{new_tickets_count}}</span></h3>
+												</div>
+											</div>
+										</div>
 									</div>
-								</div>
 
-								<div class="card">
-									<div class="card-body">
-										<div class="d-flex justify-content-between mb-4">
-											<div>
-												<span class="d-block">New Tickets</span>
+									<div class="card mx-2" style="border-radius: 1rem; background-color:#e6e6e6;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h3 class="p-3">Declined Tickets : <span class="text-danger ml-2">{{decline_tickets_count}}</span></h3>
+												</div>
 											</div>
-											<div>
-												<h3 class="mb-1">{{tickets_list.count}}</h3>
+										</div>
+									</div>
+
+									<div class="card ml-2" style="border-radius: 1rem; background-color:#e6e6e6;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h3 class="p-3">Solve Tickets : <span class="text-success ml-2">{{approved_tickets_count}}</span></h3>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							
-								<div class="card">
-									<div class="card-body">
-										<div class="d-flex justify-content-between mb-4">
-											<div>
-												<span class="d-block">Pending Tickets</span>
-											</div>
-											<div>
-												<h3 class="mb-1">{{tickets_list.count}}</h3>
-											</div>
-										</div>
-									</div>
-								</div>
-							
-								<div class="card">
-									<div class="card-body">
-										<div class="d-flex justify-content-between mb-4">
-											<div>
-												<span class="d-block">Solve Tickets</span>
-											</div>
-											<div>
-												<h3 class="mb-1">{{tickets_list.count}}</h3>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
 						</div>	
 					</div>
 					
