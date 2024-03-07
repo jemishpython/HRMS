@@ -13,7 +13,7 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     AddDesignationForm, EditDesignationForm, EditProjectForm, AddProjectForm, ProjectAssignForm, AddTaskForm, \
     EditTaskForm, EditTechnologyForm, AddTechnologyForm, AddExperienceInfoForm, EditProfileInfoForm, \
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
-    EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm
+    EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm, LeaveStatusUpdateForm, TicketStatusUpdateForm
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank
@@ -644,7 +644,6 @@ def AddProjectAssignee(request, id):
     return render(request, "admin/add_project_assignee.html", context)
 
 
-
 @login_required(login_url="Login")
 def UpdateProject(request, id):
     edit_project = Project.objects.get(id=id)
@@ -656,7 +655,7 @@ def UpdateProject(request, id):
                 messages.info(request, 'Project Update successfully')
                 return redirect('AdminProjectDetailsView', id=id)
         except Exception as e:
-            messages.error(request, "Invalid credentials | ERROR : ",e)
+            messages.error(request, "Invalid credentials | ERROR : ", e)
     context = {'form': form, 'edit_project': edit_project}
     return render(request, "admin/edit_project.html", context)
 
@@ -776,7 +775,7 @@ def AddTaskAssign(request, id):
                 messages.error(request, 'Form is not valid | ERROR :', form.errors)
         except Exception as e:
             messages.error(request, "ERROR : ", e)
-    context = {'form': form, 'users_list': users_list, 'task_id': task_id, 'project_id':project_id}
+    context = {'form': form, 'users_list': users_list, 'task_id': task_id, 'project_id': project_id}
     return render(request, "admin/add_task_assignee.html", context)
 
 
@@ -793,40 +792,45 @@ def LeaveList(request):
 
 @login_required(login_url="Login")
 def UpdateLeaveStatus(request, id):
+    update_leave_status = Leave.objects.get(id=id)
+    form = LeaveStatusUpdateForm(request.POST or None, instance=update_leave_status)
     if request.method == 'POST':
-        update_leave_status = request.POST.get('leave_status')
-        leave_status_update = Leave.objects.get(id=id)
-        leave_status_update.leave_status = update_leave_status
-        leave_status_update.save()
+        try:
+            if form.is_valid():
+                form.save()
+                leave_status_update_email = update_leave_status.leave_user.email
 
-        leave_status_update_email = leave_status_update.leave_user.email
+                context = {
+                    'username': update_leave_status.leave_user.username,
+                    'user_id': update_leave_status.leave_user.id,
+                    'leave_status': update_leave_status.leave_status,
+                    'leave_type': update_leave_status.leave_type,
+                    'leave_from': update_leave_status.leave_from,
+                    'leave_to': update_leave_status.leave_to,
+                    'leave_days': update_leave_status.leave_days,
+                    'current_date': date.today()
+                    # 'request_url': request.get_host(), #For Liveproject
+                }
 
-        context = {
-            'username': leave_status_update.leave_user.username,
-            'user_id': leave_status_update.leave_user.id,
-            'leave_status': leave_status_update.leave_status,
-            'leave_type': leave_status_update.leave_type,
-            'leave_from': leave_status_update.leave_from,
-            'leave_to': leave_status_update.leave_to,
-            'leave_days': leave_status_update.leave_days,
-            'current_date': date.today()
-            # 'request_url': request.get_host(), #For Liveproject
-        }
+                from_email = settings.EMAIL_HOST_USER
 
-        from_email = settings.EMAIL_HOST_USER
-        mail_subject = f"Leave : {leave_status_update.leave_type}"
-
-        email = loader.render_to_string('admin/leave_status_email_template.html', context)
-        send_mail(
-            subject=mail_subject,
-            message=email,
-            from_email=from_email,
-            recipient_list=[leave_status_update_email],
-            html_message=email,
-        )
-        messages.info(request, 'Leave status update successfully')
-        return redirect('AdminLeaveList')
-    return render(request, "admin/leaves.html")
+                mail_subject = f"Leave : {update_leave_status.leave_type}"
+                email = loader.render_to_string('admin/leave_status_email_template.html', context)
+                send_mail(
+                    subject=mail_subject,
+                    message=email,
+                    from_email=from_email,
+                    recipient_list=[leave_status_update_email],
+                    html_message=email,
+                )
+                messages.info(request, 'Leave Status Update successfully')
+                return redirect('AdminLeaveList')
+            else:
+                messages.error(request, 'Form Not Valid : ', form.errors)
+                return redirect('AdminLeaveList')
+        except Exception as e:
+            messages.error(request, 'ERROR : ', e)
+    return render(request, "admin/update_leave_status.html", {'form': form, 'update_leave_status': update_leave_status})
 
 
 @login_required(login_url="Login")
@@ -850,15 +854,44 @@ def TicketList(request):
 
 @login_required(login_url="Login")
 def UpdateTicketstatus(request, id):
+    update_ticket_status = Ticket.objects.get(id=id)
+    form = TicketStatusUpdateForm(request.POST or None, instance=update_ticket_status)
     if request.method == 'POST':
-        update_ticket_status = request.POST.get('ticket_status')
-        ticket_status_update = Ticket.objects.get(id=id)
-        ticket_status_update.ticket_status = update_ticket_status
-        ticket_status_update.ticket_status_update_date = date.today()
-        ticket_status_update.save()
-        messages.info(request, 'Ticket status update successfully')
-        return redirect('AdminTicketList')
-    return render(request, "admin/tickets.html")
+        try:
+            if form.is_valid():
+                form.save()
+                ticket_status_update_email = update_ticket_status.ticket_user.email
+
+                context = {
+                    'username': update_ticket_status.ticket_user.username,
+                    'user_id': update_ticket_status.ticket_user.id,
+                    'ticket_status': update_ticket_status.ticket_status,
+                    'ticket_create_date': update_ticket_status.ticket_create_date,
+                    'ticket_description': update_ticket_status.ticket_description,
+                    'ticket_title': update_ticket_status.ticket_title,
+                    'current_date': date.today()
+                    # 'request_url': request.get_host(), #For Liveproject
+                }
+
+                from_email = settings.EMAIL_HOST_USER
+
+                mail_subject = f"Ticket Update : {update_ticket_status.ticket_title}"
+                email = loader.render_to_string('admin/ticket_status_email_template.html', context)
+                send_mail(
+                    subject=mail_subject,
+                    message=email,
+                    from_email=from_email,
+                    recipient_list=[ticket_status_update_email],
+                    html_message=email,
+                )
+                messages.info(request, 'Ticket Status Update successfully')
+                return redirect('AdminTicketList')
+            else:
+                messages.error(request, 'Form Not Valid : ', form.errors)
+                return redirect('AdminTicketList')
+        except Exception as e:
+            messages.error(request, 'ERROR : ', e)
+    return render(request, "admin/update_ticket_status.html", {'form': form, 'update_ticket_status': update_ticket_status})
 
 
 @login_required(login_url="Login")

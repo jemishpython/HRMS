@@ -218,6 +218,8 @@ $(document).ready(function () {
 		table.column(5).search(this.value).draw();
 	});
 });
+
+
 function addLeave(UserId) {
     $.ajax({
         url: "{% url 'EmpAddLeaves' id=0 %}".replace(0, UserId),
@@ -227,6 +229,7 @@ function addLeave(UserId) {
         }
     });
 }
+
 function editLeave(editLeaveId, UserId) {
     $.ajax({
         url: "{% url 'EmpEditLeave' id=0 userid=1 %}".replace(0, editLeaveId).replace(1,UserId),

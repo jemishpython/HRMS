@@ -97,18 +97,7 @@
                             <td>{{leave.leave_to|date:"d - m - Y"}}</td>
                             <td>{{leave.leave_days}} days</td>
                             <td class="w-75 text-wrap">{{leave.leave_reason}}</td>
-                            <td class="text-center">
-                                <div class="dropdown action-label">
-                                    <form action="{% url 'AdminLeaveStatusUpdate' leave.id %}" method="post">
-                                        {% csrf_token %}
-                                        <select class="px-2 py-2 border rounded-pill" name="leave_status" onChange="this.form.submit();">
-                                            <option disabled selected>New</option>
-                                            <option {% if leave.leave_status == "Approved" %}selected{% endif %}>Approved</option>
-                                            <option {% if leave.leave_status == "Declined" %}selected{% endif %}>Declined</option>
-                                        </select>
-                                    </form>
-                                </div>
-                            </td>
+                            <td class="w-25 text-center"><button class="border rounded-pill px-2 py-1 text-dark" onclick="updateLeaveStatus({{leave.id}})"><i class="fa fa-dot-circle-o {% if leave.leave_status == 'Declined' %}text-danger{% elif leave.leave_status == 'Approved' %}text-success{% else %}text-info{% endif %}"></i> {{leave.leave_status}}</button></td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -118,6 +107,8 @@
         </div>
     </div>
     <!-- /Page Content -->
+
+    <div id="update-leave-status-form"></div>
 
 </div>
 <!-- /Page Wrapper -->
@@ -138,6 +129,9 @@ $(document).ready(function () {
         table.column(1).search(this.value).draw();
     });
 
+    $('#leave_status').on('change', function () {
+        table.column(6).search(this.value).draw();
+
     $('.datetimepicker').datetimepicker({
         autoclose: true,
         format: 'dd-mm-yyyy'
@@ -145,6 +139,7 @@ $(document).ready(function () {
 
 });
 </script>
+
 <script>
     let minDate, maxDate;
 
@@ -183,6 +178,16 @@ document.querySelectorAll('#from_date, #to_date').forEach((el) => {
 </script>
 
 <script>
+function updateLeaveStatus(updateLeaveId) {
+    $.ajax({
+        url: "{% url 'AdminLeaveStatusUpdate' id=0 %}".replace(0, updateLeaveId),
+        success: function(response) {
+            $("#update-leave-status-form").html(response);
+            $("#update_leave_status_form").modal('show');
+        }
+    });
+}
+
     window.setTimeout(function() {
         $(".alert").fadeTo(500, 0).slideUp(500, function(){
             $(this).remove();

@@ -107,7 +107,7 @@
 										<option value="{{ priority.0 }}">{{ priority.1 }}</option>
 									{% endfor %}
 								</select>
-								<label class="focus-label">Ticket Status</label>
+								<label class="focus-label">Ticket Priority Status</label>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-3">
@@ -118,7 +118,7 @@
 										<option value="{{ status.0 }}">{{ status.1 }}</option>
 									{% endfor %}
 								</select>
-								<label class="focus-label">Priority Status</label>
+								<label class="focus-label">Ticket Status</label>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-3">
@@ -168,18 +168,7 @@
 													<a class="border rounded-pill p-1 text-dark"><i class="fa fa-dot-circle-o {% if ticket.ticket_priority == 'High' %}text-danger{% elif ticket.ticket_priority == 'Medium' %}text-warning{% else %}text-info{% endif %}"></i> {{ticket.ticket_priority}}</a>
 												</div>
 											</td>
-											<td class="text-center">
-												<div class="dropdown action-label" >
-													<form action="{% url 'AdminTicketStatusUpdate' ticket.id %}" method="post">
-													{% csrf_token %}
-														<select class="px-2 py-2 border rounded-pill" onChange="this.form.submit();" name="ticket_status">
-															<option selected disabled>New</option>
-															<option {% if ticket.ticket_status == 'Approved' %}selected{% endif %} >Approved</option>
-															<option {% if ticket.ticket_status == 'Declined' %}selected{% endif %} >Declined</option>
-														</select>
-													</form>
-												</div>
-											</td>
+											<td class="w-25 text-center"><button class="border rounded-pill px-2 py-1 text-dark" onclick="updateTicketStatus({{ticket.id}})"><i class="fa fa-dot-circle-o {% if ticket.ticket_status == 'Declined' %}text-danger{% elif ticket.ticket_status == 'Approved' %}text-success{% else %}text-info{% endif %}"></i> {{ticket.ticket_status}}</button></td>
 											<td>{{ticket.ticket_status_update_date|date:"j - M - Y"}}</td>
 										</tr>
 										{% endfor %}
@@ -190,6 +179,8 @@
 					</div>
                 </div>
 				<!-- /Page Content -->
+
+				<div id="update-ticket-status-form"></div>
 
             </div>
 			<!-- /Page Wrapper -->
@@ -218,6 +209,17 @@ $(document).ready(function () {
 });
 </script>
 <script>
+function updateTicketStatus(updateTicketId) {
+    $.ajax({
+        url: "{% url 'AdminTicketStatusUpdate' id=0 %}".replace(0, updateTicketId),
+        success: function(response) {
+            $("#update-ticket-status-form").html(response);
+            $("#update_ticket_status_form").modal('show');
+        }
+    });
+}
+	
+	
 window.setTimeout(function() {
 	$(".alert").fadeTo(500, 0).slideUp(500, function(){
 		$(this).remove();

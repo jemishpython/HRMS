@@ -212,8 +212,7 @@ class Leave(models.Model):
     leave_to = models.DateField(verbose_name='Leave To', null=True, blank=True)
     leave_days = models.IntegerField(verbose_name='Leave Days', null=True, blank=True)
     leave_reason = models.CharField(verbose_name='Leave Reason', max_length=255, null=True, blank=True)
-    leave_status = models.CharField(verbose_name='Leave Status', max_length=100, choices=LeaveStatusChoice.choices,
-                                    default=LeaveStatusChoice.NEW, null=True, blank=True)
+    leave_status = models.CharField(verbose_name='Leave Status', max_length=100, choices=LeaveStatusChoice.choices,default=LeaveStatusChoice.NEW, null=True, blank=True)
     leave_user = models.ForeignKey(User, verbose_name='User Name', on_delete=models.CASCADE, null=True)
 
     def __str__(self):

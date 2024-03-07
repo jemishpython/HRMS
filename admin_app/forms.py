@@ -99,7 +99,13 @@ class ProjectAssignForm(forms.ModelForm):
         )
 
 
-class TicketStatusUpdate(forms.ModelForm):
+class LeaveStatusUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Leave
+        fields = ['leave_status']
+
+
+class TicketStatusUpdateForm(forms.ModelForm):
     class Meta:
         model = Ticket
         fields = ['ticket_status']
