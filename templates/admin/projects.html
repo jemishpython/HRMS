@@ -89,10 +89,9 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="dropdown profile-action">
-                            <button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger"
-                                    onclick="deleteProject({{project.id}})"><i class="las la-lg la-trash"></i></button>
+                            <button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger" onclick="deleteProject({{project.id}})"><i class="las la-lg la-trash"></i></button>
                         </div>
-                        <h4 class="project-title"><a href="projects/details-view/{{project.id}}">{{project.project_name}}</a>
+                        <h4 class="project-title"><a href="{% url 'AdminProjectDetailsView' project.id %}">{{project.project_name}}</a>
                         </h4>
                         <small class="block text-ellipsis m-b-15">
                             <span class="text-xs">1</span> <span class="text-muted">open tasks, </span>

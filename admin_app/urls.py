@@ -56,6 +56,11 @@ urlpatterns = [
     path("designation/delete/<int:id>", views.DeleteDesignation, name="AdminDeleteDesignation"),
 
     path("clients", views.ClientsView, name="AdminClientsView"),
+    path("client/add", views.AddClient, name="AdminAddClient"),
+    path("client/delete/<int:id>", views.DeleteClient, name="AdminDeleteClient"),
+    path("clients-details/<int:id>", views.ClientDetailView, name="AdminClientDetailView"),
+    path("clients/profile-info-edit/<int:id>", views.EditClientInfo, name="AdminEditClientInfo"),
+    path("clients/<int:user_id>/profile-info-edit/<int:id>", views.ClientDeleteProject, name="AdminClientDeleteProject"),
 
     path("projects", views.ProjectsView, name="AdminProjectsView"),
     path("projects/add", views.AddProject, name="AdminAddProjects"),

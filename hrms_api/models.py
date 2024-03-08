@@ -73,8 +73,7 @@ class User(AbstractUser):
     address = models.CharField(verbose_name='Address', max_length=400, blank=True, null=True)
     nationality = models.CharField(verbose_name='Nationality', max_length=255, blank=True)
     email = models.EmailField(verbose_name='Email Address', max_length=255, blank=False)
-    gender = models.CharField(verbose_name='Gender', choices=GenderTypeChoice.choices, default=GenderTypeChoice.MALE,
-                              max_length=255, null=True)
+    gender = models.CharField(verbose_name='Gender', choices=GenderTypeChoice.choices, default=GenderTypeChoice.MALE, max_length=255, null=True)
     report_to = models.CharField(verbose_name='Report to', blank=True, null=True, max_length=255)
     is_admin = models.BooleanField(verbose_name='is admin', default=False, blank=True)
     is_staff = models.BooleanField(verbose_name='is staff', default=False, blank=True)
@@ -82,9 +81,7 @@ class User(AbstractUser):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     designation = models.ForeignKey(Designation, on_delete=models.CASCADE, null=True, blank=True)
     date_joined = models.DateField(verbose_name='Date of Joining', null=True, blank=True)
-    birthdate = models.DateField(verbose_name='Birth Date', null=True)
-    marital_status = models.CharField(verbose_name='Marital Status', choices=MaritalStatusChoice.choices,
-                                      default=MaritalStatusChoice.SINGLE, null=True, max_length=255)
+    marital_status = models.CharField(verbose_name='Marital Status', choices=MaritalStatusChoice.choices, default=MaritalStatusChoice.SINGLE, null=True, max_length=255)
     religion = models.CharField(verbose_name='Religion', max_length=20, null=True)
     technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True, blank=True)
 
@@ -140,6 +137,25 @@ class Emergency_Contact(models.Model):
         return self.primary_name
 
 
+class Client(models.Model):
+    username = models.CharField(verbose_name='User Name', max_length=255, blank=True, null=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="phone number entered in format +910987654321 .")
+    country_code = models.IntegerField(blank=True, null=True)
+    phone = models.CharField(validators=[phone_regex], max_length=17, unique=True)
+    dob = models.DateField(verbose_name='Birth Date', null=True, blank=True)
+    active_status = models.BooleanField(verbose_name='Active Status', default=True, blank=True)
+    address = models.CharField(verbose_name='Address', max_length=400, blank=True, null=True)
+    nationality = models.CharField(verbose_name='Nationality', max_length=255, blank=True)
+    email = models.EmailField(verbose_name='Email Address', max_length=255, blank=False)
+    gender = models.CharField(verbose_name='Gender', choices=GenderTypeChoice.choices, default=GenderTypeChoice.MALE, max_length=255)
+    client_avatar = models.ImageField(verbose_name='Profile Image', upload_to='client_avatar/')
+    company_name = models.CharField(verbose_name='Company Name', max_length=255, blank=True, null=True)
+    position = models.CharField(verbose_name='Position in company', max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.username
+
+
 class Holiday(models.Model):
     holiday_title = models.CharField(verbose_name='Holiday Title', max_length=50, null=True, blank=True)
     holiday_date = models.DateField(verbose_name="Holiday Date", null=True, blank=True)
@@ -150,7 +166,7 @@ class Holiday(models.Model):
 
 class Project(models.Model):
     project_name = models.CharField(verbose_name='Project Name', max_length=100, null=True, blank=True)
-    project_client_name = models.CharField(verbose_name='Project Client Name', max_length=100, null=True, blank=True)
+    project_client_name = models.ForeignKey(Client,verbose_name='Project Client Name', on_delete=models.CASCADE, null=True)
     project_start_date = models.DateField(verbose_name='Project Start Date', null=True, blank=True)
     project_end_date = models.DateField(verbose_name='Project End Date', null=True, blank=True)
     project_cost = models.CharField(verbose_name='Project Cost', max_length=50, null=True, blank=True)

@@ -1,0 +1,91 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!-- Add Client Modal -->
+<div aria-hidden="true" aria-labelledby="addModalToggleLabel" class="modal fade" id="edit_client_info_model" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Client</h3>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'AdminEditClientInfo' edit_client_info.id %}" id="form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="profile-img-wrap edit-img">
+                                        <img alt="client_profile_image" class="inline-block" src="{{edit_client_info.client_avatar.url}}" >
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    {{ form.client_avatar|as_crispy_field }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        {{ form.username|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        {{ form.email|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        {{ form.dob|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.gender|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        {{ form.phone|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        {{ form.address|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.nationality|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.company_name|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        {{ form.position|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group ml-5 mt-5">
+                                        {{ form.active_status|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="submit-section ">
+                        <button class="btn btn-primary submit-btn" name="client_submit_data" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add Client Modal -->

@@ -12,6 +12,24 @@ class AddEmployeeForm(forms.ModelForm):
         }
 
 
+class AddClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['username', 'phone', 'dob', 'address', 'nationality', 'email', 'gender', 'client_avatar', 'company_name', 'position']
+        widgets = {
+            'dob': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+class EditClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = '__all__'
+        widgets = {
+            'dob': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
 class AddHolidaysForm(forms.ModelForm):
     class Meta:
         model = Holiday
@@ -69,8 +87,7 @@ class EditTechnologyForm(forms.ModelForm):
 class AddProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['project_name', 'project_client_name', 'project_start_date', 'project_end_date', 'project_cost',
-                  'project_priority', 'project_status', 'project_summary']
+        fields = ['project_name', 'project_client_name', 'project_start_date', 'project_end_date', 'project_cost', 'project_priority', 'project_status', 'project_summary']
         widgets = {
             'project_start_date': forms.DateInput(attrs={'type': 'date'}),
             'project_end_date': forms.DateInput(attrs={'type': 'date'}),
@@ -80,8 +97,7 @@ class AddProjectForm(forms.ModelForm):
 class EditProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['project_name', 'project_client_name', 'project_start_date', 'project_end_date', 'project_cost',
-                  'project_priority', 'project_status', 'project_summary']
+        fields = ['project_name', 'project_client_name', 'project_start_date', 'project_end_date', 'project_cost', 'project_priority', 'project_status', 'project_summary']
         widgets = {
             'project_start_date': forms.DateInput(attrs={'type': 'date'}),
             'project_end_date': forms.DateInput(attrs={'type': 'date'}),

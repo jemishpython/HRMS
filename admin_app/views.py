@@ -13,10 +13,11 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     AddDesignationForm, EditDesignationForm, EditProjectForm, AddProjectForm, ProjectAssignForm, AddTaskForm, \
     EditTaskForm, EditTechnologyForm, AddTechnologyForm, AddExperienceInfoForm, EditProfileInfoForm, \
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
-    EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm, LeaveStatusUpdateForm, TicketStatusUpdateForm
+    EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm, LeaveStatusUpdateForm, TicketStatusUpdateForm, \
+    AddClientForm, EditClientForm
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client
 
 
 def AdminRegister(request):
@@ -37,13 +38,13 @@ def Login(request):
         try:
             user = User.objects.get(phone=adminphone, is_admin=True)
         except Exception as e:
-            messages.error(request, "Login user is not Admin.", extra_tags='danger')
+            messages.error(request, "Login user is not Admin.")
             return redirect('Login')
         if user.is_active:
             if user.check_password(adminpassword):
                 login(request, user)
                 return redirect('AdminIndex')
-            messages.error(request, "Invalid credentials", extra_tags='danger')
+            messages.error(request, "Invalid credentials")
             return redirect('Login')
         messages.warning(request, "Please wait for admin is approve your request")
         return redirect('Login')
@@ -146,8 +147,10 @@ def AddEmployee(request):
                 add_emp.save()
                 messages.success(request, 'Employee add successfully')
                 return redirect('AdminEmployeeView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "User Not Add - ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form}
     return render(request, "admin/add_employee.html", context)
 
@@ -166,6 +169,77 @@ def DeleteEmployeeList(id):
     delete_employee.delete()
     messages.error('Employee Delete successfully')
     return redirect('AdminEmployeeListView')
+
+
+@login_required(login_url="Login")
+def ClientsView(request):
+    client_list = Client.objects.all()
+    context = {
+        'client_list': client_list
+    }
+    return render(request, "admin/clients.html", context)
+
+
+@login_required(login_url="Login")
+def ClientDetailView(request, id):
+    client = Client.objects.get(id=id)
+    client_project_list = Project.objects.filter(project_client_name=id)
+    context = {
+        'client': client,
+        'client_project_list': client_project_list,
+    }
+    return render(request, "admin/client-profile.html", context)
+
+
+@login_required(login_url="Login")
+def AddClient(request):
+    form = AddClientForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Client add successfully')
+                return redirect('AdminClientsView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    context = {'form': form}
+    return render(request, "admin/add_client.html", context)
+
+
+@login_required(login_url="Login")
+def EditClientInfo(request, id):
+    edit_client_info = Client.objects.get(id=id)
+    form = EditClientForm(request.POST or None, request.FILES or None, instance=edit_client_info)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.info(request, 'Profile Info Update successfully')
+                return redirect('AdminClientDetailView', id=id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    context = {'form': form, 'edit_client_info': edit_client_info}
+    return render(request, "admin/edit_client_info.html", context)
+
+
+@login_required(login_url="Login")
+def ClientDeleteProject(request, id, user_id):
+    delete_project = Project.objects.get(id=id)
+    delete_project.delete()
+    messages.error(request, 'Project Delete successfully')
+    return redirect('AdminClientDetailView', id=user_id)
+
+
+@login_required(login_url="Login")
+def DeleteClient(request, id):
+    delete_client = Client.objects.get(id=id)
+    delete_client.delete()
+    messages.error(request, 'Client Delete successfully')
+    return redirect('AdminClientsView')
 
 
 @login_required(login_url="Login")
@@ -196,8 +270,10 @@ def EditProfileInfo(request, id):
                 form.save()
                 messages.info(request, 'Profile Info Update successfully')
                 return redirect('AdminProfileView', id=id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_profile_info': edit_profile_info}
     return render(request, "admin/edit_profile_info.html", context)
 
@@ -212,8 +288,10 @@ def EditPersonalInfo(request, id):
                 form.save()
                 messages.info(request, 'Personal Info Update successfully')
                 return redirect('AdminProfileView', id=id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_personal_info': edit_personal_info}
     return render(request, "admin/edit_personal_info.html", context)
 
@@ -231,8 +309,10 @@ def AddEducationInfo(request, id):
                 education.save()
                 messages.success(request, 'Education Info Add successfully')
                 return redirect('AdminProfileView', id=user_id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_education_info.html", context)
 
@@ -249,8 +329,10 @@ def EditEducationInfo(request, id, edu_id):
                 form.save()
                 messages.info(request, 'Education Info Update successfully')
                 return redirect('AdminProfileView', id=user_id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_education_info': edit_education_info, 'user_id': user_id}
     return render(request, "admin/edit_education_info.html", context)
 
@@ -277,8 +359,10 @@ def AddExperienceInfo(request, id):
                 experience.save()
                 messages.success(request, 'Experience Info Add successfully')
                 return redirect('AdminProfileView', id=user_id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_experience_info.html", context)
 
@@ -295,8 +379,10 @@ def EditExperienceInfo(request, id, exp_id):
                 form.save()
                 messages.info(request, 'Experience Info Update successfully')
                 return redirect('AdminProfileView', id=user_id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_experience_info': edit_experience_info, 'user_id': user_id}
     return render(request, "admin/edit_experience_info.html", context)
 
@@ -323,8 +409,10 @@ def AddEmergencyInfo(request, id):
                 emergency_contact.save()
                 messages.success(request, 'Experience Info Add successfully')
                 return redirect('AdminProfileView', id=user_id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_emergency_contact.html", context)
 
@@ -341,8 +429,10 @@ def EditEmergencyInfo(request, id, emg_id):
                 form.save()
                 messages.info(request, 'Experience Info Update successfully')
                 return redirect('AdminProfileView', id=user_id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_emergency_contact': edit_emergency_contact, 'user_id': user_id}
     return render(request, "admin/edit_emergency_contact.html", context)
 
@@ -353,9 +443,10 @@ def DeleteEmergency(request, id, emg_id):
     delete_emg = Emergency_Contact.objects.get(id=emg_id)
     delete_emg.delete()
     messages.error(request, 'Emergency information Delete successfully')
-    return redirect('AdminProfileView', id=user_id.id) @ login_required(login_url="Login")
+    return redirect('AdminProfileView', id=user_id.id)
 
 
+@login_required(login_url="Login")
 def AddBankInfo(request, id):
     user = User.objects.get(id=id)
     user_id = user.id
@@ -368,8 +459,10 @@ def AddBankInfo(request, id):
                 bank_info.save()
                 messages.success(request, 'Banke Info Add successfully')
                 return redirect('AdminProfileView', id=user_id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'user_id': user_id}
     return render(request, "admin/add_bank_info.html", context)
 
@@ -386,8 +479,10 @@ def EditBankInfo(request, id, bank_id):
                 form.save()
                 messages.info(request, 'Banke Info Update successfully')
                 return redirect('AdminProfileView', id=user_id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_bank_info': edit_bank_info, 'user_id': user_id}
     return render(request, "admin/edit_bank_info.html", context)
 
@@ -419,8 +514,10 @@ def AddHolidays(request):
                 form.save()
                 messages.success(request, 'Holiday add successfully')
                 return redirect('AdminHolidays')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form}
     return render(request, "admin/add_holidays.html", context)
 
@@ -435,8 +532,10 @@ def UpdateHolidays(request, id):
                 form.save()
                 messages.info(request, 'Holiday Update successfully')
                 return redirect('AdminHolidays')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_holiday': edit_holiday}
     return render(request, "admin/edit_holidays.html", context)
 
@@ -467,8 +566,10 @@ def AddDepartment(request):
                 form.save()
                 messages.success(request, 'Department add successfully')
                 return redirect('AdminDepartmentView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form}
     return render(request, "admin/add_department.html", context)
 
@@ -483,8 +584,10 @@ def UpdateDepartment(request, id):
                 form.save()
                 messages.info(request, 'Department Update successfully')
                 return redirect('AdminDepartmentView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_department': edit_department}
     return render(request, "admin/edit_department.html", context)
 
@@ -515,8 +618,10 @@ def AddDesignation(request):
                 form.save()
                 messages.success(request, 'Designation add successfully')
                 return redirect('AdminDesignationView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form}
     return render(request, "admin/add_designation.html", context)
 
@@ -531,8 +636,10 @@ def UpdateDesignation(request, id):
                 form.save()
                 messages.info(request, 'Designation Update successfully')
                 return redirect('AdminDesignationView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_designation': edit_designation}
     return render(request, "admin/edit_designation.html", context)
 
@@ -563,8 +670,10 @@ def AddTechnology(request):
                 form.save()
                 messages.success(request, 'Technology add successfully')
                 return redirect('AdminTechnologyView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form}
     return render(request, "admin/add_technology.html", context)
 
@@ -579,8 +688,10 @@ def UpdateTechnology(request, id):
                 form.save()
                 messages.info(request, 'Designation Update successfully')
                 return redirect('AdminTechnologyView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_technology': edit_technology}
     return render(request, "admin/edit_technology.html", context)
 
@@ -591,11 +702,6 @@ def DeleteTechnology(request, id):
     delete_technology.delete()
     messages.error(request, 'Technology Delete successfully')
     return redirect('AdminTechnologyView')
-
-
-@login_required(login_url="Login")
-def ClientsView(request):
-    return render(request, "admin/clients.html")
 
 
 @login_required(login_url="Login")
@@ -613,8 +719,10 @@ def AddProject(request):
                 form.save()
                 messages.success(request, 'Project add successfully')
                 return redirect('AdminProjectsView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form}
     return render(request, "admin/add_project.html", context)
 
@@ -637,9 +745,9 @@ def AddProjectAssignee(request, id):
                 messages.success(request, 'Project Assign successfully')
                 return redirect('AdminProjectDetailsView', id=id)
             else:
-                messages.error(request, 'Form is not valid | ERROR :', form.errors)
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'users_list': users_list, 'project_id': project_id}
     return render(request, "admin/add_project_assignee.html", context)
 
@@ -654,8 +762,10 @@ def UpdateProject(request, id):
                 form.save()
                 messages.info(request, 'Project Update successfully')
                 return redirect('AdminProjectDetailsView', id=id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "Invalid credentials | ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_project': edit_project}
     return render(request, "admin/edit_project.html", context)
 
@@ -720,6 +830,8 @@ def AddProjectTask(request, id):
             task.save()
             messages.success(request, 'Task added successfully')
             return redirect('AdminProjectTaskList', id=id)
+        else:
+            messages.error(request, f"Form Not Valid : {form.errors}")
     else:
         form = AddTaskForm()
     context = {'form': form, 'add_project_id': add_project_id}
@@ -737,8 +849,10 @@ def EditProjectTask(request, id, projectid):
                 form.save()
                 messages.info(request, 'Task Update successfully')
                 return redirect('AdminProjectTaskList', id=projectid.id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_task': edit_task, 'projectid': projectid}
     return render(request, "admin/edit_task.html", context)
 
@@ -772,9 +886,9 @@ def AddTaskAssign(request, id):
                 messages.success(request, 'Task Assign successfully')
                 return redirect('AdminProjectTaskList', id=task_id.task_project.id)
             else:
-                messages.error(request, 'Form is not valid | ERROR :', form.errors)
+                messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            messages.error(request, "ERROR : ", e)
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'users_list': users_list, 'task_id': task_id, 'project_id': project_id}
     return render(request, "admin/add_task_assignee.html", context)
 
@@ -826,10 +940,10 @@ def UpdateLeaveStatus(request, id):
                 messages.info(request, 'Leave Status Update successfully')
                 return redirect('AdminLeaveList')
             else:
-                messages.error(request, 'Form Not Valid : ', form.errors)
+                messages.error(request, f"Form Not Valid : {form.errors}")
                 return redirect('AdminLeaveList')
         except Exception as e:
-            messages.error(request, 'ERROR : ', e)
+            messages.error(request, f"ERROR : {e}")
     return render(request, "admin/update_leave_status.html", {'form': form, 'update_leave_status': update_leave_status})
 
 
@@ -887,11 +1001,12 @@ def UpdateTicketstatus(request, id):
                 messages.info(request, 'Ticket Status Update successfully')
                 return redirect('AdminTicketList')
             else:
-                messages.error(request, 'Form Not Valid : ', form.errors)
+                messages.error(request, f"Form Not Valid : {form.errors}")
                 return redirect('AdminTicketList')
         except Exception as e:
-            messages.error(request, 'ERROR : ', e)
-    return render(request, "admin/update_ticket_status.html", {'form': form, 'update_ticket_status': update_ticket_status})
+            messages.error(request, f"ERROR : {e}")
+    return render(request, "admin/update_ticket_status.html",
+                  {'form': form, 'update_ticket_status': update_ticket_status})
 
 
 @login_required(login_url="Login")
