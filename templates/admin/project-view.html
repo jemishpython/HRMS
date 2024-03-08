@@ -239,18 +239,21 @@
 										{% for project_leader in project_leader_list %}
 											{% for employee in project_leader.employees.all %}
 												<li>
-													<a href="profile.html">
-														<div class="list-item">
+													<div class="list-item">
+														<a href="{% url 'AdminProfileView' employee.id %}">
 															<div class="list-left">
-																<img class="avatar" alt="" src="{{employee.avatar.url}}">
+																<img class="avatar" alt="Employee Profile Photo" src="{{employee.avatar.url}}">
 															</div>
 															<div class="list-body">
 																<span class="message-author">{{employee}}</span>
 																<div class="clearfix"></div>
 																<span class="message-content text-secondary">{{employee.department}} | {{employee.designation}} | {{employee.technology}}</span>
 															</div>
+														</a>
+														<div class="dropdown profile-action">
+															<button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger" onclick="deleteAssignEmployee({{employee.id}}, {{projectdetailview.id}})"><i class="las la-lg la-trash"></i></button>
 														</div>
-													</a>
+													</div>
 												</li>
 											{% endfor %}
 										{% endfor %}
@@ -264,8 +267,8 @@
 										{% for project_team_member in project_team_member_list %}
 											{% for employee in project_team_member.employees.all %}
 												<li>
-													<a href="profile.html">
-														<div class="list-item">
+													<div class="list-item">
+														<a href="{% url 'AdminProfileView' employee.id %}">
 															<div class="list-left">
 																<img class="avatar" alt="" src="{{employee.avatar.url}}">
 															</div>
@@ -274,8 +277,11 @@
 																<div class="clearfix"></div>
 																<span class="message-content text-secondary">{{employee.department}} | {{employee.designation}} | {{employee.technology}}</span>
 															</div>
+														</a>
+														<div class="dropdown profile-action">
+															<button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger" onclick="deleteAssignEmployee({{employee.id}},{{projectdetailview.id}})"><i class="las la-lg la-trash"></i></button>
 														</div>
-													</a>
+													</div>
 												</li>
 											{% endfor %}
 										{% endfor %}
@@ -290,6 +296,31 @@
 				<div id="add-project-assignee-form"></div>
 
 				<div id="edit-project-form"></div>
+
+				<!-- Delete Employee Modal -->
+				<div class="modal custom-modal fade" id="delete_assign_employee_model" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="form-header">
+									<h3>Delete Employee</h3>
+									<p>Are you sure want to delete?</p>
+								</div>
+								<div class="modal-btn delete-action">
+									<div class="row">
+										<div class="col-6">
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
+										</div>
+										<div class="col-6">
+											<a href="#" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Delete Employee Modal -->
 				
             </div>
 			<!-- /Page Wrapper -->
@@ -314,6 +345,14 @@ function addProjectAssignee(addAssigneeProjectId) {
 			$("#add_project_assignee_model").modal('show');
         }
     });
+}
+
+function deleteAssignEmployee(deleteAssignEmployeeId, ProjectId) {
+    $("#delete_assign_employee_model").modal('show');
+    if (deleteAssignEmployeeId) {
+        var deleteUrl = "{% url 'AdminDeleteAssignEmployee' id=0 project_id=1 %}".replace(0, deleteAssignEmployeeId).replace(1, ProjectId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
 }
 </script>
 <script>

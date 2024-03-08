@@ -60,7 +60,7 @@ urlpatterns = [
     path("client/delete/<int:id>", views.DeleteClient, name="AdminDeleteClient"),
     path("clients-details/<int:id>", views.ClientDetailView, name="AdminClientDetailView"),
     path("clients/profile-info-edit/<int:id>", views.EditClientInfo, name="AdminEditClientInfo"),
-    path("clients/<int:user_id>/profile-info-edit/<int:id>", views.ClientDeleteProject, name="AdminClientDeleteProject"),
+    path("clients/<int:user_id>/project-delete/<int:id>", views.ClientDeleteProject, name="AdminClientDeleteProject"),
 
     path("projects", views.ProjectsView, name="AdminProjectsView"),
     path("projects/add", views.AddProject, name="AdminAddProjects"),
@@ -70,6 +70,7 @@ urlpatterns = [
     path("project/<int:projectid>/task-delete/<int:id>", views.DeleteProjectTask, name="AdminDeleteProjectTask"),
 
     path("project-assignee/<int:id>", views.AddProjectAssignee, name='AdminAddProjectAssignee'),
+    path("<int:project_id>/project-assignee-delete/<int:id>", views.DeleteAssignEmployee, name='AdminDeleteAssignEmployee'),
 
     path("projects/tasks", views.ProjectTask, name="AdminProjectTask"),
     path("project/<int:id>/tasks", views.ProjectTaskList, name="AdminProjectTaskList"),

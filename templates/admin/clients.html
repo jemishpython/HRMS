@@ -70,7 +70,7 @@
 						<div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
 							<div class="profile-widget">
 								<div class="profile-img">
-									<a href="{% url 'AdminClientDetailView' client.id %}"><img style="position: relative;" class="avatar" alt="Client Profile Image" src="{{client.client_avatar.url}}"></a>
+									<a href="{% url 'AdminClientDetailView' client.id %}"><img class="avatar" alt="Client Profile Image" src="{{client.client_avatar.url}}"></a>
 									{% if client.active_status == True %}
 									<span style="position: absolute; bottom: 0; right:5%; border:3px solid white; width: 20px; height: 20px; background-color: green; border-radius: 50%;"></span>
 									{% else %}

@@ -107,13 +107,15 @@ def update_password(request, pk):
 @login_required(login_url="Login")
 def AdminIndex(request):
     users = User.objects.all()
-    projects = Project.objects.all()
-    tasks = Task.objects.all()
+    project_list = Project.objects.all()
+    task_list = Task.objects.all()
+    client_list = Client.objects.all()
 
     context = {
-        'projects': projects,
-        'tasks': tasks,
+        'project_list': project_list,
+        'task_list': task_list,
         'users': users,
+        'client_list': client_list,
     }
     return render(request, "admin/index.html", context)
 
@@ -750,6 +752,14 @@ def AddProjectAssignee(request, id):
             messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'users_list': users_list, 'project_id': project_id}
     return render(request, "admin/add_project_assignee.html", context)
+
+
+@login_required(login_url="Login")
+def DeleteAssignEmployee(request, id, project_id):
+    delete_assign_employee = ProjectAssign.objects.filter(employees=id)
+    delete_assign_employee.delete()
+    messages.error(request, 'Assign Employee Delete successfully')
+    return redirect('AdminProjectDetailsView', id=project_id)
 
 
 @login_required(login_url="Login")
