@@ -1,0 +1,53 @@
+{% extends 'employee/base.html' %}
+{% block body %}
+	<!-- Page Wrapper -->
+            <div class="page-wrapper">
+				<div class="show_message">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+
+				<!-- Page Content -->
+                <div class="content container-fluid">
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">To view the tasks list, Please select any one project ...</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item active">Dashboard/Projects</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+					<div class="row">
+						{% for project in projectlist %}
+						<div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+							<div class="card dash-widget text-center">
+								<div class="card-body">
+									<div>
+										<h3><a href="{% url 'EmpProjectTaskList' id=project.project_name.id user_id=user.id %}" class="text-dark"><span></span>{{project.project_name}}</a></h3>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endfor %}
+					</div>
+				</div>
+				<!-- /Page Content -->
+
+            </div>
+			<!-- /Page Wrapper -->
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
+</script>
+
+ {% endblock body %}

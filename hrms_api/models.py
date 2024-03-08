@@ -163,7 +163,7 @@ class Project(models.Model):
 
 
 class ProjectAssign(models.Model):
-    project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
+    project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.CASCADE, null=True)
     assignee_type = models.CharField(verbose_name='Assignee Type', max_length=50, blank=True, null=True, choices=ProjectAssigneeTypeChoice.choices, default=ProjectAssigneeTypeChoice.TEAM_MEMBER)
     employees = models.ManyToManyField(User, verbose_name='Employee Name', related_name='ProjectName')
 
@@ -197,7 +197,7 @@ class Task(models.Model):
 
 
 class TaskAssign(models.Model):
-    task_name = models.ForeignKey(Task, verbose_name='Task Name', on_delete=models.DO_NOTHING, null=True)
+    task_name = models.ForeignKey(Task, verbose_name='Task Name', on_delete=models.CASCADE, null=True)
     task_project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
     employees = models.ManyToManyField(User, verbose_name='Employee Name', related_name='TaskName')
 

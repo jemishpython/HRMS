@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block body %}
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div class="sidebar-menu">
+            <ul>
+                <li><a href="{% url 'EmpProjectTask' user.id %}"><span>Project List</span></a></li>
+                <li class="menu-title">Projects</li>
+                {% for project in project_list %}
+                <li><a href="{% url 'EmpProjectTaskList' id=project.project_name.id user_id=user.id %}"><span>{{project.project_name}}</span></a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- /Sidebar -->
+
+<!-- Page Wrapper -->
+
+    <div class="page-wrapper">
+        <div class="show_message">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
+        <div class="chat-main-row">
+            <div class="chat-main-wrapper">
+                <div class="col-lg-7 message-view task-view task-left-sidebar">
+                    <div class="chat-window">
+                        <div class="fixed-header">
+                            <ul class="nav nav-tabs nav-tabs-top">
+                                <li class="nav-item"><a class="nav-link active" href="#all_tasks" data-toggle="tab" aria-expanded="true">All Tasks</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#pending_tasks" data-toggle="tab" aria-expanded="false">Pending Tasks</a></li>
+                                <li class="nav-item"><a class="nav-link" href="#completed_tasks" data-toggle="tab" aria-expanded="false">Completed Tasks</a></li>
+                            </ul>
+                        </div>
+                        <div class="show_message">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="chat-contents">
+                            <div class="chat-content-wrap">
+                                <div class="chat-wrap-inner">
+                                    <div class="chat-box">
+                                        <div class="task-wrapper">
+                                            <div class="task-list-container">
+                                                <div class="task-list-body">
+                                                    <ul id="task-list">
+                                                        {% for task_list in project_task_list %}
+                                                            {% if task_list.task_project_name.id == project_id %}
+                                                            <li class="task">
+                                                                <div class="task-container">
+                                                                <span class="task-action-btn task-check">
+                                                                    <span class="action-circle large complete-btn"
+                                                                          title="Mark Complete">
+                                                                        <i class="material-icons">check</i>
+                                                                    </span>
+                                                                </span>
+                                                                     <span class="task-label">{{task_list.task_name.task_title}}     </span>
+                                                                </div>
+                                                            </li>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="notification-popup hide">
+                                            <p>
+                                                <span class="task"></span>
+                                                <span class="notification-text"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- /Page Wrapper -->
+
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
+</script>
+
+{% endblock body %}

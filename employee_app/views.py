@@ -26,7 +26,7 @@ def EmployeeLogin(request):
         employeephone = request.POST.get('employeephone')
         employeepassword = request.POST.get('employeepassword')
         try:
-            user = User.objects.get(phone=employeephone,is_admin=False)
+            user = User.objects.get(phone=employeephone, is_admin=False)
         except:
             messages.error(request, "Login user is not Employee.", extra_tags='danger')
             return redirect('EmployeeLogin')
@@ -103,7 +103,7 @@ def EmployeeIndex(request):
     context = {
         'user': user,
         'user_task': user_task,
-        'user_projects':user_projects,
+        'user_projects': user_projects,
     }
 
     return render(request, "employee/employee-dashboard.html", context)
@@ -121,7 +121,7 @@ def EmployeeListView(request):
         'emp_department': emp_department,
         'emp_designation': emp_designation,
     }
-    return render(request, "employee/employees_list.html",context)
+    return render(request, "employee/employees_list.html", context)
 
 
 # def day_month_year_converter(date1, date2):
@@ -147,8 +147,8 @@ def ProfileView(request, id):
         'user_details': user_details,
         'view_education_info': view_education_info,
         'view_experience_info': view_experience_info,
-        'view_emergency_contact':view_emergency_contact,
-        'view_bank_info':view_bank_info,
+        'view_emergency_contact': view_emergency_contact,
+        'view_bank_info': view_bank_info,
     }
     return render(request, "employee/profile.html", context)
 
@@ -164,7 +164,7 @@ def EditProfileInfo(request, id):
                 messages.info(request, 'Profile Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
-            form = EditProfileInfoForm(instance=edit_profile_info)
+            messages.error(request, 'ERROR : ', e)
     context = {'form': form, 'edit_profile_info': edit_profile_info}
     return render(request, "employee/edit_profile_info.html", context)
 
@@ -180,7 +180,7 @@ def EditPersonalInfo(request, id):
                 messages.info(request, 'Personal Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
-            form = EditPersonalInfoForm(instance=edit_personal_info)
+            messages.error(request, 'ERROR : ', e)
     context = {'form': form, 'edit_personal_info': edit_personal_info}
     return render(request, "employee/edit_personal_info.html", context)
 
@@ -197,7 +197,7 @@ def AddEducationInfo(request, id):
                 messages.success(request, 'Education Info Add successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
-            form = AddEducationInfoForm()
+            messages.error(request, 'ERROR : ', e)
     context = {'form': form}
     return render(request, "employee/add_education_info.html", context)
 
@@ -213,7 +213,7 @@ def EmpEditEducationInfo(request, user_id, edu_id):
                 messages.info(request, 'Education Info Update successfully')
                 return redirect('EmpProfileView', id=user_id)
         except Exception as e:
-            form = EditEducationInfoForm(instance=edit_education_info)
+            messages.error(request, 'ERROR : ', e)
     context = {'form': form, 'edit_education_info': edit_education_info}
     return render(request, "employee/edit_education_info.html", context)
 
@@ -229,7 +229,7 @@ def AddExperienceInfo(request, id):
                 messages.success(request, 'Experience Info Add successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
-            form = AddExperienceInfoForm()
+            messages.error(request, 'ERROR : ', e)
     context = {'form': form}
     return render(request, "employee/add_experience_info.html", context)
 
@@ -245,7 +245,7 @@ def EditExperienceInfo(request, id, exp_id):
                 messages.info(request, 'Experience Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
-            form = EditExperienceInfoForm(instance=edit_experience_info)
+            messages.error(request, 'ERROR : ', e)
     context = {'form': form, 'edit_experience_info': edit_experience_info}
     return render(request, "employee/edit_experience_info.html", context)
 
@@ -262,7 +262,7 @@ def AddEmergencyInfo(request, id):
                 messages.success(request, 'Experience Info Add successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
-            form = AddEmergencyContactForm()
+            messages.error(request, 'ERROR : ', e)
     context = {'form': form}
     return render(request, "employee/add_emergency_contact.html", context)
 
@@ -280,7 +280,7 @@ def EditEmergencyInfo(request, id, emg_id):
                 messages.info(request, 'Experience Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
-            form = EditEmergencyContactForm(instance=edit_emergency_contact)
+            messages.error(request, 'ERROR : ', e)
     context = {'form': form, 'edit_emergency_contact': edit_emergency_contact}
     return render(request, "employee/edit_emergency_contact.html", context)
 
@@ -349,16 +349,19 @@ def Leaves(request, id):
 @login_required(login_url="EmployeeLogin")
 def AddLeave(request, id):
     userid = User.objects.get(id=id)
+    form = AddLeaveForm(request.POST)
     if request.method == 'POST':
-        form = AddLeaveForm(request.POST)
-        if form.is_valid():
-            leave = form.save(commit=False)
-            leave.leave_user = User.objects.get(id=id)
-            leave.save()
-            messages.success(request, 'Leave added successfully')
-            return redirect('EmpLeaves', id=userid.id)
-    else:
-        form = AddLeaveForm()
+        try:
+            if form.is_valid():
+                leave = form.save(commit=False)
+                leave.leave_user = User.objects.get(id=id)
+                leave.save()
+                messages.success(request, 'Leave added successfully')
+                return redirect('EmpLeaves', id=userid.id)
+            else:
+                messages.error(request, 'Form Not Valid', form.errors)
+        except Exception as e:
+            messages.error(request, 'ERROR', e)
     context = {'form': form}
     return render(request, "employee/add_leave.html", context)
 
@@ -375,7 +378,7 @@ def EditLeave(request, id, userid):
                 messages.info(request, 'Leave Update successfully')
                 return redirect('EmpLeaves', id=userid.id)
         except Exception as e:
-            form = EditLeaveForm(instance=edit_leave)
+            messages.error(request, 'ERROR : ', e)
     context = {'form': form, 'edit_leave': edit_leave}
     return render(request, "employee/edit_leave.html", context)
 
@@ -411,16 +414,19 @@ def Tickets(request, id):
 @login_required(login_url="EmployeeLogin")
 def AddTicket(request, id):
     userid = User.objects.get(id=id)
+    form = AddTicketsForm(request.POST)
     if request.method == 'POST':
-        form = AddTicketsForm(request.POST)
-        if form.is_valid():
-            ticket = form.save(commit=False)
-            ticket.ticket_user = User.objects.get(id=id)
-            ticket.save()
-            messages.success(request, 'Ticket generate successfully')
-            return redirect('EmpTickets', id=userid.id)
-    else:
-        form = AddTicketsForm()
+        try:
+            if form.is_valid():
+                ticket = form.save(commit=False)
+                ticket.ticket_user = User.objects.get(id=id)
+                ticket.save()
+                messages.success(request, 'Ticket generate successfully')
+                return redirect('EmpTickets', id=userid.id)
+            else:
+                messages.error(request, 'Form not valid : ', form.errors)
+        except Exception as e:
+            messages.error(request, 'ERROR', e)
     context = {'form': form}
     return render(request, "employee/add_tickets.html", context)
 
@@ -437,7 +443,7 @@ def EditTicket(request, id, userid):
                 messages.info(request, 'Ticket Update successfully')
                 return redirect('EmpTickets', id=userid.id)
         except Exception as e:
-            form = EditTicketsForm(instance=edit_tickets)
+            messages.error(request, 'ERROR', e)
     context = {'form': form, 'edit_tickets': edit_tickets}
     return render(request, "employee/edit_tickets.html", context)
 
@@ -459,3 +465,56 @@ def ChatView(request, id):
 @login_required(login_url="EmployeeLogin")
 def AttendanceView(request, id):
     return render(request, "employee/attendance-employee.html")
+
+
+@login_required(login_url="EmployeeLogin")
+def ProjectView(request, id):
+    projectlist = ProjectAssign.objects.filter(employees=id)
+
+    context = {
+        'projectlist': projectlist,
+    }
+    return render(request, "employee/projects.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def ProjectDetailsView(request, id):
+    projectdetailview = Project.objects.get(id=id)
+    task_list = Task.objects.filter(task_project=id)
+    user_list = User.objects.all()
+    project_leader_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Leader')
+    project_team_member_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Team Member')
+
+    context = {
+        'projectdetailview': projectdetailview,
+        'task_list': task_list,
+        'user_list': user_list,
+        'project_leader_list': project_leader_list,
+        'project_team_member_list': project_team_member_list,
+    }
+    return render(request, "employee/project-view.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def ProjectTaskView(request, id):
+    projectlist = ProjectAssign.objects.filter(employees=id)
+
+    context = {
+        'projectlist': projectlist,
+    }
+    return render(request, "employee/task-nav.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def ProjectTaskList(request, id, user_id):
+    project_id = id
+    project_list = ProjectAssign.objects.filter(employees=user_id)
+    project_task_list = TaskAssign.objects.filter(employees=user_id)
+
+    context = {
+        'project_task_list': project_task_list,
+        'project_list': project_list,
+        'project_id': project_id,
+
+    }
+    return render(request, "employee/tasks.html", context)

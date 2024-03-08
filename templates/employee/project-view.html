@@ -1,0 +1,300 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block body %}
+			
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+				<div class="show_message">
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+					{% endfor %}
+        		</div>
+				<!-- Page Content -->
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-title">{{projectdetailview.project_name}}</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Project</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<div class="row">
+						<div class="col-lg-8 col-xl-9">
+							<div class="card">
+								<div class="card-body">
+									<div class="project-title">
+										<h5 class="card-title">{{projectdetailview.project_name}}</h5>
+										<small class="block text-ellipsis m-b-15"><span class="text-xs">2</span> <span class="text-muted">open tasks, </span><span class="text-xs">5</span> <span class="text-muted">tasks completed</span></small>
+									</div>
+									<p>{{projectdetailview.project_summary}}</p>
+								</div>
+							</div>
+							<div class="card">
+								<div class="card-body">
+				                    <h5 class="card-title m-b-20">Uploaded image files</h5>
+									<div class="row">
+										<div class="col-md-3 col-sm-4 col-lg-4 col-xl-3">
+											<div class="uploaded-box">
+												<div class="uploaded-img">
+													<img src="assets/img/placeholder.jpg" class="img-fluid" alt="">
+												</div>
+												<div class="uploaded-img-name">
+													 demo.png
+												</div>
+											</div>
+										</div>
+										<div class="col-md-3 col-sm-4 col-lg-4 col-xl-3">
+											<div class="uploaded-box">
+												<div class="uploaded-img">
+													<img src="assets/img/placeholder.jpg" class="img-fluid" alt="">
+												</div>
+												<div class="uploaded-img-name">
+													 demo.png
+												</div>
+											</div>
+										</div>
+										<div class="col-md-3 col-sm-4 col-lg-4 col-xl-3">
+											<div class="uploaded-box">
+												<div class="uploaded-img">
+													<img src="assets/img/placeholder.jpg" class="img-fluid" alt="">
+												</div>
+												<div class="uploaded-img-name">
+													 demo.png
+												</div>
+											</div>
+										</div>
+										<div class="col-md-3 col-sm-4 col-lg-4 col-xl-3">
+											<div class="uploaded-box">
+												<div class="uploaded-img">
+													<img src="assets/img/placeholder.jpg" class="img-fluid" alt="">
+												</div>
+												<div class="uploaded-img-name">
+													 demo.png
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="card">
+								<div class="card-body">
+									<h5 class="card-title m-b-20">Uploaded files</h5>
+									<ul class="files-list">
+										<li>
+											<div class="files-cont">
+												<div class="file-type">
+													<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+												</div>
+												<div class="files-info">
+													<span class="file-name text-ellipsis"><a href="#">AHA Selfcare Mobile Application Test-Cases.xls</a></span>
+													<span class="file-author"><a href="#">John Doe</a></span> <span class="file-date">May 31st at 6:53 PM</span>
+													<div class="file-size">Size: 14.8Mb</div>
+												</div>
+												<ul class="files-action">
+													<li class="dropdown dropdown-action">
+														<a href="" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_horiz</i></a>
+														<div class="dropdown-menu dropdown-menu-right">
+															<a class="dropdown-item" href="javascript:void(0)">Download</a>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</li>
+										<li>
+											<div class="files-cont">
+												<div class="file-type">
+													<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+												</div>
+												<div class="files-info">
+													<span class="file-name text-ellipsis"><a href="#">AHA Selfcare Mobile Application Test-Cases.xls</a></span>
+													<span class="file-author"><a href="#">Richard Miles</a></span> <span class="file-date">May 31st at 6:53 PM</span>
+													<div class="file-size">Size: 14.8Mb</div>
+												</div>
+												<ul class="files-action">
+													<li class="dropdown dropdown-action">
+														<a href="" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_horiz</i></a>
+														<div class="dropdown-menu dropdown-menu-right">
+															<a class="dropdown-item" href="javascript:void(0)">Download</a>
+															<a class="dropdown-item" href="#" data-toggle="modal" data-target="#share_files">Share</a>
+															<a class="dropdown-item" href="javascript:void(0)">Delete</a>
+														</div>
+													</li>
+												</ul>
+											</div>
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="project-task">
+								<ul class="nav nav-tabs nav-tabs-top nav-justified mb-0">
+									<li class="nav-item"><a class="nav-link active" href="#all_tasks" data-toggle="tab" aria-expanded="true">All Tasks</a></li>
+									<li class="nav-item"><a class="nav-link" href="#pending_tasks" data-toggle="tab" aria-expanded="false">Pending Tasks</a></li>
+									<li class="nav-item"><a class="nav-link" href="#completed_tasks" data-toggle="tab" aria-expanded="false">Completed Tasks</a></li>
+								</ul>
+								<div class="tab-content">
+									<div class="tab-pane show active" id="all_tasks">
+										<div class="task-wrapper">
+											<div class="task-list-container">
+												<div class="task-list-body">
+													<ul id="task-list">
+														{% for task in task_list %}
+														<li class="task">
+															<div class="task-container">
+																<span class="task-action-btn task-check">
+																	<span class="action-circle large complete-btn" title="Mark Complete">
+																		<i class="material-icons">check</i>
+																	</span>
+																</span>
+																<span class="task-label">{{task.task_title}}</span>
+															</div>
+														</li>
+														{% endfor %}
+													</ul>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="tab-pane" id="pending_tasks"></div>
+									<div class="tab-pane" id="completed_tasks"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4 col-xl-3">
+							<div class="card">
+								<div class="card-body">
+									<h6 class="card-title m-b-15">Project details</h6>
+									<table class="table table-striped table-border">
+										<tbody>
+											<tr>
+												<td>Cost:</td>
+												<td class="text-right">{{projectdetailview.project_cost}}</td>
+											</tr>
+											<tr>
+												<td>Created:</td>
+												<td class="text-right">{{projectdetailview.project_start_date|date:'j  M , Y'}}</td>
+											</tr>
+											<tr>
+												<td>Deadline:</td>
+												<td class="text-right">{{projectdetailview.project_end_date|date:'j  M , Y'}}</td>
+											</tr>
+											<tr>
+												<td>Priority:</td>
+												<td class="text-right">{{projectdetailview.project_priority}}</td>
+											</tr>
+											<tr>
+												<td>Created by:</td>
+												<td class="text-right"><a href="profile.html">{{projectdetailview.project_client_name}}</a></td>
+											</tr>
+											<tr>
+												<td>Status:</td>
+												<td class="text-right">{{projectdetailview.project_status}}</td>
+											</tr>
+										</tbody>
+									</table>
+<!--									<p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>-->
+<!--									<div class="progress progress-xs mb-0">-->
+<!--										<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="40%" style="width: 40%"></div>-->
+<!--									</div>-->
+								</div>
+							</div>
+							<div class="card project-user">
+								<div class="card-body">
+									<h6 class="card-title m-b-20">Assigned Leader</h6>
+									<ul class="list-box">
+										{% for project_leader in project_leader_list %}
+											{% for employee in project_leader.employees.all %}
+												<li>
+													<a href="profile.html">
+														<div class="list-item">
+															<div class="list-left">
+																<img class="avatar" alt="" src="{{employee.avatar.url}}">
+															</div>
+															<div class="list-body">
+																<span class="message-author">{{employee}}</span>
+																<div class="clearfix"></div>
+																<span class="message-content text-secondary">{{employee.department}} | {{employee.designation}} | {{employee.technology}}</span>
+															</div>
+														</div>
+													</a>
+												</li>
+											{% endfor %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+							<div class="card project-user">
+								<div class="card-body">
+									<h6 class="card-title m-b-20">Assigned users</h6>
+									<ul class="list-box">
+										{% for project_team_member in project_team_member_list %}
+											{% for employee in project_team_member.employees.all %}
+												<li>
+													<a href="profile.html">
+														<div class="list-item">
+															<div class="list-left">
+																<img class="avatar" alt="" src="{{employee.avatar.url}}">
+															</div>
+															<div class="list-body">
+																<span class="message-author">{{employee}}</span>
+																<div class="clearfix"></div>
+																<span class="message-content text-secondary">{{employee.department}} | {{employee.designation}} | {{employee.technology}}</span>
+															</div>
+														</div>
+													</a>
+												</li>
+											{% endfor %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+                </div>
+				<!-- /Page Content -->
+
+				<div id="add-project-assignee-form"></div>
+
+				<div id="edit-project-form"></div>
+				
+            </div>
+			<!-- /Page Wrapper -->
+
+<script>
+
+function editProject(editProjectId) {
+    $.ajax({
+        url: "{% url 'AdminUpdateProject' id=0 %}".replace(0, editProjectId),
+        success: function(response) {
+            $("#edit-project-form").html(response);
+            $("#edit_project_model").modal('show');
+        }
+    });
+}
+
+function addProjectAssignee(addAssigneeProjectId) {
+    $.ajax({
+        url: "{% url 'AdminAddProjectAssignee' id=0 %}".replace(0, addAssigneeProjectId),
+        success: function(response) {
+            $("#add-project-assignee-form").html(response);
+			$("#add_project_assignee_model").modal('show');
+        }
+    });
+}
+</script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
+</script>
+
+{% endblock body %}

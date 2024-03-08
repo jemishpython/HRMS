@@ -47,4 +47,10 @@ urlpatterns = [
 
     path("attendance/<int:id>", views.AttendanceView, name="EmpAttendanceView"),
 
+    path("project/<int:id>", views.ProjectView, name="EmpProjectsView"),
+    path("project/details-view/<int:id>", views.ProjectDetailsView, name="EmpProjectDetailsView"),
+
+    path("project-task/<int:id>", views.ProjectTaskView, name="EmpProjectTask"),
+    path("<int:user_id>/project/<int:id>/tasks", views.ProjectTaskList, name="EmpProjectTaskList"),
+
 ]
