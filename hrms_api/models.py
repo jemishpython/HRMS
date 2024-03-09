@@ -254,7 +254,7 @@ class Bank(models.Model):
     bank_account_number = models.BigIntegerField(verbose_name="Bank Account Number", null=True, blank=True)
     bank_ifsc_code = models.CharField(verbose_name="Bank IFSC Code", max_length=20, null=True, blank=True)
     user_pan_card_number = models.CharField(verbose_name="Pan Card Number", max_length=20, null=True, blank=True)
-    user_aadhar_card_number = models.BigIntegerField(verbose_name="Aadhar Card Number", null=True, blank=True)
+    user_aadhar_card_number = models.BigIntegerField(verbose_name="Aadhar Card", null=True, blank=True)
 
     def __str__(self):
         return self.employee or "Bank Information"
