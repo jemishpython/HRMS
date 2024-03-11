@@ -14,10 +14,10 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     EditTaskForm, EditTechnologyForm, AddTechnologyForm, AddExperienceInfoForm, EditProfileInfoForm, \
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
     EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm, LeaveStatusUpdateForm, TicketStatusUpdateForm, \
-    AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles
+    AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles, AddPoliciesForm
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies
 
 
 def AdminRegister(request):
@@ -1045,7 +1045,9 @@ def UpdateTicketstatus(request, id):
     if request.method == 'POST':
         try:
             if form.is_valid():
-                form.save()
+                ticket = form.save(commit=False)
+                ticket.ticket_status_update_date = date.today()
+                ticket.save()
                 ticket_status_update_email = update_ticket_status.ticket_user.email
 
                 context = {
@@ -1089,3 +1091,42 @@ def ChatView(request, id):
 @login_required(login_url="Login")
 def AttendanceView(request):
     return render(request, "admin/attendance.html")
+
+
+@login_required(login_url="Login")
+def PoliciesView(request):
+    policies = Policies.objects.all()
+
+    context = {
+        'policies': policies,
+    }
+    return render(request, "admin/policies.html", context)
+
+
+@login_required(login_url="Login")
+def AddPolicies(request):
+    form = AddPoliciesForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                polices = form.save(commit=False)
+                polices.policy_create_date = date.today()
+                polices.save()
+                messages.success(request, 'Policies add successfully')
+                return redirect('AdminPoliciesView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    context = {'form': form}
+    return render(request, "admin/add_policy.html", context)
+
+
+@login_required(login_url="Login")
+def DeletePolicies(request, id):
+    delete_policy = Policies.objects.get(id=id)
+    delete_policy.delete()
+    messages.error(request, 'PoliciesDelete successfully')
+    return redirect('AdminPoliciesView')
+
+

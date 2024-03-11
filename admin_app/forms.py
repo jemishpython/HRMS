@@ -265,3 +265,15 @@ class EditBankForm(forms.ModelForm):
     class Meta:
         model = Bank
         fields = ['bank_name', 'bank_account_number', 'bank_ifsc_code', 'user_pan_card_number', 'user_aadhar_card_number']
+
+
+class AddPoliciesForm(forms.ModelForm):
+    policy_file = forms.FileField(widget=forms.ClearableFileInput(attrs={
+        "name": "policy_file",
+        "type": "file",
+        "class": "form-control",
+    }), label="")
+
+    class Meta:
+        model = Policies
+        fields = ['policy_name', 'policy_department', 'policy_file']

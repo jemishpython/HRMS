@@ -92,4 +92,8 @@ urlpatterns = [
     path("chat/<int:id>", views.ChatView, name='AdminChatView'),
 
     path("attendance/", views.AttendanceView, name='AdminAttendanceView'),
+
+    path("policies/", views.PoliciesView, name='AdminPoliciesView'),
+    path("policies/add/", views.AddPolicies, name="AdminAddPolicies"),
+    path("policies/delete/<int:id>", views.DeletePolicies, name="AdminDeletePolicies"),
 ]

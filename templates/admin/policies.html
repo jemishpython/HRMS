@@ -16,14 +16,14 @@
 					<div class="page-header">
 						<div class="row align-items-center">
 							<div class="col">
-								<h3 class="page-title">Holidays 2024</h3>
+								<h3 class="page-title">Policies</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-									<li class="breadcrumb-item active">Holidays</li>
+									<li class="breadcrumb-item active">Policies</li>
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<button class="btn add-btn" onclick="addHoliday()"><i class="fa fa-plus"></i> Add Holiday</button>
+								<button class="btn add-btn" onclick="addPolicies()"><i class="fa fa-plus"></i> Add Policie</button>
 							</div>
 						</div>
 					</div>
@@ -36,23 +36,24 @@
 									<thead>
 										<tr>
 											<th>Sr NO</th>
-											<th>Title </th>
-											<th>Holiday Date</th>
-											<th>Day</th>
+											<th>Policy Name </th>
+											<th>Department</th>
+											<th>Created Date</th>
+											<th>File</th>
 											<th class="text-right">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-										{% for holiday in holidaylist %}
+										{% for policy in policies %}
 										<tr class="holiday-upcoming">
 											<td>{{forloop.counter}}</td>
-											<td>{{holiday.holiday_title}}</td>
-											<td>{{holiday.holiday_date|date:"j - F - Y"}}</td>
-											<td>{{holiday.holiday_date|date:"l"}}</td>
+											<td>{{policy.policy_name}}</td>
+											<td>{{policy.policy_department}}</td>
+											<td>{{policy.policy_create_date|date:"j - F - Y"}}</td>
+											<td>{{policy.policy_file|cut:'policies/'}}</td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
-													<button class="p-0 ml-4 text-info border-0 " onclick="editHoliday({{holiday.id}})">Edit</button>
-													<button class="p-0 ml-4 text-danger border-0 " onclick="deleteHoliday({{holiday.id}})">Delete</button>
+													<button class="p-0 ml-4 text-danger border-0 " onclick="deleteHoliday({{policy.id}})">Delete</button>
 												</div>
 											</td>
 										</tr>
@@ -66,14 +67,11 @@
 				<!-- /Page Content -->
 
 
-				<div id="add-holiday-form"></div>
-
-
-				<div id="edit-holiday-form"></div>
+				<div id="add-policy-form"></div>
 
 
 				<!-- Delete Holiday Modal -->
-				<div class="modal custom-modal fade" id="delete_holiday_model" role="dialog">
+				<div class="modal custom-modal fade" id="delete_policy_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
@@ -100,29 +98,20 @@
 			<!-- /Page Wrapper -->
 
 <script>
-function addHoliday() {
+function addPolicies() {
     $.ajax({
-        url: "{% url 'AdminAddHolidays' %}",
+        url: "{% url 'AdminAddPolicies' %}",
         success: function(response) {
-            $("#add-holiday-form").html(response);
-            $("#add_holiday_model").modal('show');
-        }
-    });
-}
-function editHoliday(editHolidayId) {
-    $.ajax({
-        url: "holidays/update/"+ editHolidayId,
-        success: function(response) {
-            $("#edit-holiday-form").html(response);
-            $("#edit_holiday_model").modal('show');
+            $("#add-policy-form").html(response);
+            $("#add_policy_model").modal('show');
         }
     });
 }
 
-function deleteHoliday(deleteHolidayId) {
-    $("#delete_holiday_model").modal('show');
-    if (deleteHolidayId) {
-        var deleteUrl = "{% url 'AdminDeleteHolidays' id=0 %}".replace(0, deleteHolidayId);
+function deleteHoliday(deletePolicyId) {
+    $("#delete_policy_model").modal('show');
+    if (deletePolicyId) {
+        var deleteUrl = "{% url 'AdminDeletePolicies' id=0 %}".replace(0, deletePolicyId);
         $("#confirmDeleteBtn").attr("href", deleteUrl);
     }
 }

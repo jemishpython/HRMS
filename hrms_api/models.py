@@ -240,8 +240,8 @@ class Ticket(models.Model):
     ticket_user = models.ForeignKey(User, verbose_name='Ticket User Name', on_delete=models.CASCADE, null=True, blank=True)
     ticket_create_date = models.DateField(verbose_name='Ticket Date', null=True, blank=True)
     ticket_description = models.CharField(verbose_name='Ticket Description', max_length=500, null=True, blank=True)
-    ticket_priority = models.CharField(verbose_name='Leave Days', max_length=50, choices=TicketPriorityChoice.choices, default=TicketPriorityChoice.LOW, null=True, blank=True)
-    ticket_status = models.CharField(verbose_name='Leave Status', max_length=50, choices=TicketStatusChoice.choices, default=TicketStatusChoice.NEW, null=True, blank=True)
+    ticket_priority = models.CharField(verbose_name='Ticket Priority', max_length=50, choices=TicketPriorityChoice.choices, default=TicketPriorityChoice.LOW, null=True, blank=True)
+    ticket_status = models.CharField(verbose_name='Ticket Status', max_length=50, choices=TicketStatusChoice.choices, default=TicketStatusChoice.NEW, null=True, blank=True)
     ticket_status_update_date = models.DateField(verbose_name='Ticket Status Update Date', null=True)
 
     def __str__(self):
@@ -258,3 +258,14 @@ class Bank(models.Model):
 
     def __str__(self):
         return self.employee or "Bank Information"
+
+
+class Policies(models.Model):
+    policy_name = models.CharField(verbose_name="Policy Name", max_length=100, null=True, blank=True)
+    policy_department = models.CharField(verbose_name="Policy Department Name", max_length=100, null=True, blank=True)
+    policy_create_date = models.DateField(verbose_name="Policy Create Date", null=True, blank=True)
+    policy_file = models.FileField(verbose_name="Policy File", upload_to='policies/')
+
+    def __str__(self):
+        return self.policy_name
+

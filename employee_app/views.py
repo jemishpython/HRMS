@@ -14,7 +14,7 @@ from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm,
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign, ProjectImages, ProjectFile
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign, ProjectImages, ProjectFile, Policies
 
 
 def landing(request):
@@ -522,3 +522,13 @@ def ProjectTaskList(request, id, user_id):
 
     }
     return render(request, "employee/tasks.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def PoliciesView(request):
+    policies = Policies.objects.all()
+
+    context = {
+        'policies': policies,
+    }
+    return render(request, "employee/policies.html", context)
