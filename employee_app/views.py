@@ -469,27 +469,29 @@ def AttendanceView(request, id):
 
 @login_required(login_url="EmployeeLogin")
 def ProjectView(request, id):
+    user = request.user
     projectlist = ProjectAssign.objects.filter(employees=id)
 
     context = {
         'projectlist': projectlist,
+        'user': user,
     }
     return render(request, "employee/projects.html", context)
 
 
 @login_required(login_url="EmployeeLogin")
-def ProjectDetailsView(request, id):
+def ProjectDetailsView(request, id, user_id):
     projectdetailview = Project.objects.get(id=id)
-    task_list = Task.objects.filter(task_project=id)
     user_list = User.objects.all()
     project_leader_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Leader')
     project_team_member_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Team Member')
     project_images = ProjectImages.objects.filter(project_name=id)
     project_files = ProjectFile.objects.filter(project_name=id)
+    project_task_list = TaskAssign.objects.filter(employees=user_id)
 
     context = {
         'projectdetailview': projectdetailview,
-        'task_list': task_list,
+        'project_task_list': project_task_list,
         'user_list': user_list,
         'project_leader_list': project_leader_list,
         'project_team_member_list': project_team_member_list,

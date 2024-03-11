@@ -84,18 +84,20 @@
 											<div class="task-list-container">
 												<div class="task-list-body">
 													<ul id="task-list">
-														{% for task in task_list %}
-														<li class="task">
-															<div class="task-container">
-																<span class="task-action-btn task-check">
-																	<span class="action-circle large complete-btn" title="Mark Complete">
-																		<i class="material-icons">check</i>
+														{% for task_list in project_task_list %}
+                                                            {% if task_list.task_project_name.id == projectdetailview.id %}
+															<li class="task">
+																<div class="task-container">
+																	<span class="task-action-btn task-check">
+																		<span class="action-circle large complete-btn" title="Mark Complete">
+																			<i class="material-icons">check</i>
+																		</span>
 																	</span>
-																</span>
-																<span class="task-label">{{task.task_title}}</span>
-															</div>
-														</li>
-														{% endfor %}
+																	<span class="task-label">{{task_list.task_name.task_title}}</span>
+																</div>
+															</li>
+															{% endif %}
+                                                        {% endfor %}
 													</ul>
 												</div>
 											</div>
