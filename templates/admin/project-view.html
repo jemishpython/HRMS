@@ -94,7 +94,7 @@
 								<div class="card-body">
 									<button class="edit-icon ml-2" onclick="addProjectFile({{projectdetailview.id}})"><i class="fa fa-plus"></i></button>
 									<h5 class="card-title m-b-20">Uploaded files</h5>
-									<ul class="files-list">
+									<ul class="files-list" style="overflow-y: scroll; max-height: 10rem;">
 										{% for file in project_files %}
 										<li class="p-0">
 											<div class="d-flex">
