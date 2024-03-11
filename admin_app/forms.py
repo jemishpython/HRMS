@@ -115,6 +115,32 @@ class ProjectAssignForm(forms.ModelForm):
         )
 
 
+class AddProjectImages(forms.ModelForm):
+    project_image = forms.FileField(widget=forms.ClearableFileInput(attrs={
+        "name": "project_image",
+        "type": "file",
+        "class": "form-control",
+        "multiple": True,
+    }), label="")
+
+    class Meta:
+        model = ProjectImages
+        fields = ['project_image']
+
+
+class AddProjectFiles(forms.ModelForm):
+    project_file = forms.FileField(widget=forms.ClearableFileInput(attrs={
+        "name": "project_file",
+        "type": "file",
+        "class": "form-control",
+        "multiple": True,
+    }), label="")
+
+    class Meta:
+        model = ProjectFile
+        fields = ['project_file']
+
+
 class LeaveStatusUpdateForm(forms.ModelForm):
     class Meta:
         model = Leave

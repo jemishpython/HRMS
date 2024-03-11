@@ -14,7 +14,7 @@ from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm,
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign, ProjectImages, ProjectFile
 
 
 def landing(request):
@@ -484,6 +484,8 @@ def ProjectDetailsView(request, id):
     user_list = User.objects.all()
     project_leader_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Leader')
     project_team_member_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Team Member')
+    project_images = ProjectImages.objects.filter(project_name=id)
+    project_files = ProjectFile.objects.filter(project_name=id)
 
     context = {
         'projectdetailview': projectdetailview,
@@ -491,6 +493,8 @@ def ProjectDetailsView(request, id):
         'user_list': user_list,
         'project_leader_list': project_leader_list,
         'project_team_member_list': project_team_member_list,
+        'project_images': project_images,
+        'project_files': project_files,
     }
     return render(request, "employee/project-view.html", context)
 

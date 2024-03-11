@@ -14,10 +14,10 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     EditTaskForm, EditTechnologyForm, AddTechnologyForm, AddExperienceInfoForm, EditProfileInfoForm, \
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
     EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm, LeaveStatusUpdateForm, TicketStatusUpdateForm, \
-    AddClientForm, EditClientForm
+    AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile
 
 
 def AdminRegister(request):
@@ -730,6 +730,64 @@ def AddProject(request):
 
 
 @login_required(login_url="Login")
+def AddProjectImage(request, id):
+    project_id = Project.objects.get(id=id)
+    form = AddProjectImages(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                images = request.FILES.getlist('project_image')
+                for image in images:
+                    projectimage = ProjectImages(project_name=project_id, project_image=image)
+                    projectimage.save()
+                messages.success(request, 'Project images add successfully')
+                return redirect('AdminProjectDetailsView', id=id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    context = {'form': form, 'project_id': project_id}
+    return render(request, "admin/add_project_images.html", context)
+
+
+@login_required(login_url="Login")
+def AdminDeleteProjectImage(request, id, project_id):
+    delete_project_image = ProjectImages.objects.get(id=id)
+    delete_project_image.delete()
+    messages.error(request, 'Project Image Delete successfully')
+    return redirect('AdminProjectDetailsView', id=project_id)
+
+
+@login_required(login_url="Login")
+def AddProjectFile(request, id):
+    project_id = Project.objects.get(id=id)
+    form = AddProjectFiles(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                files = request.FILES.getlist('project_file')
+                for file in files:
+                    projectfile = ProjectFile(project_name=project_id, project_file=file)
+                    projectfile.save()
+                messages.success(request, 'Project files add successfully')
+                return redirect('AdminProjectDetailsView', id=id)
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    context = {'form': form, 'project_id': project_id}
+    return render(request, "admin/add_project_files.html", context)
+
+
+@login_required(login_url="Login")
+def AdminDeleteProjectFile(request, id, project_id):
+    delete_project_file = ProjectFile.objects.get(id=id)
+    delete_project_file.delete()
+    messages.error(request, 'Project file delete successfully')
+    return redirect('AdminProjectDetailsView', id=project_id)
+
+
+@login_required(login_url="Login")
 def AddProjectAssignee(request, id):
     users_list = User.objects.all()
     project_id = Project.objects.get(id=id)
@@ -795,6 +853,8 @@ def ProjectDetailsView(request, id):
     user_list = User.objects.all()
     project_leader_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Leader')
     project_team_member_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Team Member')
+    project_images = ProjectImages.objects.filter(project_name=id)
+    project_files = ProjectFile.objects.filter(project_name=id)
 
     context = {
         'projectdetailview': projectdetailview,
@@ -802,6 +862,8 @@ def ProjectDetailsView(request, id):
         'user_list': user_list,
         'project_leader_list': project_leader_list,
         'project_team_member_list': project_team_member_list,
+        'project_images': project_images,
+        'project_files': project_files,
     }
     return render(request, "admin/project-view.html", context)
 

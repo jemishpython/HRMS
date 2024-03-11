@@ -1,7 +1,37 @@
 {% extends 'admin/base.html' %}
 {% load static %}
+{% block head %}
+
+<style>
+.uploaded-img {
+    position: relative;
+}
+
+.uploaded-img .hover-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3rem;
+    background-color: rgba(77, 77, 77, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.uploaded-img:hover .hover-text {
+    opacity: 1;
+}
+
+
+
+</style>
+
+{% endblock head %}FR
 {% block body %}
-			
+
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
 				<div class="show_message">
@@ -42,99 +72,42 @@
 							</div>
 							<div class="card">
 								<div class="card-body">
+									<button class="edit-icon ml-2" onclick="addProjectImages({{projectdetailview.id}})"><i class="fa fa-plus"></i></button>
 				                    <h5 class="card-title m-b-20">Uploaded image files</h5>
-									<div class="row">
+									<div class="row" style="overflow-x: scroll; flex-wrap:nowrap">
+										{% for image in project_images %}
 										<div class="col-md-3 col-sm-4 col-lg-4 col-xl-3">
 											<div class="uploaded-box">
 												<div class="uploaded-img">
-													<img src="assets/img/placeholder.jpg" class="img-fluid" alt="">
-												</div>
-												<div class="uploaded-img-name">
-													 demo.png
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-4 col-lg-4 col-xl-3">
-											<div class="uploaded-box">
-												<div class="uploaded-img">
-													<img src="assets/img/placeholder.jpg" class="img-fluid" alt="">
-												</div>
-												<div class="uploaded-img-name">
-													 demo.png
+													<img src="{{image.project_image.url}}" alt="" style="width:100%; height:10rem">
+													<div class="hover-text">
+														<button class="btn text-white" onclick="deleteProjectImage({{image.id}}, {{projectdetailview.id}})">Delete</button>
+													</div>
 												</div>
 											</div>
 										</div>
-										<div class="col-md-3 col-sm-4 col-lg-4 col-xl-3">
-											<div class="uploaded-box">
-												<div class="uploaded-img">
-													<img src="assets/img/placeholder.jpg" class="img-fluid" alt="">
-												</div>
-												<div class="uploaded-img-name">
-													 demo.png
-												</div>
-											</div>
-										</div>
-										<div class="col-md-3 col-sm-4 col-lg-4 col-xl-3">
-											<div class="uploaded-box">
-												<div class="uploaded-img">
-													<img src="assets/img/placeholder.jpg" class="img-fluid" alt="">
-												</div>
-												<div class="uploaded-img-name">
-													 demo.png
-												</div>
-											</div>
-										</div>
+										{% endfor %}
 									</div>
 								</div>
 							</div>
 							<div class="card">
 								<div class="card-body">
+									<button class="edit-icon ml-2" onclick="addProjectFile({{projectdetailview.id}})"><i class="fa fa-plus"></i></button>
 									<h5 class="card-title m-b-20">Uploaded files</h5>
 									<ul class="files-list">
-										<li>
-											<div class="files-cont">
-												<div class="file-type">
-													<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-												</div>
-												<div class="files-info">
-													<span class="file-name text-ellipsis"><a href="#">AHA Selfcare Mobile Application Test-Cases.xls</a></span>
-													<span class="file-author"><a href="#">John Doe</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-													<div class="file-size">Size: 14.8Mb</div>
-												</div>
-												<ul class="files-action">
-													<li class="dropdown dropdown-action">
-														<a href="" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_horiz</i></a>
-														<div class="dropdown-menu dropdown-menu-right">
-															<a class="dropdown-item" href="javascript:void(0)">Download</a>
-															<a class="dropdown-item" href="#" data-toggle="modal" data-target="#share_files">Share</a>
-															<a class="dropdown-item" href="javascript:void(0)">Delete</a>
-														</div>
-													</li>
-												</ul>
+										{% for file in project_files %}
+										<li class="p-0">
+											<div class="d-flex">
+												<span class="icon"><i class="las la-file la-2x"></i></span>
+												<span class="pt-1 ml-2">{{file.project_file|cut:'project_files/'}}</span>
+												<span class="ml-auto">
+													<a class="btn" href="{{file.project_file.url}}"><i class="las la-download la-lg"></i></a>
+													<button class="btn text-danger" onclick="deleteProjectFile({{file.id}},{{projectdetailview.id	}})"><i class="las la-trash la-lg"></i></button>
+												</span>
+
 											</div>
 										</li>
-										<li>
-											<div class="files-cont">
-												<div class="file-type">
-													<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-												</div>
-												<div class="files-info">
-													<span class="file-name text-ellipsis"><a href="#">AHA Selfcare Mobile Application Test-Cases.xls</a></span>
-													<span class="file-author"><a href="#">Richard Miles</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-													<div class="file-size">Size: 14.8Mb</div>
-												</div>
-												<ul class="files-action">
-													<li class="dropdown dropdown-action">
-														<a href="" class="dropdown-toggle btn btn-link" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_horiz</i></a>
-														<div class="dropdown-menu dropdown-menu-right">
-															<a class="dropdown-item" href="javascript:void(0)">Download</a>
-															<a class="dropdown-item" href="#" data-toggle="modal" data-target="#share_files">Share</a>
-															<a class="dropdown-item" href="javascript:void(0)">Delete</a>
-														</div>
-													</li>
-												</ul>
-											</div>
-										</li>
+										{% endfor %}
 									</ul>
 								</div>
 							</div>
@@ -295,15 +268,19 @@
 
 				<div id="add-project-assignee-form"></div>
 
+				<div id="add-project-image-model"></div>
+
+				<div id="add-project-file-model"></div>
+
 				<div id="edit-project-form"></div>
 
 				<!-- Delete Employee Modal -->
-				<div class="modal custom-modal fade" id="delete_assign_employee_model" role="dialog">
+				<div class="modal custom-modal fade" id="delete_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
 								<div class="form-header">
-									<h3>Delete Employee</h3>
+									<h3>Delete</h3>
 									<p>Are you sure want to delete?</p>
 								</div>
 								<div class="modal-btn delete-action">
@@ -337,6 +314,26 @@ function editProject(editProjectId) {
     });
 }
 
+function addProjectImages(ProjectId) {
+    $.ajax({
+        url: "{% url 'AdminAddProjectImage' id=0 %}".replace(0, ProjectId),
+        success: function(response) {
+            $("#add-project-image-model").html(response);
+            $("#add_project_image_model").modal('show');
+        }
+    });
+}
+
+function addProjectFile(ProjectId) {
+    $.ajax({
+        url: "{% url 'AdminAddProjectFile' id=0 %}".replace(0, ProjectId),
+        success: function(response) {
+            $("#add-project-file-model").html(response);
+            $("#add_project_file_model").modal('show');
+        }
+    });
+}
+
 function addProjectAssignee(addAssigneeProjectId) {
     $.ajax({
         url: "{% url 'AdminAddProjectAssignee' id=0 %}".replace(0, addAssigneeProjectId),
@@ -347,8 +344,24 @@ function addProjectAssignee(addAssigneeProjectId) {
     });
 }
 
+function deleteProjectImage(deleteId, ProjectId) {
+    $("#delete_model").modal('show');
+    if (deleteId) {
+        var deleteUrl = "{% url 'AdminDeleteProjectImage' id=0 project_id=1 %}".replace(0, deleteId).replace(1, ProjectId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
+function deleteProjectFile(deleteId, ProjectId) {
+    $("#delete_model").modal('show');
+    if (deleteId) {
+        var deleteUrl = "{% url 'AdminDeleteProjectFile' id=0 project_id=1 %}".replace(0, deleteId).replace(1, ProjectId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
 function deleteAssignEmployee(deleteAssignEmployeeId, ProjectId) {
-    $("#delete_assign_employee_model").modal('show');
+    $("#delete_model").modal('show');
     if (deleteAssignEmployeeId) {
         var deleteUrl = "{% url 'AdminDeleteAssignEmployee' id=0 project_id=1 %}".replace(0, deleteAssignEmployeeId).replace(1, ProjectId);
         $("#confirmDeleteBtn").attr("href", deleteUrl);

@@ -188,19 +188,19 @@ class ProjectAssign(models.Model):
 
 
 class ProjectImages(models.Model):
-    project_image = models.ImageField(verbose_name='Project Image', upload_to='project_images/')
-    project = models.ForeignKey(Project, verbose_name='Project Id', on_delete=models.CASCADE, null=True)
+    project_image = models.FileField(verbose_name='Project Image', upload_to='project_images/')
+    project_name = models.ForeignKey(Project, verbose_name='Project Id', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.project
+        return self.project_name
 
 
 class ProjectFile(models.Model):
-    project_file = models.FileField(verbose_name='Project Image', upload_to='project_images/')
-    project = models.ForeignKey(Project, verbose_name='Project Id', on_delete=models.CASCADE, null=True)
+    project_file = models.FileField(verbose_name='Project File', upload_to='project_files/')
+    project_name = models.ForeignKey(Project, verbose_name='Project Id', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.project
+        return self.project_name
 
 
 class Task(models.Model):

@@ -84,7 +84,7 @@
             <div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="project-title"><a href="{% url 'EmpProjectDetailsView' project.id %}">{{project.project_name}}</a>
+                        <h4 class="project-title"><a href="{% url 'EmpProjectDetailsView' project.project_name.id %}">{{project.project_name}}</a>
                         </h4>
                         <small class="block text-ellipsis m-b-15">
                             <span class="text-xs">1</span> <span class="text-muted">open tasks, </span>
