@@ -36,12 +36,12 @@
 										</tr>
 									</thead>
 									<tbody>
-										{% for x in holidaylist %}
+										{% for holiday in holidaylist %}
 										<tr class="holiday-upcoming">
 											<td>{{forloop.counter}}</td>
-											<td>{{x.holiday_title}}</td>
-											<td>{{x.holiday_date|date:"j - F - Y"}}</td>
-											<td class="text-right">{{x.holiday_date|date:"l"}}</td>
+											<td>{{holiday.holiday_title}}</td>
+											<td>{{holiday.holiday_date|date:"j - F - Y"}}</td>
+											<td class="text-right">{{holiday.holiday_date|date:"l"}}</td>
 										</tr>
 										{% endfor %}
 									</tbody>

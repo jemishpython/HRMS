@@ -34,11 +34,11 @@
 										</tr>
 									</thead>
 									<tbody>
-										{% for x in designationlist %}
+										{% for designation in designationlist %}
 										<tr>
 											<td>{{forloop.counter}}</td>
-											<td>{{x.designation_name}}</td>
-											<td>{{x.department}}</td>
+											<td>{{designation.designation_name}}</td>
+											<td>{{designation.department}}</td>
 										</tr>
 										{% endfor %}
 									</tbody>
