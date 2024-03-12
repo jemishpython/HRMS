@@ -6,7 +6,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Profile Information</h3>
+                <h3 class="modal-title">Edit Profile Information</h3>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -16,8 +16,13 @@
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="profile-img-wrap edit-img">
-                                <div class="fileupload btn">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="profile-img-wrap edit-img">
+                                        <img class="inline-block" src="{{edit_profile_info.avatar.url}}" alt="user">
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
                                     {{ form.avatar|as_crispy_field }}
                                 </div>
                             </div>
@@ -85,4 +90,11 @@
         </div>
     </div>
 </div>
+<script>
+    document.getElementById('avatar-clear_id').addEventListener('change', function() {
+        var button = document.getElementById('id_avatar');
+        button.disabled = this.checked;
+        document.getElementById("form").reset();
+    });
+</script>
 <!-- /Profile Modal -->

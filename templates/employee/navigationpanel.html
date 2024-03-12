@@ -33,27 +33,25 @@
         <!-- Header Menu -->
         <ul class="nav user-menu">
 
-            <!-- Search -->
-            <li class="nav-item">
-                <div class="top-nav-search">
-                    <a class="responsive-search" href="javascript:void(0);">
-                        <i class="fa fa-search"></i>
-                    </a>
-                    <form action="search.html">
-                        <input class="form-control" placeholder="Search here" type="text">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
-            </li>
-            <!-- /Search -->
+<!--            &lt;!&ndash; Search &ndash;&gt;-->
+<!--            <li class="nav-item">-->
+<!--                <div class="top-nav-search">-->
+<!--                    <a class="responsive-search" href="javascript:void(0);">-->
+<!--                        <i class="fa fa-search"></i>-->
+<!--                    </a>-->
+<!--                    <form action="search.html">-->
+<!--                        <input class="form-control" placeholder="Search here" type="text">-->
+<!--                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </li>-->
+<!--            &lt;!&ndash; /Search &ndash;&gt;-->
 
             <li class="nav-item dropdown has-arrow main-drop">
-                <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#">
-                    <span>{{user.username}}</span>
-                </a>
+                <a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#"><span><img class="avatar mr-3" alt="Profile image" src="{{user.avatar.url}}"></span><span class="mr-2">{{user.username}}</span></a>
                 <div class="dropdown-menu">
-                    <a class="dropdown-item" href="/admin_profile"><i class="las la-user"></i> My Profile</a>
-                    <a class="dropdown-item" href="settings.html"><i class="las la-user-cog"></i> Settings</a>
+                    <a class="dropdown-item" href="{% url 'EmpProfileView' user.id %}"><i class="las la-user"></i> My Profile</a>
+<!--                    <a class="dropdown-item" href="settings.html"><i class="las la-user-cog"></i> Settings</a>-->
                     <a class="dropdown-item" href="/"><i class="las la-sign-out-alt"></i> Logout</a>
                 </div>
             </li>
@@ -93,17 +91,23 @@
                 <li><a href="{% url 'EmployeeIndex' %}"><i class="las la-home"></i><span>Employees Dashboard</span></a></li>
                 <li class="menu-title"><span>Employee</span></li>
                 <li><a href="{% url 'EmployeeListView' %}"><i class="las la-user-tie"></i><span>Employee</span></a></li>
+                <li><a href="{% url 'EmpAttendanceView' user.id %}"><i class="las la-check-circle"></i><span>Attendance </span></a></li>
                 <li><a href="{% url 'EmpLeaves' user.id %}"><i class="las la-calendar-minus"></i><span>Leaves</span></a></li>
                 <li><a href="{% url 'EmpHolidays' %}"><i class="las la-calendar-day"></i><span>Holidays</span></a></li>
                 <li><a href="{% url 'EmpDepartmentView' %}"><i class="las la-building"></i><span>Departments</span></a></li>
                 <li><a href="{% url 'EmpDesignationView' %}"><i class="lab la-buffer"></i><span>Designation</span></a></li>
                 <li><a href="{% url 'EmpTechnologyView' %}"><i class="las la-code"></i><span>Technology</span></a></li>
+                <li><a href="{% url 'EmpTickets' user.id %}"><i class="la la-ticket"></i> <span>Tickets</span></a></li>
+                <li><a href="{% url 'EmpChatView' user.id %}"><i class="las la-comments"></i><span>Chat</span></a></li>
+                <li class="menu-title"><span>Project</span></li>
+                <li><a href="{% url 'EmpProjectsView' user.id %}"><i class="las la-project-diagram"></i><span>Projects</span></a></li>
+                <li><a href="{% url 'EmpProjectTask' user.id %}"><i class="las la-tasks"></i><span>Tasks</span></a></li>
+                <li class="menu-title"><span>Company</span></li>
+                <li><a href="{% url 'EmpPoliciesView' %}"><i class="las la-file-pdf"></i><span>Policies</span></a></li>
+                <li class="menu-title"><span>Account</span></li>
                 <li><a href="{% url 'EmpProfileView' user.id %}"><i class="las la-user"></i><span>Profile</span></a></li>
 <!--                <li><a href="clients"><span>Clients</span></a></li>-->
 <!--                <li><a href="leads.html"><span>Leads</span></a></li>-->
-                <!--							<li>-->
-                <!--								<a href="tickets.html"><i class="la la-ticket"></i> <span>Tickets</span></a>-->
-                <!--							</li>-->
 <!--                <li><a href="trainers.html"><span>Trainers</span></a></li>-->
                 <!--							<li><a href="promotion.html"><i class="la la-bullhorn"></i> <span>Promotion</span></a></li>-->
                 <!--							<li><a href="resignation.html"><i class="la la-external-link-square"></i> <span>Resignation</span></a></li>-->

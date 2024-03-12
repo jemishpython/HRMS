@@ -6,13 +6,13 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Emergency Contact Information</h3>
+                <h3 class="modal-title">Edit Emergency Contact Information</h3>
                 <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'AdminEditEmergencyInfo' user.id edit_emergency_contact.id %}">
+                <form method="post" action="{% url 'AdminEditEmergencyInfo' user_id edit_emergency_contact.id %}">
                 {% csrf_token %}
                         <div class="card-body">
                             <h3 class="card-title">Primary Contact</h3>
@@ -65,7 +65,8 @@
                             </div>
                         </div>
                     <div class="submit-section">
-                        <button class="btn btn-primary submit-btn">Submit</button>
+                        <a href="{% url 'AdminDeleteEmergencyInfo' id=user_id emg_id=edit_emergency_contact.id %}" class="btn btn-danger submit-btn mr-5">Delete</a>
+                        <button class="btn btn-primary submit-btn ml-5">Submit</button>
                     </div>
                 </form>
             </div>

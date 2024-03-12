@@ -4,6 +4,11 @@
 
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
+				<div class="show_message">
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+					{% endfor %}
+				</div>
 			
 				<!-- Page Content -->
                 <div class="content container-fluid">
@@ -24,48 +29,111 @@
 						</div>
 					</div>
 					<!-- /Page Header -->
-					
+
 					<!-- Leave Statistics -->
 					<div class="row">
-						<div class="col-md-3">
-							<div class="stats-info">
-								<h6>Annual Leave</h6>
-								<h4>12</h4>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="stats-info">
-								<h6>Medical Leave</h6>
-								<h4>3</h4>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="stats-info">
-								<h6>Other Leave</h6>
-								<h4>4</h4>
-							</div>
-						</div>
-						<div class="col-md-3">
-							<div class="stats-info">
-								<h6>Remaining Leave</h6>
-								<h4>5</h4>
-							</div>
+						<div class="col-md-12">
+							<div class="card-group m-b-30">
+									<div class="card mr-1" style="border-radius: 1rem; background-color:#e8e3e3;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h3 class="p-1">Total Annual Leaves : <span class="text-secondary">12</span></h3>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="card mx-1" style="border-radius: 1rem; background-color:#e8e3e3;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h3 class="p-1">New Leaves : <span class="text-info">{{new_leaves_count}}</span></h3>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="card mx-1" style="border-radius: 1rem; background-color:#e8e3e3;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h3 class="p-1">Approved Leaves : <span class="text-success">{{approved_leaves_count}}</span></h3>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="card mx-1" style="border-radius: 1rem; background-color:#e8e3e3;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h3 class="p-1">Declined Leaves : <span class="text-danger">{{decline_leaves_count}}</span></h3>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="card ml-1" style="border-radius: 1rem; background-color:#e8e3e3;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h3 class="p-1">Remaining Leaves : <span class="text-primary">{{remaining_leaves_count}}</span></h3>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
 						</div>
 					</div>
 					<!-- /Leave Statistics -->
+
+					<!-- Search Filter -->
+					<div class="row filter-row">
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="name-search">
+								<label class="focus-label">Leave Type</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<input type="date" class="form-control floating" id="from_date">
+								<label class="focus-label">From Date</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<input type="date" class="form-control floating" id="to_date">
+								<label class="focus-label">To Date</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control floating" id="leave_status">
+									<option value="">Select Status</option>
+									{% for status in leave_status %}
+										<option value="{{ status.0 }}">{{ status.1 }}</option>
+									{% endfor %}
+								</select>
+								<label class="focus-label">Leave Status</label>
+							</div>
+						</div>
+					</div>
+					<!-- /Search Filter -->
 
 				<!-- /Page Content -->
 					<div class="row">
 						<div class="col-md-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table mb-0 datatable">
+								<table class="table table-striped custom-table mb-0" id="leave_table">
 									<thead>
 										<tr>
 											<th>Leave Type</th>
 											<th>From</th>
 											<th>To</th>
 											<th>No of Days</th>
-											<th>Reason</th>
+											<th class="w-25 text-wrap">Reason</th>
 											<th class="text-center">Status</th>
 											<th class="text-right">Actions</th>
 										</tr>
@@ -77,10 +145,10 @@
 											<td>{{leave.leave_from|date:"j - M - Y"}}</td>
 											<td>{{leave.leave_to|date:"j - M - Y"}}</td>
 											<td>{{leave.leave_days}}  Days</td>
-											<td>{{leave.leave_reason}}</td>
+											<td class="w-75 text-wrap">{{leave.leave_reason}}</td>
 											<td class="text-center">
 												<div class="action-label">
-													<a class="border rounded-pill p-1 text-dark">{{leave.leave_status}}</a>
+													<a class="border rounded-pill p-1 text-dark"><i class="fa fa-dot-circle-o {% if leave.leave_status == 'Declined' %}text-danger{% elif leave.leave_status == 'Approved' %}text-success{% else %}text-info{% endif %}"></i> {{leave.leave_status}}</a>
 												</div>
 											</td>
 
@@ -130,8 +198,28 @@
 				<!-- /Delete Leave Modal -->
             </div>
 			<!-- /Page Wrapper -->
-
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
 <script>
+$(document).ready(function () {
+	var table = $('#leave_table').DataTable({
+		dom: 'Blrtip',
+	});
+	 $('#name-search').on('keyup', function () {
+		table.column(0).search(this.value).draw();
+	});
+
+
+<!-- lllll -------------------------------------- date functionality pending-->
+
+
+
+	$('#leave_status').on('change', function () {
+		table.column(5).search(this.value).draw();
+	});
+});
+
+
 function addLeave(UserId) {
     $.ajax({
         url: "{% url 'EmpAddLeaves' id=0 %}".replace(0, UserId),
@@ -141,6 +229,7 @@ function addLeave(UserId) {
         }
     });
 }
+
 function editLeave(editLeaveId, UserId) {
     $.ajax({
         url: "{% url 'EmpEditLeave' id=0 userid=1 %}".replace(0, editLeaveId).replace(1,UserId),
@@ -159,6 +248,13 @@ function deleteLeave(deleteLeaveId) {
     }
 }
 
+</script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
 </script>
 
 {% endblock body %}

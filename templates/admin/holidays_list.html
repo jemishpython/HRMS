@@ -3,6 +3,11 @@
 {% block body %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
+				<div class="show_message">
+				{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+				{% endfor %}
+        	</div>
 
 				<!-- Page Content -->
                 <div class="content container-fluid">
@@ -11,7 +16,7 @@
 					<div class="page-header">
 						<div class="row align-items-center">
 							<div class="col">
-								<h3 class="page-title">Holidays 2024</h3>
+								<h3 class="page-title">Holidays in year {{year|date:'Y'}}</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
 									<li class="breadcrumb-item active">Holidays</li>
@@ -38,16 +43,16 @@
 										</tr>
 									</thead>
 									<tbody>
-										{% for x in holidaylist %}
+										{% for holiday in holidaylist %}
 										<tr class="holiday-upcoming">
 											<td>{{forloop.counter}}</td>
-											<td>{{x.holiday_title}}</td>
-											<td>{{x.holiday_date|date:"j - F - Y"}}</td>
-											<td>{{x.holiday_date|date:"l"}}</td>
+											<td>{{holiday.holiday_title}}</td>
+											<td>{{holiday.holiday_date|date:"j - F - Y"}}</td>
+											<td>{{holiday.holiday_date|date:"l"}}</td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
-													<button class="p-0 ml-4 text-info border-0 " onclick="editHoliday({{x.id}})">Edit</button>
-													<button class="p-0 ml-4 text-danger border-0 " onclick="deleteHoliday({{x.id}})">Delete</button>
+													<button class="p-0 ml-4 text-info border-0 " onclick="editHoliday({{holiday.id}})">Edit</button>
+													<button class="p-0 ml-4 text-danger border-0 " onclick="deleteHoliday({{holiday.id}})">Delete</button>
 												</div>
 											</td>
 										</tr>
@@ -122,6 +127,13 @@ function deleteHoliday(deleteHolidayId) {
     }
 }
 
+</script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
 </script>
 
 {% endblock body %}

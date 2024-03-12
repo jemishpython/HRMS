@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>HRMS : Ticket</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+</head>
+<body style="margin:auto; width:50rem;">
+<table style=" margin:1rem auto;">
+    <tr style="color: #fff9e6; font-size:1.8rem">
+        <td style="text-align:center; padding:1rem 1.5rem;"><h1 style="color:#F47920;">Webmigrates</h1></td>
+    </tr>
+    <tr>
+        <td style="text-align:center; color:#2C2727"><h1>Ticket <span style="color: {% if ticket_status == 'Approved' %}green{% else %}red{% endif %}">{{ticket_status}}</span></h1></td>
+    </tr>
+    <tr>
+        <td style="text-align:center; color:#2C2727"><h2>Hello, <strong>{{username}}</strong>.</h2></td>
+    </tr>
+    <tr>
+        <td style="text-align:left; color:#2C2727;"><h4 style="margin:1rem 4rem;">Ticket Title : {{ticket_title}}</h4></td>
+    </tr>
+    <tr>
+        <td style="text-align:left; color:#2C2727;"><h4 style="margin:1rem 4rem;">Ticket Generate Reason : {{ticket_description}}</h4></td>
+    </tr>
+    <tr>
+        <td style="text-align:center; color:#2C2727;"><h4 style="margin:1.5rem 4rem;">We have received your ticket request for these dates:
+            <u>{{ticket_create_date|date:"j - M - Y"}}</u> .<br>As of <u>{{current_date|date:"j - M - Y"}}</u>, your ticket request is <span style="color: {% if ticket_status == 'Approved' %}green{% else %}red{% endif %}">{{ticket_status}}</span>.</h4></td>
+    </tr>
+    <tr>
+        <td style="color:#2C2727;"><h4 style="margin:4rem">The Webmigrates Team.</h4></td>
+    </tr>
+</table>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

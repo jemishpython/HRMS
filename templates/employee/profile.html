@@ -3,7 +3,11 @@
 {% block body %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
-
+				<div class="show_message">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+            {% endfor %}
+        </div>
 				<!-- Page Content -->
                 <div class="content container-fluid">
 
@@ -71,9 +75,11 @@
 												</div>
 											</div>
 										</div>
+										{% if user.id == user_details.id %}
 										<div class="pro-edit">
 											<button class="edit-icon" onclick="editProfileInfo({{user_details.id}})"><i class="fa fa-pencil"></i></button>
 										</div>
+										{% endif %}
 									</div>
 								</div>
 							</div>
@@ -89,7 +95,9 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
+											{% if user.id == user_details.id %}
 											<button class="edit-icon" onclick="editPersonalInfo({{user_details.id}})"><i class="fa fa-pencil"></i></button>
+											{% endif %}
 											<h3 class="card-title">Personal Information</h3>
 											<ul class="personal-info">
 												<li>
@@ -114,24 +122,24 @@
 											<h3 class="card-title">Bank information</h3>
 											<ul class="personal-info">
 												<li>
-													<div class="title">Bank name</div>
-													<div class="text">ICICI Bank</div>
+													<div class="title">Bank Name : </div>
+													<div class="text">{{view_bank_info.bank_name}}</div>
 												</li>
 												<li>
-													<div class="title">Bank account No.</div>
-													<div class="text">159843014641</div>
+													<div class="title">Bank Account Number : </div>
+													<div class="text">{{view_bank_info.bank_account_number}}</div>
 												</li>
 												<li>
-													<div class="title">IFSC Code</div>
-													<div class="text">ICI24504</div>
+													<div class="title">Bank IFSC Code : </div>
+													<div class="text">{{view_bank_info.bank_ifsc_code}}</div>
 												</li>
 												<li>
-													<div class="title">PAN No</div>
-													<div class="text">TC000Y56</div>
+													<div class="title">PAN Card Number : </div>
+													<div class="text">{{view_bank_info.user_pan_card_number}}</div>
 												</li>
 												<li>
-													<div class="title">ADHAR No</div>
-													<div class="text">TC000Y56</div>
+													<div class="title">Aadhar Number : </div>
+													<div class="text">{{view_bank_info.user_aadhar_card_number}}</div>
 												</li>
 											</ul>
 										</div>
@@ -142,7 +150,9 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
+											{% if user.id == user_details.id %}
 											<button class="edit-icon ml-2" onclick="addEducationInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
+											{% endif %}
 											<h3 class="card-title">Education Information</h3>
 											<div class="experience-box">
 												<ul class="experience-list">
@@ -153,7 +163,11 @@
 														</div>
 														<div class="experience-content">
 															<div class="timeline-content">
+																{% if user.id == user_details.id %}
 																<h4 class="text-dark cursor_pointer" onclick="editEducationInfo({{user_details.id}}, {{edu_info.id}})" title="Edit">{{edu_info.institution}}</h4>
+																{% else %}
+																<h4 class="text-dark">{{edu_info.institution}}</h4>
+																{% endif %}
 																<div class="text-dark">{{edu_info.degree}}<span class="ml-2">| Grade :  {{edu_info.grade}}</span></div>
 																<span class="">{{edu_info.start_year|date:'F - Y'}} - {{edu_info.complete_year|date:'F - Y'}}</span>
 															</div>
@@ -168,7 +182,9 @@
 								<div class="col-md-6 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
+											{% if user.id == user_details.id %}
 											<button class="edit-icon" onclick="addExperienceInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
+											{% endif %}
 											<h3 class="card-title">Experience</h3>
 											<div class="experience-box">
 												<ul class="experience-list">
@@ -179,7 +195,11 @@
 														</div>
 														<div class="experience-content">
 															<div class="timeline-content">
+																{% if user.id == user_details.id %}
 																<h4 class="text-dark cursor_pointer" onclick="editExperienceInfo({{user_details.id}}, {{exp.id}})" title="Edit">{{exp.company_name}}</h4>
+																{% else %}
+																<h4 class="text-dark">{{exp.company_name}}</h4>
+																{% endif %}
 																<span class="">{{exp.start_date|date:'M , Y'}} - {{exp.end_date|date:'M , Y'}}</span>
 															</div>
 														</div>
@@ -195,9 +215,12 @@
 								<div class="col-md-12 d-flex">
 									<div class="card user_details-box flex-fill">
 										<div class="card-body">
+											{% if user.id == user_details.id %}
 											<button class="edit-icon ml-2" onclick="addEmergencyInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
 											<button class="edit-icon mr-1" onclick="editEmergencyInfo({{user_details.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
+											{% endif %}
 											<h2 class="card-title">Emergency Contact</h2>
+											{% if view_emergency_contact %}
 											<div class="d-flex">
 												<div class="col-md-6 border-right">
 													<h4 class="section-title">Primary</h4>
@@ -234,6 +257,7 @@
 													</ul>
 												</div>
 											</div>
+											{% endif %}
 										</div>
 									</div>
 								</div>
@@ -290,13 +314,14 @@ function addEducationInfo(UserId) {
 
 function editEducationInfo(UserId, EduId) {
     $.ajax({
-        url: "{% url 'EmpEditEducationInfo' id=0 edu_id=1 %}".replace(0, UserId).replace(1, EduId),
+        url: `/hrms/employee/emp-profile/education-info-edit/${UserId}/${EduId}`,
         success: function(response) {
             $("#edit-education-info-form").html(response);
             $("#edit_education_info_model").modal('show');
         }
     });
 }
+
 
 function addExperienceInfo(UserId) {
     $.ajax({
@@ -310,7 +335,7 @@ function addExperienceInfo(UserId) {
 
 function editExperienceInfo(UserId, ExpId) {
     $.ajax({
-        url: "{% url 'EmpEditExperienceInfo' id=0 exp_id=1 %}".replace(0, UserId).replace(1, ExpId),
+        url: `/hrms/employee/emp-profile/experience-info-edit/${UserId}/${ExpId}`,
         success: function(response) {
             $("#edit-experience-info-form").html(response);
             $("#edit_experience_info_model").modal('show');
@@ -329,7 +354,7 @@ function addEmergencyInfo(UserId) {
 }
 function editEmergencyInfo(UserId, EmgId) {
     $.ajax({
-        url: "{% url 'EmpEditEmergencyInfo' id=0 emg_id=1 %}".replace(0, UserId).replace(1, EmgId),
+        url: `/hrms/employee/emp-profile/emergency-contact-edit/${UserId}/${EmgId}`,
         success: function(response) {
             $("#edit-emergency-contact-form").html(response);
             $("#edit_emergency_contact_modal").modal('show');
@@ -338,6 +363,13 @@ function editEmergencyInfo(UserId, EmgId) {
 }
 
 
+</script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
 </script>
 
 {% endblock body %}

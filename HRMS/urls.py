@@ -25,9 +25,9 @@ from employee_app.views import landing
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", landing, name='landing'),
-    path("hrms/admin/", include('admin_app.urls')),
+    path("hrms-admin/", include('admin_app.urls')),
     path("hrms/employee/", include('employee_app.urls')),
-    path('login/', views.Login, name="Login"),
+    path('hrms/login_admin/', views.Login, name="Login"),
 ]
 
 if settings.DEBUG:

@@ -9,10 +9,10 @@
           name="keywords">
     <meta content="Dreamguys - Bootstrap Admin Template" name="author">
     <meta content="noindex, nofollow" name="robots">
-    <title>Login - Webmigrates HRMS</title>
+    <title>Login - Webmigrates Admin</title>
 
     <!-- Favicon -->
-    <link href="{% static 'img/favicon.png' %}" rel="shortcut icon" type="image/x-icon">
+    <link href="{% static 'img/logo.png' %}" rel="shortcut icon" type="image/x-icon">
 
     <!-- Bootstrap CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
@@ -96,6 +96,9 @@
 <body>
 <div class="bg-img">
     <div class="content">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+        {% endfor %}
         <header>Admin Login</header>
         <form action="{% url 'Login' %}" method="post">
             {% csrf_token %}
@@ -103,15 +106,15 @@
                  <input class="form-control" name="adminphone" type="number" placeholder="Phone">
             </div>
             <div class="form-group">
-                <div class="row mb-2">
+                <input class="form-control" name="adminpassword" type="password" placeholder="Password">
+                <div class="row">
                     <div class="col"></div>
-                    <div class="col-auto">
-                        <a class="text-light" href="forgot-password.html">Forgot password ?</a>
+                    <div class="col-auto mt-2">
+                        <a class="text-info" href="javascript:void(0);" id="forget-password-link">Forget Password ?</a>
                     </div>
                 </div>
-                <input class="form-control" name="adminpassword" type="password" placeholder="Password">
             </div>
-            <div class="form-group text-center">
+            <div class="form-group text-center mt-5">
                 <button class="btn btn-primary account-btn form-control" type="submit">Login</button>
             </div>
             <div class="account-footer text-light">
@@ -159,5 +162,56 @@
 
 <!-- Custom JS -->
 <script src="{% static 'js/app.js' %}"></script>
+
+
+<script>
+window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove();
+    });
+}, 1600);
+
+$("#forget-password-link").click(function(e) {
+    e.preventDefault();
+    var adminphone = $("[name='adminphone']").val();
+    if (adminphone) {
+        $.ajax({
+            url: '{% url "forget_password_mail" %}',
+            type: 'POST',
+            data: {
+                'adminphone': adminphone,
+                'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(response) {
+                var messageBox = $("<div>").addClass("alert alert-success").attr("role", "alert").text("A password reset email has been sent.");
+                $(".show_message").prepend(messageBox);
+                setTimeout(function() {
+                    messageBox.fadeTo(500, 0).slideUp(500, function(){
+                        $(this).remove();
+                    });
+                }, 2000);
+            },
+            error: function(xhr, errmsg, err) {
+                var messageBox = $("<div>").addClass("alert alert-danger").attr("role", "alert").text("A password reset email has been not sent.");
+                $(".show_message").prepend(messageBox);
+                setTimeout(function() {
+                    messageBox.fadeTo(500, 0).slideUp(500, function(){
+                        $(this).remove();
+                    });
+                }, 2000);
+            }
+        });
+    } else {
+        var messageBox = $("<div>").addClass("alert alert-warning").attr("role", "alert").text("Please enter phone number");
+        $(".show_message").prepend(messageBox);
+        setTimeout(function() {
+            messageBox.fadeTo(500, 0).slideUp(500, function(){
+                $(this).remove();
+            });
+        }, 2000);
+    }
+});
+</script>
+
 </body>
 </html>

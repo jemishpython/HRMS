@@ -4,7 +4,8 @@ from django.db import models
 
 # Create your models here.
 from hrms_api.choices import GenderTypeChoice, MaritalStatusChoice, ProjectPriorityChoice, TaskStatusChoice, \
-    ProjectStatusChoice, LeaveTypeChoice, LeaveStatusChoice, ProjectAssigneeTypeChoice
+    ProjectStatusChoice, LeaveTypeChoice, LeaveStatusChoice, ProjectAssigneeTypeChoice, TicketPriorityChoice, \
+    TicketStatusChoice
 
 
 class Department(models.Model):
@@ -80,7 +81,6 @@ class User(AbstractUser):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
     designation = models.ForeignKey(Designation, on_delete=models.CASCADE, null=True, blank=True)
     date_joined = models.DateField(verbose_name='Date of Joining', null=True, blank=True)
-    birthdate = models.DateField(verbose_name='Birth Date', null=True)
     marital_status = models.CharField(verbose_name='Marital Status', choices=MaritalStatusChoice.choices, default=MaritalStatusChoice.SINGLE, null=True, max_length=255)
     religion = models.CharField(verbose_name='Religion', max_length=20, null=True)
     technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True, blank=True)
@@ -137,6 +137,25 @@ class Emergency_Contact(models.Model):
         return self.primary_name
 
 
+class Client(models.Model):
+    username = models.CharField(verbose_name='User Name', max_length=255, blank=True, null=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="phone number entered in format +910987654321 .")
+    country_code = models.IntegerField(blank=True, null=True)
+    phone = models.CharField(validators=[phone_regex], max_length=17, unique=True)
+    dob = models.DateField(verbose_name='Birth Date', null=True, blank=True)
+    active_status = models.BooleanField(verbose_name='Active Status', default=True, blank=True)
+    address = models.CharField(verbose_name='Address', max_length=400, blank=True, null=True)
+    nationality = models.CharField(verbose_name='Nationality', max_length=255, blank=True)
+    email = models.EmailField(verbose_name='Email Address', max_length=255, blank=False)
+    gender = models.CharField(verbose_name='Gender', choices=GenderTypeChoice.choices, default=GenderTypeChoice.MALE, max_length=255)
+    client_avatar = models.ImageField(verbose_name='Profile Image', upload_to='client_avatar/')
+    company_name = models.CharField(verbose_name='Company Name', max_length=255, blank=True, null=True)
+    position = models.CharField(verbose_name='Position in company', max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.username
+
+
 class Holiday(models.Model):
     holiday_title = models.CharField(verbose_name='Holiday Title', max_length=50, null=True, blank=True)
     holiday_date = models.DateField(verbose_name="Holiday Date", null=True, blank=True)
@@ -147,7 +166,7 @@ class Holiday(models.Model):
 
 class Project(models.Model):
     project_name = models.CharField(verbose_name='Project Name', max_length=100, null=True, blank=True)
-    project_client_name = models.CharField(verbose_name='Project Client Name', max_length=100, null=True, blank=True)
+    project_client_name = models.ForeignKey(Client,verbose_name='Project Client Name', on_delete=models.CASCADE, null=True)
     project_start_date = models.DateField(verbose_name='Project Start Date', null=True, blank=True)
     project_end_date = models.DateField(verbose_name='Project End Date', null=True, blank=True)
     project_cost = models.CharField(verbose_name='Project Cost', max_length=50, null=True, blank=True)
@@ -159,57 +178,113 @@ class Project(models.Model):
         return self.project_name
 
 
-class ProjectImages(models.Model):
-    project_image = models.ImageField(verbose_name='Project Image', upload_to='project_images/')
-    project = models.ForeignKey(Project, verbose_name='Project Id', on_delete=models.CASCADE, null=True)
+class ProjectAssign(models.Model):
+    project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.CASCADE, null=True)
+    assignee_type = models.CharField(verbose_name='Assignee Type', max_length=50, blank=True, null=True, choices=ProjectAssigneeTypeChoice.choices, default=ProjectAssigneeTypeChoice.TEAM_MEMBER)
+    employees = models.ManyToManyField(User, verbose_name='Employee Name', related_name='ProjectName')
 
     def __str__(self):
-        return self.project
+        return self.project_name.project_name
+
+
+class ProjectImages(models.Model):
+    project_image = models.FileField(verbose_name='Project Image', upload_to='project_images/')
+    project_name = models.ForeignKey(Project, verbose_name='Project Id', on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.project_name
 
 
 class ProjectFile(models.Model):
-    project_file = models.FileField(verbose_name='Project Image', upload_to='project_images/')
-    project = models.ForeignKey(Project, verbose_name='Project Id', on_delete=models.CASCADE, null=True)
+    project_file = models.FileField(verbose_name='Project File', upload_to='project_files/')
+    project_name = models.ForeignKey(Project, verbose_name='Project Id', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.project
+        return self.project_name
 
 
 class Task(models.Model):
     task_title = models.CharField(verbose_name='Task Title', max_length=100, null=True)
     task_status = models.CharField(verbose_name='Task Status', choices=TaskStatusChoice.choices, default=TaskStatusChoice.WORKING, max_length=255, null=True, blank=True)
     task_project = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
-    task_assign = models.ManyToManyField(User, verbose_name='Task Assign')
 
     def __str__(self):
         return self.task_title
 
 
+class TaskAssign(models.Model):
+    task_name = models.ForeignKey(Task, verbose_name='Task Name', on_delete=models.CASCADE, null=True)
+    task_project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
+    employees = models.ManyToManyField(User, verbose_name='Employee Name', related_name='TaskName')
+
+    def __str__(self):
+        return self.task_name.task_name
+
+
 class Leave(models.Model):
-    leave_type = models.CharField(verbose_name='Leave Type', max_length=50, choices=LeaveTypeChoice.choices, default=LeaveTypeChoice.CASUAL, null=True, blank=True)
+    leave_type = models.CharField(verbose_name='Leave Type', max_length=50, choices=LeaveTypeChoice.choices,
+                                  default=LeaveTypeChoice.CASUAL, null=True, blank=True)
     leave_from = models.DateField(verbose_name='Leave From', null=True, blank=True)
     leave_to = models.DateField(verbose_name='Leave To', null=True, blank=True)
     leave_days = models.IntegerField(verbose_name='Leave Days', null=True, blank=True)
     leave_reason = models.CharField(verbose_name='Leave Reason', max_length=255, null=True, blank=True)
-    leave_status = models.CharField(verbose_name='Leave Status', max_length=100, choices=LeaveStatusChoice.choices, default=LeaveStatusChoice.NEW, null=True, blank=True)
+    leave_status = models.CharField(verbose_name='Leave Status', max_length=100, choices=LeaveStatusChoice.choices,default=LeaveStatusChoice.NEW, null=True, blank=True)
     leave_user = models.ForeignKey(User, verbose_name='User Name', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.leave_type or "Leave"
 
 
-class ProjectAssign(models.Model):
-    project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
-    assignee_type = models.CharField(verbose_name='Assignee Type', max_length=50, blank=True, null=True, choices=ProjectAssigneeTypeChoice.choices, default=ProjectAssigneeTypeChoice.TEAM_MEMBER)
-    employee_name = models.ManyToManyField(User, verbose_name='Employee Name', through='Projectassign_Employee_Name')
+class Ticket(models.Model):
+    ticket_title = models.CharField(verbose_name='Ticket Title', max_length=50, null=True, blank=True)
+    ticket_user = models.ForeignKey(User, verbose_name='Ticket User Name', on_delete=models.CASCADE, null=True, blank=True)
+    ticket_create_date = models.DateField(verbose_name='Ticket Date', null=True, blank=True)
+    ticket_description = models.CharField(verbose_name='Ticket Description', max_length=500, null=True, blank=True)
+    ticket_priority = models.CharField(verbose_name='Ticket Priority', max_length=50, choices=TicketPriorityChoice.choices, default=TicketPriorityChoice.LOW, null=True, blank=True)
+    ticket_status = models.CharField(verbose_name='Ticket Status', max_length=50, choices=TicketStatusChoice.choices, default=TicketStatusChoice.NEW, null=True, blank=True)
+    ticket_status_update_date = models.DateField(verbose_name='Ticket Status Update Date', null=True)
 
     def __str__(self):
-        return self.project_name.project_name
+        return self.ticket_title or "Tickets"
 
 
-class Projectassign_Employee_Name(models.Model):
-    projectassign = models.ForeignKey(ProjectAssign, on_delete=models.DO_NOTHING, null=True)
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
+class Bank(models.Model):
+    employee = models.ForeignKey(User, verbose_name='Bank User Name', on_delete=models.CASCADE, null=True, blank=True, unique=True)
+    bank_name = models.CharField(verbose_name="Bank Name", max_length=50, null=True, blank=True)
+    bank_account_number = models.BigIntegerField(verbose_name="Bank Account Number", null=True, blank=True)
+    bank_ifsc_code = models.CharField(verbose_name="Bank IFSC Code", max_length=20, null=True, blank=True)
+    user_pan_card_number = models.CharField(verbose_name="Pan Card Number", max_length=20, null=True, blank=True)
+    user_aadhar_card_number = models.BigIntegerField(verbose_name="Aadhar Card", null=True, blank=True)
 
     def __str__(self):
-        return f"{self.projectassign.project_name.project_name} - {self.user.username}"
+        return self.employee or "Bank Information"
+
+
+class Policies(models.Model):
+    policy_name = models.CharField(verbose_name="Policy Name", max_length=100, null=True, blank=True)
+    policy_department = models.CharField(verbose_name="Policy Department Name", max_length=100, null=True, blank=True)
+    policy_create_date = models.DateField(verbose_name="Policy Create Date", null=True, blank=True)
+    policy_file = models.FileField(verbose_name="Policy File", upload_to='policies/')
+
+    def __str__(self):
+        return self.policy_name
+
+
+class Interviewers(models.Model):
+    name = models.CharField(verbose_name='Name', max_length=100, blank=True, null=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="phone number entered in format +910987654321 .")
+    country_code = models.IntegerField(blank=True, null=True)
+    phone = models.CharField(validators=[phone_regex], max_length=17)
+    dob = models.DateField(verbose_name='Birth Date', null=True, blank=True)
+    address = models.CharField(verbose_name='Address', max_length=400, blank=True, null=True)
+    email = models.EmailField(verbose_name='Email Address', max_length=255, blank=True)
+    gender = models.CharField(verbose_name='Gender', choices=GenderTypeChoice.choices, default=GenderTypeChoice.MALE,max_length=255)
+    city = models.CharField(verbose_name='City', max_length=50, blank=True, null=True)
+    state = models.CharField(verbose_name='State', max_length=50, blank=True, null=True)
+    experience = models.CharField(verbose_name='Experience', max_length=50, blank=True, null=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
+    technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True, blank=True)
+    resume = models.FileField(verbose_name='Upload Resume', upload_to='interviewer_resume/', null=True, blank=True)
+
+    def __str__(self):
+        return self.name

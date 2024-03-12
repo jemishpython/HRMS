@@ -33,10 +33,10 @@
 										</tr>
 									</thead>
 									<tbody>
-										{% for x in departmentlist %}
+										{% for department in departmentlist %}
 										<tr>
 											<td>{{forloop.counter}}</td>
-											<td>{{x.department_name}}</td>
+											<td>{{department.department_name}}</td>
 										</tr>
 										{% endfor %}
 									</tbody>

@@ -27,24 +27,29 @@
 								</div>
 							</section>
 							<section class="dash-section">
-								<h1 class="dash-sec-title">Today Task</h1>
+								<h2 class="dash-title m-0 "><span class="text-dark"><i class="las la-check-double"></i> </span> Task</h2>
 								<div class="task-wrapper">
-                                        <div class="task-list-container">
-                                            <div class="task-list-body">
-                                                <ul id="task-list">
-                                                    {% for task in task_list %}
-                                                    <li class="task">
-                                                        <div class="task-container">
-                                                            <span class="task-action-btn task-check">
-                                                                <span class="action-circle large complete-btn" title="Mark Complete">
-                                                                    <i class="material-icons">check</i>
-                                                                </span>
-                                                            </span>
-                                                            <span class="task-label">{{task.task_title}}</span>
-                                                        </div>
-                                                    </li>
-                                                    {% endfor %}
-                                                </ul>
+									<div class="task-list-container">
+										<div class="task-list-body">
+											{% for project in user_projects %}
+												<ul id="task-list" class="mb-3">
+													<h3><span class="text-secondary"><i class="las la-angle-right"></i> </span> {{project}}</h3>
+														<li class="task">
+															{% for task in user_task %}
+																{% if task.task_project_name == project.project_name %}
+																	<div class="task-container">
+																		<span class="task-action-btn task-check">
+																			<span class="action-circle large complete-btn" title="Mark Complete">
+																				<i class="material-icons">check</i>
+																			</span>
+																		</span>
+																		<span class="task-label">{{task.task_name}}</span>
+																	</div>
+																{% endif %}
+															{% endfor %}
+														</li>
+                                                	</ul>
+												{% endfor %}
                                             </div>
                                         </div>
                                     </div>
@@ -59,17 +64,17 @@
 										<div class="card-body">
 											<div class="time-list">
 												<div class="dash-stats-list">
-													<h4>{{task_list.count}}</h4>
+													<h4>{{user_task.count}}</h4>
 													<p>Total Tasks</p>
 												</div>
 												<div class="dash-stats-list">
-													<h4>14</h4>
+													<h4>------</h4>
 													<p>Pending Tasks</p>
 												</div>
 											</div>
 											<div class="request-btn">
 												<div class="dash-stats-list">
-													<h4>1231123</h4>
+													<h4>{{user_projects.count}}</h4>
 													<p>Total Projects</p>
 												</div>
 											</div>

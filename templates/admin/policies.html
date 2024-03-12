@@ -1,0 +1,128 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block body %}
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+				<div class="show_message">
+				{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+				{% endfor %}
+        	</div>
+
+				<!-- Page Content -->
+                <div class="content container-fluid">
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-title">Policies</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Policies</li>
+								</ul>
+							</div>
+							<div class="col-auto float-right ml-auto">
+								<button class="btn add-btn" onclick="addPolicies()"><i class="fa fa-plus"></i> Add Policie</button>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive">
+								<table class="table table-striped custom-table mb-0">
+									<thead>
+										<tr>
+											<th>Sr NO</th>
+											<th>Policy Name </th>
+											<th>Department</th>
+											<th>Created Date</th>
+											<th>File</th>
+											<th class="text-right">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for policy in policies %}
+										<tr class="holiday-upcoming">
+											<td>{{forloop.counter}}</td>
+											<td>{{policy.policy_name}}</td>
+											<td>{{policy.policy_department}}</td>
+											<td>{{policy.policy_create_date|date:"j - F - Y"}}</td>
+											<td>{{policy.policy_file|cut:'policies/'}}</td>
+											<td class="text-right">
+												<div class="d-flex justify-content-end">
+													<button class="p-0 ml-4 text-danger border-0 " onclick="deleteHoliday({{policy.id}})">Delete</button>
+												</div>
+											</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+                </div>
+				<!-- /Page Content -->
+
+
+				<div id="add-policy-form"></div>
+
+
+				<!-- Delete Holiday Modal -->
+				<div class="modal custom-modal fade" id="delete_policy_model" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="form-header">
+									<h3>Delete Holiday</h3>
+									<p>Are you sure want to delete?</p>
+								</div>
+								<div class="modal-btn delete-action">
+									<div class="row">
+										<div class="col-6">
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
+										</div>
+										<div class="col-6">
+											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Delete Holiday Modal -->
+            </div>
+			<!-- /Page Wrapper -->
+
+<script>
+function addPolicies() {
+    $.ajax({
+        url: "{% url 'AdminAddPolicies' %}",
+        success: function(response) {
+            $("#add-policy-form").html(response);
+            $("#add_policy_model").modal('show');
+        }
+    });
+}
+
+function deleteHoliday(deletePolicyId) {
+    $("#delete_policy_model").modal('show');
+    if (deletePolicyId) {
+        var deleteUrl = "{% url 'AdminDeletePolicies' id=0 %}".replace(0, deletePolicyId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
+</script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
+</script>
+
+{% endblock body %}

@@ -11,7 +11,7 @@
         <title>Register -Webmigrates HRMS</title>
 
 		<!-- Favicon -->
-        <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}">
+        <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/logo.png' %}">
 
 		<!-- Bootstrap CSS -->
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
@@ -48,6 +48,11 @@
 			<script src="{% static 'js/html5shiv.min.js' %}"></script>
 			<script src="{% static 'js/respond.min.js"' %}></script>
 		<![endif]-->
+		<style>
+			.sidebar-menu ul li a.active {
+				color: red;
+			}
+		</style>
 		{% block head %} {% endblock head %}
     </head>
     <body>

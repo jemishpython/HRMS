@@ -8,17 +8,22 @@ urlpatterns = [
     path("employee_index", views.EmployeeIndex, name="EmployeeIndex"),
     path("employee_logout", views.EmployeeLogout, name="EmployeeLogout"),
 
+    # Forget Password
+    path('emp-password-reset-mail/', views.forget_password_mail, name='emp_forget_password_mail'),
+    path('emp-password-reset/<int:pk>/', views.reset_page, name='emp_forgot_password'),
+    path('emp-password-reset-successfully/<int:pk>/', views.update_password, name='emp_update_password'),
+
     path("employee-list", views.EmployeeListView, name="EmployeeListView"),
 
-    path("profile/<int:id>", views.ProfileView, name="EmpProfileView"),
-    path("profile/profile-info-edit/<int:id>", views.EditProfileInfo, name="EmpEditProfileInfo"),
-    path("profile/personal-info-edit/<int:id>", views.EditPersonalInfo, name="EmpEditPersonalInfo"),
-    path("profile/education-info-add/<int:id>", views.AddEducationInfo, name="EmpAddEducationInfo"),
-    path("profile/education-info-edit/<int:id>/<int:edu_id>", views.EditEducationInfo, name="EmpEditEducationInfo"),
-    path("profile/experience-info-add/<int:id>", views.AddExperienceInfo, name="EmpAddExperienceInfo"),
-    path("profile/experience-info-edit/<int:id>/<int:exp_id>", views.EditExperienceInfo, name="EmpEditExperienceInfo"),
-    path("profile/emergency-contact-add/<int:id>", views.AddEmergencyInfo, name="EmpAddEmergencyInfo"),
-    path("profile/emergency-contact-edit/<int:id>/<int:emg_id>", views.EditEmergencyInfo, name="EmpEditEmergencyInfo"),
+    path("emp-profile/<int:id>", views.ProfileView, name="EmpProfileView"),
+    path("emp-profile/profile-info-edit/<int:id>", views.EditProfileInfo, name="EmpEditProfileInfo"),
+    path("emp-profile/personal-info-edit/<int:id>", views.EditPersonalInfo, name="EmpEditPersonalInfo"),
+    path("emp-profile/education-info-add/<int:id>", views.AddEducationInfo, name="EmpAddEducationInfo"),
+    path("emp-profile/<int:user_id>/education-info-edit/<int:edu_id>", views.EmpEditEducationInfo, name="EmpEditEducationInfo"),
+    path("emp-profile/experience-info-add/<int:id>", views.AddExperienceInfo, name="EmpAddExperienceInfo"),
+    path("emp-profile/<int:id>/experience-info-edit/<int:exp_id>", views.EditExperienceInfo, name="EmpEditExperienceInfo"),
+    path("emp-profile/emergency-contact-add/<int:id>", views.AddEmergencyInfo, name="EmpAddEmergencyInfo"),
+    path("emp-profile/<int:id>/emergency-contact-edit/<int:emg_id>", views.EditEmergencyInfo, name="EmpEditEmergencyInfo"),
 
     path("holidays", views.Holidays, name="EmpHolidays"),
 
@@ -32,4 +37,24 @@ urlpatterns = [
     path("<int:id>/leaves/add", views.AddLeave, name="EmpAddLeaves"),
     path("<int:userid>/leaves/update/<int:id>", views.EditLeave, name="EmpEditLeave"),
     path("<int:id>/leaves/delete", views.DeleteLeave, name="EmpDeleteLeave"),
+
+    path("tickets/<int:id>", views.Tickets, name="EmpTickets"),
+    path("<int:id>/tickets/add", views.AddTicket, name="EmpAddTicket"),
+    path("<int:userid>/tickets-update/<int:id>", views.EditTicket, name="EmpEditTicket"),
+    path("<int:id>/tickets/delete", views.DeleteTicket, name="EmpDeleteTicket"),
+
+    path("chat/<int:id>", views.ChatView, name="EmpChatView"),
+
+    path("attendance/<int:id>", views.AttendanceView, name="EmpAttendanceView"),
+
+    path("project/<int:id>", views.ProjectView, name="EmpProjectsView"),
+    # path("project/details-view/<int:id>", views.ProjectDetailsView, name="EmpProjectDetailsView"),
+    path("<int:user_id>/project/details-view/<int:id>", views.ProjectDetailsView, name="EmpProjectDetailsView"),
+
+
+    path("project-task/<int:id>", views.ProjectTaskView, name="EmpProjectTask"),
+    path("<int:user_id>/project/<int:id>/tasks", views.ProjectTaskList, name="EmpProjectTaskList"),
+
+    path("policies/", views.PoliciesView, name='EmpPoliciesView'),
+
 ]

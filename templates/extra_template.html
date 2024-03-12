@@ -1,0 +1,310 @@
+{% extends 'store_owner/base.html' %}
+{% load static %}
+{% block link %}<a class="navbar-brand"
+                   href="{% url 'my_earnings' %}">My Earning</a>{% endblock link %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+<script src="{% static 'admin-panel/js/chart-dashboard.js' %}"></script>
+<style>
+select, option{
+    width: 20%!important;
+    padding: 3px;
+    background-color: transparent;
+    border: 1px solid #E3E3E3;
+    border-radius: 3px;
+    font-size: 15px;
+}
+</style>
+
+<script>
+fetchOrders();
+fetchUsers();
+
+    function populateOrderTable(orders) {
+    let datatableOrder;
+    if ( $.fn.dataTable.isDataTable( '#datatableOrder' ) ) {
+        datatableOrder = $('#datatableOrder').DataTable();
+    }
+    else {
+        datatableOrder = $('#datatableOrder').DataTable({
+            "pagingType": "full_numbers",
+            "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"],
+            ],
+            scrollX: true,
+            bSort: false,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search records",
+            },
+            bAutoWidth: false,
+            aoColumns: [
+                {"sWidth": '10px', "aTargets": [-1]},
+                {"sWidth": '10px', "aTargets": [-1]},
+                {"sWidth": '10px', "aTargets": [-1]},
+                {"sWidth": '10px', "aTargets": [-1]},
+                {"sWidth": '10%', "aTargets": [-1]},
+                {"sWidth": '10px', "aTargets": [-1]},
+                {"sWidth": '10px', "aTargets": [-1]},
+                {"sWidth": '5px', "aTargets": [-1]},
+                {"sWidth": '2px', "aTargets": [-1]},
+                {"sWidth": '5px', "aTargets": [-1]},
+                {"sWidth": '5px', "aTargets": [-1]},
+            ]
+        });
+    }
+    datatableOrder.clear().draw();
+    orders.forEach(function(order) {
+        const action = '<a href="/store/order/' + order.order_id + '" class="btn btn-round btn-info btn-icon btn-sm mx-1">' +
+        '<i class="fas fa-eye"></i></a>';
+        '</a>';
+        const image = '<img src=" ' + order.product_picture + '" alt="category-image" width="50%">'
+        const productUrl = '<a href="' + '/store/product/view/' + order.product_id + '">' + order.product_url + '</a>'
+        const formattedDate = moment(order.order_date).format('YYYY-MM-DD');
+        datatableOrder.row.add([image, productUrl, order.customer_name, order.customer_phone, order.customer_address, formattedDate, order.delivery_date,
+        order.order_amount, order.billing_number, order.ship_location, action]).draw(false);
+    });
+}
+
+    function populateProductsTable(product_data) {
+    let datatableProduct;
+    if ( $.fn.dataTable.isDataTable( '#datatableProduct' ) ) {
+        datatableProduct = $('#datatableProduct').DataTable();
+    }
+    else {
+
+        datatableProduct = $('#datatableProduct').DataTable({
+            "pagingType": "full_numbers",
+            "lengthMenu": [
+                [10, 25, 50, -1],
+                [10, 25, 50, "All"],
+            ],
+            scrollX: true,
+            bSort: false,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Search records",
+            },
+
+        });
+
+    }
+     datatableProduct.clear().draw();
+
+    product_data.forEach(function(product) {
+        let occasion = '';
+        for (let i = 0; i < product.occasion.length; i++){
+            occasion += '<span class="badge bg-primary-subtle text-primary me-1">' + product.occasion[i] + '</span>';
+        }
+        const gift_link = '<a href="' + '/store/product/view/' + product.product_id + '">' + product.gift_link
+        const image = '<img src=" ' + product.image + '" alt="category-image" width="30%">'
+        '</a>';
+        datatableProduct.row.add([ image, product.gift_name, occasion, product.total_price, gift_link, product.note, product.total_sold]).draw(false);
+    });
+}
+
+function fetchUsers() {
+
+    $.ajax({
+        url: "{% url 'most_sold_product' %}",
+        method: "GET",
+        dataType: "json",
+        success: function(data) {
+            populateProductsTable(data.product_data);
+        },
+        error: function() {
+
+            console.log("Error fetching user data.");
+        }
+    });
+}
+
+function fetchOrders() {
+    $.ajax({
+        url: "{% url 'my_order_list_data' %}",
+        method: "GET",
+        dataType: "json",
+        success: function(data) {
+            populateOrderTable(data.orders);
+        },
+        error: function() {
+            console.log("Error fetching user data.");
+        }
+    });
+}
+
+fetchIncome();
+function fetchIncome(month, year) {
+    const Month = month != undefined ? month: "";
+    const Year = year != undefined ? year: "";
+    const url = month || year ? '/store/total_income/?month=' + Month + '&year=' + Year: "{% url 'total_income' %}"
+    $.ajax({
+        url: url,
+        method: "GET",
+        dataType: "json",
+        success: function(data) {
+            const htmlformate = `<p>` + data?.total_income + `</p>`;
+            $('#income').html(htmlformate);
+        },
+        error: function() {
+
+            console.log("Error fetching user data.");
+        }
+    });
+}
+
+$(function(){
+    $('#month').change(function(){
+    const month = $('#month').val();
+    const year = $('#year').val();
+    fetchIncome(month, year);
+    })
+})
+$(function(){
+    $('#year').change(function(){
+    const month = $('#month').val();
+    const year = $('#year').val();
+    fetchIncome(month, year);
+    })
+})
+
+</script>
+{% endblock head %}
+{% block body %}
+<div class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title d-inline-block">Bank Account Detail</h4>
+                </div>
+                <div class="card-body">
+                    <div class="toolbar">
+                        <!--Here you can write extra buttons/actions for the toolbar-->
+                    </div>
+                    <table class="table table-striped" cellspacing="0" width="100%">
+                        <tbody>
+
+                        <tr>
+                            <td width="20%">Balanced Amount</td>
+                            <td width="30%">{{ total_income }}
+                            </td><td width="30%">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="20%">Withdraw Amount</td>
+                            <td width="30%">{{ withdraw_amount }}
+                            </td><td width="30%"></td>
+                        </tr>
+                        <tr>
+                            <td width="20%">Money Earned</td>
+                            <td width="30%" id="income"></td>
+                            <td>
+                                <form action="{% url 'total_income_filter' %}" method="get">
+                                    <label>Month</label>
+                                    <select class="change_month chart-via-year" id="month" name="month">
+                                        <option value="">---</option>
+                                        <option value="1">January</option>
+                                        <option value="2">February</option>
+                                        <option value="3">March</option>
+                                        <option value="4">April</option>
+                                        <option value="5">May</option>
+                                        <option value="6">June</option>
+                                        <option value="7">July</option>
+                                        <option value="8">August</option>
+                                        <option value="9">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                    <label>Year</label>
+                                    <select class="change_month chart-via-year" id="year" name="month">
+                                        <option value="">---</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2021">2021</option>
+                                    </select>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title ">Product Stats ({{ products }})</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="product-stats-chart" data-url="{% url 'product_stats_chart' %}" style="height: 10rem; width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Most Sold Category</h4>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="most-sold-chart" data-url="{% url 'most_sold_category' %}" style="height: 10rem; width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title d-inline-block">Orders</h4>
+                </div>
+                <div class="card-body">
+                    <div class="toolbar">
+                        <!--Here you can write extra buttons/actions for the toolbar -->
+                    </div>
+                    <table id="datatableOrder" class="table table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th class="font-weight-bold">Product Image</th>
+                            <th class="font-weight-bold">Product URL</th>
+                            <th class="font-weight-bold">Customer Name</th>
+                            <th class="font-weight-bold">Customer Phone</th>
+                            <th class="font-weight-bold">Customer Address</th>
+                            <th class="font-weight-bold">Order Date</th>
+                            <th class="font-weight-bold">Delivery Date</th>
+                            <th class="font-weight-bold">Order Amount</th>
+                            <th class="font-weight-bold">Billing Number</th>
+                            <th class="font-weight-bold">Ship Location</th>
+                            <th class="font-weight-bold">Action</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title d-inline-block">Most Sold Product</h4>
+                </div>
+                <div class="card-body">
+                    <div class="toolbar">
+                    </div>
+                    <table id="datatableProduct" class="table table-bordered" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th class="font-weight-bold">Image</th>
+                            <th class="font-weight-bold">Gift Name</th>
+                            <th class="font-weight-bold">Occasion</th>
+                            <th class="font-weight-bold">Price</th>
+                            <th class="font-weight-bold">Gift Link</th>
+                            <th class="font-weight-bold">Note</th>
+                            <th class="font-weight-bold">Total Sell</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

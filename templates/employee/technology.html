@@ -36,12 +36,6 @@
 										<tr>
 											<td>{{forloop.counter}}</td>
 											<td>{{technology.technology_name}}</td>
-											<td class="text-right">
-                                            <div class="d-flex justify-content-end">
-												<button class="p-0 ml-4 text-info border-0 " onclick="editTechnology({{technology.id}})">Edit</button>
-												<button class="p-0 ml-4 text-danger border-0 " onclick="deleteTechnology({{technology.id}})">Delete</button>
-											</div>
-											</td>
 										</tr>
 										{% endfor %}
 									</tbody>
@@ -82,35 +76,5 @@
 				<!-- /Delete Technology Modal -->
             </div>
 			<!-- /Page Wrapper -->
-
-<script>
-function addTechnology() {
-    $.ajax({
-        url: "{% url 'AdminAddTechnology' %}",
-        success: function(response) {
-            $("#add-technology-form").html(response);
-            $("#add_technology_model").modal('show');
-        }
-    });
-}
-function editTechnology(editTechnologyId) {
-    $.ajax({
-        url: "technology/update/"+ editTechnologyId,
-        success: function(response) {
-            $("#edit-technology-form").html(response);
-            $("#edit_technology_model").modal('show');
-        }
-    });
-}
-
-function deleteTechnology(deleteTechnologyId) {
-    $("#delete_technology_model").modal('show');
-    if (deleteTechnologyId) {
-        var deleteUrl = "{% url 'AdminDeleteTechnology' id=0 %}".replace(0, deleteTechnologyId);
-        $("#confirmDeleteBtn").attr("href", deleteUrl);
-    }
-}
-
-</script>
 
 {% endblock body %}

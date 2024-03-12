@@ -2,17 +2,18 @@
 {% load static %}
 
 <!-- Add Holiday Modal -->
-<div class="modal fade" id="add_holiday_model" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
+<div aria-hidden="true" aria-labelledby="addModalToggleLabel" class="modal fade" id="add_holiday_model" role="dialog"
+     tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Add Holiday</h3>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" id="form" action="{% url 'AdminAddHolidays' %}" enctype="multipart/form-data">
+                <form action="{% url 'AdminAddHolidays' %}" enctype="multipart/form-data" id="form" method="post">
                     {% csrf_token %}
                     <div class="form-group">
                         {{ form.holiday_title|as_crispy_field }}

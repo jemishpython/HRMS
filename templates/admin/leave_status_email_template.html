@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>HRMS : Leave</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+</head>
+<body style="margin:auto; width:50rem;">
+<table style=" margin:1rem auto;">
+    <tr style="color: #fff9e6; font-size:1.8rem">
+        <td style="text-align:center; padding:1rem 1.5rem;"><h1 style="color:#F47920;">Webmigrates</h1></td>
+    </tr>
+    <tr>
+        <td style="text-align:center; color:#2C2727"><h1>Leave <span style="color: {% if leave_status == 'Approved' %}green{% else %}red{% endif %}">{{leave_status}}</span></h1></td>
+    </tr>
+    <tr>
+        <td style="text-align:center; color:#2C2727"><h2>Hello, <strong>{{username}}</strong>.</h2></td>
+    </tr>
+    <tr>
+        <td style="text-align:center; color:#2C2727;"><h4 style="margin:2rem 4rem;">We have received your leave request for these dates:
+            <u>{{leave_from|date:"j - M - Y"}}</u> to <u>{{leave_to|date:"j - M - Y"}}</u>, totalling <strong>{{leave_days}}</strong> days. <br>As of <u>{{current_date|date:"j - M - Y"}}</u>, your leave request is <span style="color: {% if leave_status == 'Approved' %}green{% else %}red{% endif %}">{{leave_status}}</span>. <br>Per your request, this time off will be marked as
+            {{leave_type}}.</h4></td>
+    </tr>
+    <tr>
+        <td style="color:#2C2727;"><h4 style="margin:4rem">The Webmigrates Team.</h4></td>
+    </tr>
+</table>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+
+</script>
+</body>
+</html>

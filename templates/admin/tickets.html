@@ -1,0 +1,231 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block body %}
+
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+				<div class="show_message">
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+					{% endfor %}
+				</div>
+
+				<!-- Page Content -->
+                <div class="content container-fluid">
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-title">Tickets</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Tickets</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card-group m-b-30">
+								<div class="card mr-2" style="border-radius: 1rem; background-color:#e8e3e3;">
+									<div class="card-body">
+										<div class="d-flex justify-content-center">
+											<div>
+												<h3 class="p-3">Total Tickets :  <span class="text-secondary ml-2">{{ticket_list.count}}</span></h3>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="card mx-2" style="border-radius: 1rem; background-color:#e8e3e3;">
+									<div class="card-body">
+										<div class="d-flex justify-content-center">
+											<div>
+												<h3 class="p-3">New Tickets : <span class="text-info ml-2">{{new_tickets_count}}</span></h3>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="card mx-2" style="border-radius: 1rem; background-color:#e8e3e3;">
+									<div class="card-body">
+										<div class="d-flex justify-content-center">
+											<div>
+												<h3 class="p-3">Declined Tickets : <span class="text-danger ml-2">{{decline_tickets_count}}</span></h3>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<div class="card ml-2" style="border-radius: 1rem; background-color:#e8e3e3;">
+									<div class="card-body">
+										<div class="d-flex justify-content-center">
+											<div>
+												<h3 class="p-3">Solve Tickets : <span class="text-success ml-2">{{approved_tickets_count}}</span></h3>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<!-- Search Filter -->
+					<div class="row filter-row">
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="emp_name">
+								<label class="focus-label">Employee Name</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="name-search">
+								<label class="focus-label">Ticket Title</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<input type="date" class="form-control floating" id="ticket_from_date">
+								<label class="focus-label">Ticket Generate - From Date</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<input type="date" class="form-control floating" id="ticket_to_date">
+								<label class="focus-label">Ticket Generate - To Date</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control floating" id="ticket_priority_status">
+									<option value="">Select</option>
+									{% for priority in ticket_priority  %}
+										<option value="{{ priority.0 }}">{{ priority.1 }}</option>
+									{% endfor %}
+								</select>
+								<label class="focus-label">Ticket Priority Status</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control floating" id="ticket_status_check">
+									<option value="">Select</option>
+									{% for status in ticket_status %}
+										<option value="{{ status.0 }}">{{ status.1 }}</option>
+									{% endfor %}
+								</select>
+								<label class="focus-label">Ticket Status</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<input type="date" class="form-control floating" id="status_from_date">
+								<label class="focus-label">Ticket Status - From Date</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<input type="date" class="form-control floating" id="status_to_date">
+								<label class="focus-label">Ticket Status - To Date</label>
+							</div>
+						</div>
+					</div>
+					<!-- /Search Filter -->
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive">
+								<table class="table table-striped custom-table mb-0" id="ticket_table">
+									<thead>
+										<tr>
+											<th>Employee</th>
+											<th>Ticket Title</th>
+											<th>Ticket Description</th>
+											<th>Ticket Generate</th>
+											<th class="text-center">Ticket Priority</th>
+											<th class="text-center">Ticket Status</th>
+											<th>Ticket Complete</th>
+										</tr>
+									</thead>
+									<tbody>
+										{% for ticket in ticket_list %}
+										<tr>
+											<td>
+												<h2 class="table-avatar">
+													<a href="profile.html" class="avatar"><img alt="" src="{{ticket.ticket_user.avatar.url}}"></a>
+													<a href="#">{{ticket.ticket_user.username}}<span>{{ticket.ticket_user.designation|default:""}}. {{ticket.ticket_user.technology|default:""}}</span></a>
+												</h2>
+											</td>
+											<td class="w-25 text-wrap">{{ticket.ticket_title}}</td>
+											<td class="w-75 text-wrap">{{ticket.ticket_description}}</td>
+											<td>{{ticket.ticket_create_date|date:"j - M - Y"}}</td>
+											<td class="text-center">
+												<div class="action-label">
+													<a class="border rounded-pill p-1 text-dark"><i class="fa fa-dot-circle-o {% if ticket.ticket_priority == 'High' %}text-danger{% elif ticket.ticket_priority == 'Medium' %}text-warning{% else %}text-info{% endif %}"></i> {{ticket.ticket_priority}}</a>
+												</div>
+											</td>
+											<td class="w-25 text-center"><button class="border rounded-pill px-2 py-1 text-dark" onclick="updateTicketStatus({{ticket.id}})"><i class="fa fa-dot-circle-o {% if ticket.ticket_status == 'Declined' %}text-danger{% elif ticket.ticket_status == 'Approved' %}text-success{% else %}text-info{% endif %}"></i> {{ticket.ticket_status}}</button></td>
+											<td>{{ticket.ticket_status_update_date|date:"j - M - Y"}}</td>
+										</tr>
+										{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+                </div>
+				<!-- /Page Content -->
+
+				<div id="update-ticket-status-form"></div>
+
+            </div>
+			<!-- /Page Wrapper -->
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+	var table = $('#ticket_table').DataTable({
+		dom: 'Blrtip',
+	});
+	 $('#emp_name').on('keyup', function () {
+		table.column(0).search(this.value).draw();
+	});
+	 $('#name-search').on('keyup', function () {
+		table.column(1).search(this.value).draw();
+	});
+	$('#ticket_priority_status').on('change', function () {
+		table.column(4).search(this.value).draw();
+	});
+	$('#ticket_status_check').on('change', function () {
+		table.column(5).search(this.value).draw();
+	});
+	$('#technology').on('change', function () {
+		table.column(6).search(this.value).draw();
+	});
+});
+</script>
+<script>
+function updateTicketStatus(updateTicketId) {
+    $.ajax({
+        url: "{% url 'AdminTicketStatusUpdate' id=0 %}".replace(0, updateTicketId),
+        success: function(response) {
+            $("#update-ticket-status-form").html(response);
+            $("#update_ticket_status_form").modal('show');
+        }
+    });
+}
+	
+	
+window.setTimeout(function() {
+	$(".alert").fadeTo(500, 0).slideUp(500, function(){
+		$(this).remove();
+	});
+}, 1600);
+
+</script>
+
+{% endblock body %}

@@ -3,6 +3,11 @@
 {% block body %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
+				<div class="show_message">
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+					{% endfor %}
+				</div>
 			
 				<!-- Page Content -->
                 <div class="content container-fluid">
@@ -35,15 +40,15 @@
 								<label class="focus-label">Employee ID</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3">  
+						<div class="col-sm-6 col-md-3">
 							<div class="form-group form-focus">
 								<input type="text" class="form-control floating">
 								<label class="focus-label">Employee Name</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3"> 
+						<div class="col-sm-6 col-md-3">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating"> 
+								<select class="select floating">
 									<option value="">Select Designation</option>
 									<option value="1">Web Developer</option>
 									<option value="">Web Designer</option>
@@ -53,8 +58,8 @@
 								<label class="focus-label">Designation</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3">  
-							<a href="#" class="btn btn-success btn-block"> Search </a>  
+						<div class="col-sm-6 col-md-3">
+							<a href="#" class="btn btn-success btn-block"> Search </a>
 						</div>
                     </div>
 					<!-- Search Filter -->
@@ -65,7 +70,7 @@
 						<div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
 							<div class="profile-widget">
 								<div class="profile-img">
-									<a href="{% url 'AdminProfileView' employee.id %}" class="avatar"><img src="{{employee.avatar.url}}" alt="employee image"></a>
+									<a href="{% url 'AdminProfileView' employee.id %}"><img class="avatar" src="{{employee.avatar.url}}" alt="employee image"></a>
 								</div>
 								<div class="dropdown profile-action">
 									<button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger" onclick="deleteEmployee({{employee.id}})"><i class="las la-lg la-trash"></i></button>
@@ -78,12 +83,8 @@
                 	</div>
 				<!-- /Page Content -->
 
-
 				<div id="add-employee-form"></div>
 
-				
-
-				
 				<!-- Delete Employee Modal -->
 				<div class="modal custom-modal fade" id="delete_employee_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
@@ -132,6 +133,13 @@ function deleteEmployee(deleteEmployeeId) {
         $("#confirmDeleteBtn").attr("href", deleteUrl);
     }
 }
+</script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
 </script>
 
 {% endblock body %}

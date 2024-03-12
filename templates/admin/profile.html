@@ -1,345 +1,393 @@
 {% extends 'admin/base.html' %}
 {% load static %}
 {% block body %}
-			<!-- Page Wrapper -->
-            <div class="page-wrapper">
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="show_message">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+        {% endfor %}
+    </div>
 
-				<!-- Page Content -->
-                <div class="content container-fluid">
+    <!-- Page Content -->
+    <div class="content container-fluid">
 
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row">
-							<div class="col-sm-12">
-								<h3 class="page-title">Profile</h3>
-								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-									<li class="breadcrumb-item active">Profile</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<!-- /Page Header -->
-
-					<div class="card mb-0">
-						<div class="card-body">
-							<div class="row">
-								<div class="col-md-12">
-									<div class="profile-view">
-										<div class="profile-img-wrap">
-											<div class="profile-img">
-												{% if profile.avatar %}
-												<img alt="Profile Image" src="{{profile.avatar.url}}">
-												{% endif %}
-											</div>
-										</div>
-										<div class="profile-basic">
-											<div class="row">
-												<div class="col-md-4 ml-4">
-													<div class="profile-info-left">
-														<h3 class="user-name m-t-0 mb-0">{{profile.username}}</h3>
-														<h6 class="text-muted">{{profile.department}}</h6>
-														<small class="text-muted">{{profile.designation}}</small>.
-														<small class="text-muted">{{profile.technology}}</small>
-														<div class="staff-id">Employee ID : FT-0001</div>
-														<div class="small doj text-muted">Date of Join : {{profile.date_joined|date:'d F Y'}}</div>
-													</div>
-												</div>
-												<div class="col-md-7">
-													<ul class="personal-info">
-														<li>
-															<div class="title">Phone</div>
-															<div class="text"><a href="">{{profile.phone}}</a></div>
-														</li>
-														<li>
-															<div class="title">Email</div>
-															<div class="text"><a href="">{{profile.email}}</a></div>
-														</li>
-														<li>
-															<div class="title">Birthday</div>
-															<div class="text">{{profile.dob|date:'d F Y'}}</div>
-														</li>
-														<li>
-															<div class="title">Address</div>
-															<div class="text">{{profile.address}}</div>
-														</li>
-														<li>
-															<div class="title">Gender</div>
-															<div class="text">{{profile.gender}}</div>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-										<div class="pro-edit">
-											<button class="edit-icon" onclick="editProfileInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-
-
-					<div class="tab-content">
-
-						<!-- Profile Info Tab -->
-						<div id="emp_user_details" class="pro-overview tab-pane fade show active">
-							<div class="row">
-								<div class="col-md-6 d-flex">
-									<div class="card user_details-box flex-fill">
-										<div class="card-body">
-											<button class="edit-icon" onclick="editPersonalInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
-											<h3 class="card-title">Personal Information</h3>
-											<ul class="personal-info">
-												<li>
-													<div class="title">Nationality</div>
-													<div class="text">{{profile.nationality}}</div>
-												</li>
-												<li>
-													<div class="title">Religion</div>
-													<div class="text">{{profile.religion}}</div>
-												</li>
-												<li>
-													<div class="title">Marital status</div>
-													<div class="text">{{profile.marital_status}}</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6 d-flex">
-									<div class="card user_details-box flex-fill">
-										<div class="card-body">
-											<h3 class="card-title">Bank information</h3>
-											<ul class="personal-info">
-												<li>
-													<div class="title">Bank name</div>
-													<div class="text">ICICI Bank</div>
-												</li>
-												<li>
-													<div class="title">Bank account No.</div>
-													<div class="text">159843014641</div>
-												</li>
-												<li>
-													<div class="title">IFSC Code</div>
-													<div class="text">ICI24504</div>
-												</li>
-												<li>
-													<div class="title">PAN No</div>
-													<div class="text">TC000Y56</div>
-												</li>
-												<li>
-													<div class="title">ADHAR No</div>
-													<div class="text">TC000Y56</div>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-6 d-flex">
-									<div class="card user_details-box flex-fill">
-										<div class="card-body">
-											<button class="edit-icon ml-2" onclick="addEducationInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
-											<h3 class="card-title">Education Information</h3>
-											<div class="experience-box">
-												<ul class="experience-list">
-													{% for edu_info in view_education_info %}
-													<li>
-														<div class="experience-user">
-															<div class="before-circle"></div>
-														</div>
-														<div class="experience-content">
-															<div class="timeline-content">
-																<h4 class="text-dark cursor_pointer" onclick="editEducationInfo({{profile.id}}, {{edu_info.id}})" title="Edit">{{edu_info.institution}}</h4>
-																<div class="text-dark">{{edu_info.degree}}<span class="ml-2">| Grade :  {{edu_info.grade}}</span></div>
-																<span class="">{{edu_info.start_year|date:'F - Y'}} - {{edu_info.complete_year|date:'F - Y'}}</span>
-															</div>
-														</div>
-													</li>
-													{% endfor %}
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-6 d-flex">
-									<div class="card user_details-box flex-fill">
-										<div class="card-body">
-											<button class="edit-icon" onclick="addExperienceInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
-											<h3 class="card-title">Experience</h3>
-											<div class="experience-box">
-												<ul class="experience-list">
-													{% for exp in view_experience_info %}
-													<li>
-														<div class="experience-user">
-															<div class="before-circle"></div>
-														</div>
-														<div class="experience-content">
-															<div class="timeline-content">
-																<h4 class="text-dark cursor_pointer" onclick="editExperienceInfo({{profile.id}}, {{exp.id}})" title="Edit">{{exp.company_name}}</h4>
-																<span class="">{{exp.start_date|date:'M , Y'}} - {{exp.end_date|date:'M , Y'}}</span>
-															</div>
-														</div>
-													</li>
-													{% endfor %}
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-md-12 d-flex">
-									<div class="card user_details-box flex-fill">
-										<div class="card-body">
-											<button class="edit-icon ml-2" onclick="addEmergencyInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
-											<button class="edit-icon mr-1" onclick="editEmergencyInfo({{profile.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
-											<h2 class="card-title">Emergency Contact</h2>
-											{% if view_emergency_contact %}
-											<div class="d-flex">
-												<div class="col-md-6 border-right">
-													<h4 class="section-title">Primary</h4>
-													<ul class="personal-info">
-														<li>
-															<div class="title">Name</div>
-															<div class="text">{{view_emergency_contact.primary_name}}</div>
-														</li>
-														<li>
-															<div class="title">Relationship</div>
-															<div class="text">{{view_emergency_contact.primary_con_relationship}}</div>
-														</li>
-														<li>
-															<div class="title">Phone </div>
-															<div class="text">{{view_emergency_contact.primary_phone1}} , {{view_emergency_contact.primary_phone2}}</div>
-														</li>
-													</ul>
-												</div>
-												<div class="col-md-6">
-													<h4 class="section-title">Secondary</h4>
-													<ul class="personal-info">
-														<li>
-															<div class="title">Name</div>
-															<div class="text">{{view_emergency_contact.secondary_name}}</div>
-														</li>
-														<li>
-															<div class="title">Relationship</div>
-															<div class="text">{{view_emergency_contact.secondary_con_relationship}}</div>
-														</li>
-														<li>
-															<div class="title">Phone </div>
-															<div class="text">{{view_emergency_contact.secondary_phone1}} , {{view_emergency_contact.secondary_phone2}}</div>
-														</li>
-													</ul>
-												</div>
-											</div>
-											{% endif %}
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<!-- /Profile Info Tab -->
-
-					</div>
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="page-title">Profile</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Profile</li>
+                    </ul>
                 </div>
-				<!-- /Page Content -->
-
-				<div id="edit-profile-info-form"></div>
-				<div id="edit-personal-info-form"></div>
-				<div id="add-education-info-form"></div>
-				<div id="edit-education-info-form"></div>
-				<div id="add-experience-info-form"></div>
-				<div id="edit-experience-info-form"></div>
-				<div id="add-emergency-contact-form"></div>
-				<div id="edit-emergency-contact-form"></div>
-
             </div>
-			<!-- /Page Wrapper -->
+        </div>
+        <!-- /Page Header -->
+
+        <div class="card mb-0">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="profile-view">
+                            <div class="profile-img-wrap">
+                                <div class="profile-img">
+                                    {% if profile.avatar %}
+                                    <img alt="Profile Image" src="{{profile.avatar.url}}">
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="profile-basic">
+                                <div class="row">
+                                    <div class="col-md-4 ml-4">
+                                        <div class="profile-info-left">
+                                            <h3 class="user-name m-t-0 mb-0">{{profile.username}}</h3>
+                                            <h6 class="text-muted">{{profile.department}}</h6>
+                                            <small class="text-muted">{{profile.designation}}</small>.
+                                            <small class="text-muted">{{profile.technology}}</small>
+                                            <div class="staff-id">Employee ID : FT-0001</div>
+                                            <div class="small doj text-muted">Date of Join :
+                                                {{profile.date_joined|date:'d F Y'}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                        <ul class="personal-info">
+                                            <li>
+                                                <div class="title">Phone</div>
+                                                <div class="text"><a href="">{{profile.phone}}</a></div>
+                                            </li>
+                                            <li>
+                                                <div class="title">Email</div>
+                                                <div class="text"><a href="{{profile.email}}">{{profile.email}}</a></div>
+                                            </li>
+                                            <li>
+                                                <div class="title">Birthday</div>
+                                                <div class="text">{{profile.dob|date:'d F Y'}}</div>
+                                            </li>
+                                            <li>
+                                                <div class="title">Address</div>
+                                                <div class="text">{{profile.address}}</div>
+                                            </li>
+                                            <li>
+                                                <div class="title">Gender</div>
+                                                <div class="text">{{profile.gender}}</div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pro-edit">
+                                <button class="edit-icon" onclick="editProfileInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="tab-content">
+
+            <!-- Profile Info Tab -->
+            <div class="pro-overview tab-pane fade show active" id="emp_user_details">
+                <div class="row">
+                    <div class="col-md-6 d-flex">
+                        <div class="card user_details-box flex-fill">
+                            <div class="card-body">
+                                <button class="edit-icon" onclick="editPersonalInfo({{profile.id}})"><i class="fa fa-pencil"></i></button>
+                                <h3 class="card-title">Personal Information</h3>
+                                <ul class="personal-info">
+                                    <li>
+                                        <div class="title">Nationality</div>
+                                        <div class="text">{{profile.nationality}}</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">Religion</div>
+                                        <div class="text">{{profile.religion}}</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">Marital status</div>
+                                        <div class="text">{{profile.marital_status}}</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex">
+                        <div class="card user_details-box flex-fill">
+                            <div class="card-body">
+                                <button class="edit-icon ml-2" onclick="addBankInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
+                                <button class="edit-icon mr-1" onclick="editBankInfo({{profile.id}}, {{view_bank_info.id}})"><i class="fa fa-pencil"></i></button>
+                                <h3 class="card-title">Bank information</h3>
+                                <ul class="personal-info">
+                                    <li>
+                                        <div class="title">Bank Name : </div>
+                                        <div class="text">{{view_bank_info.bank_name}}</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">Bank Account Number : </div>
+                                        <div class="text">{{view_bank_info.bank_account_number}}</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">Bank IFSC Code : </div>
+                                        <div class="text">{{view_bank_info.bank_ifsc_code}}</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">PAN Card Number : </div>
+                                        <div class="text">{{view_bank_info.user_pan_card_number}}</div>
+                                    </li>
+                                    <li>
+                                        <div class="title">Aadhar Number : </div>
+                                        <div class="text">{{view_bank_info.user_aadhar_card_number}}</div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 d-flex">
+                        <div class="card user_details-box flex-fill">
+                            <div class="card-body">
+                                <button class="edit-icon ml-2" onclick="addEducationInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
+                                <h3 class="card-title">Education Information</h3>
+                                <div class="experience-box">
+                                    <ul class="experience-list">
+                                        {% for edu_info in view_education_info %}
+                                        <li>
+                                            <div class="experience-user">
+                                                <div class="before-circle"></div>
+                                            </div>
+                                            <div class="experience-content">
+                                                <div class="timeline-content">
+                                                    <h4 class="text-dark cursor_pointer" onclick="editEducationInfo({{profile.id}}, {{edu_info.id}})" title="Edit">{{edu_info.institution}}</h4>
+                                                    <div class="text-dark">{{edu_info.degree}}<span class="ml-2">| Grade :  {{edu_info.grade}}</span></div>
+                                                    <span class="">{{edu_info.start_year|date:'F - Y'}} - {{edu_info.complete_year|date:'F - Y'}}</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 d-flex">
+                        <div class="card user_details-box flex-fill">
+                            <div class="card-body">
+                                <button class="edit-icon" onclick="addExperienceInfo({{profile.id}})"><i
+                                        class="fa fa-plus"></i></button>
+                                <h3 class="card-title">Experience</h3>
+                                <div class="experience-box">
+                                    <ul class="experience-list">
+                                        {% for exp in view_experience_info %}
+                                        <li>
+                                            <div class="experience-user">
+                                                <div class="before-circle"></div>
+                                            </div>
+                                            <div class="experience-content">
+                                                <div class="timeline-content">
+                                                    <h4 class="text-dark cursor_pointer"
+                                                        onclick="editExperienceInfo({{profile.id}}, {{exp.id}})"
+                                                        title="Edit">{{exp.company_name}}</h4>
+                                                    <span class="">{{exp.start_date|date:'M , Y'}} - {{exp.end_date|date:'M , Y'}}</span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 d-flex">
+                        <div class="card user_details-box flex-fill">
+                            <div class="card-body">
+                                <button class="edit-icon ml-2" onclick="addEmergencyInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
+                                <button class="edit-icon mr-1" onclick="editEmergencyInfo({{profile.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
+                                <h2 class="card-title">Emergency Contact</h2>
+                                {% if view_emergency_contact %}
+                                <div class="d-flex">
+                                    <div class="col-md-6 border-right">
+                                        <h4 class="section-title">Primary</h4>
+                                        <ul class="personal-info">
+                                            <li>
+                                                <div class="title">Name</div>
+                                                <div class="text">{{view_emergency_contact.primary_name}}</div>
+                                            </li>
+                                            <li>
+                                                <div class="title">Relationship</div>
+                                                <div class="text">{{view_emergency_contact.primary_con_relationship}}
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="title">Phone</div>
+                                                <div class="text">{{view_emergency_contact.primary_phone1}} ,
+                                                    {{view_emergency_contact.primary_phone2}}
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h4 class="section-title">Secondary</h4>
+                                        <ul class="personal-info">
+                                            <li>
+                                                <div class="title">Name</div>
+                                                <div class="text">{{view_emergency_contact.secondary_name}}</div>
+                                            </li>
+                                            <li>
+                                                <div class="title">Relationship</div>
+                                                <div class="text">
+                                                    {{view_emergency_contact.secondary_con_relationship}}
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="title">Phone</div>
+                                                <div class="text">{{view_emergency_contact.secondary_phone1}} ,
+                                                    {{view_emergency_contact.secondary_phone2}}
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Profile Info Tab -->
+
+        </div>
+    </div>
+    <!-- /Page Content -->
+
+    <div id="edit-profile-info-form"></div>
+    <div id="edit-personal-info-form"></div>
+    <div id="add-education-info-form"></div>
+    <div id="edit-education-info-form"></div>
+    <div id="add-bank-info-form"></div>
+    <div id="edit-bank-info-form"></div>
+    <div id="add-experience-info-form"></div>
+    <div id="edit-experience-info-form"></div>
+    <div id="add-emergency-contact-form"></div>
+    <div id="edit-emergency-contact-form"></div>
+
+</div>
+<!-- /Page Wrapper -->
 
 <script>
-function editProfileInfo(UserId) {
-    $.ajax({
-        url: "{% url 'AdminEditProfileInfo' id=0 %}".replace(0, UserId),
-        success: function(response) {
-            $("#edit-profile-info-form").html(response);
-            $("#edit_profile_info_model").modal('show');
-        }
-    });
-}
+    function editProfileInfo(UserId) {
+        $.ajax({
+            url: "{% url 'AdminEditProfileInfo' id=0 %}".replace(0, UserId),
+            success: function(response) {
+                $("#edit-profile-info-form").html(response);
+                $("#edit_profile_info_model").modal('show');
+            }
+        });
+    }
 
-function editPersonalInfo(UserId) {
-    $.ajax({
-        url: "{% url 'AdminEditPersonalInfo' id=0 %}".replace(0, UserId),
-        success: function(response) {
-            $("#edit-personal-info-form").html(response);
-            $("#edit_personal_info_model").modal('show');
-        }
-    });
-}
+    function editPersonalInfo(UserId) {
+        $.ajax({
+            url: "{% url 'AdminEditPersonalInfo' id=0 %}".replace(0, UserId),
+            success: function(response) {
+                $("#edit-personal-info-form").html(response);
+                $("#edit_personal_info_model").modal('show');
+            }
+        });
+    }
 
-function addEducationInfo(UserId) {
-    $.ajax({
-        url: "{% url 'AdminAddEducationInfo' id=0 %}".replace(0, UserId),
-        success: function(response) {
-            $("#add-education-info-form").html(response);
-            $("#add_education_info_model").modal('show');
-        }
-    });
-}
+    function addEducationInfo(UserId) {
+        $.ajax({
+            url: "{% url 'AdminAddEducationInfo' id=0 %}".replace(0, UserId),
+            success: function(response) {
+                $("#add-education-info-form").html(response);
+                $("#add_education_info_model").modal('show');
+            }
+        });
+    }
 
-function editEducationInfo(UserId, EduId) {
-    $.ajax({
-        url: "{% url 'AdminEditEducationInfo' id=0 edu_id=1 %}".replace(0, UserId).replace(1, EduId),
-        success: function(response) {
-            $("#edit-education-info-form").html(response);
-            $("#edit_education_info_model").modal('show');
-        }
-    });
-}
+    function editEducationInfo(UserId, EduId) {
+        $.ajax({
+            url: '/hrms-admin/employee/'+UserId+'/education-info-edit/'+EduId,
+            success: function(response) {
+                $("#edit-education-info-form").html(response);
+                $("#edit_education_info_model").modal('show');
+            }
+        });
+    }
 
-function addExperienceInfo(UserId) {
-    $.ajax({
-        url: "{% url 'AdminAddExperienceInfo' id=0 %}".replace(0, UserId),
-        success: function(response) {
-            $("#add-experience-info-form").html(response);
-            $("#add_experience_info_model").modal('show');
-        }
-    });
-}
+    function addBankInfo(UserId) {
+        $.ajax({
+            url: "{% url 'AdminAddBankInfo' id=0 %}".replace(0, UserId),
+            success: function(response) {
+                $("#add-bank-info-form").html(response);
+                $("#add_bank_info_model").modal('show');
+            }
+        });
+    }
 
-function editExperienceInfo(UserId, ExpId) {
-    $.ajax({
-        url: "{% url 'AdminEditExperienceInfo' id=0 exp_id=1 %}".replace(0, UserId).replace(1, ExpId),
-        success: function(response) {
-            $("#edit-experience-info-form").html(response);
-            $("#edit_experience_info_model").modal('show');
-        }
-    });
-}
+    function editBankInfo(UserId, BankId) {
+        $.ajax({
+            url: '/hrms-admin/employee/'+UserId+'/bank-info-edit/'+BankId,
+            success: function(response) {
+                $("#edit-bank-info-form").html(response);
+                $("#edit_bank_info_model").modal('show');
+            }
+        });
+    }
 
-function addEmergencyInfo(UserId) {
-    $.ajax({
-        url: "{% url 'AdminAddEmergencyInfo' id=0 %}".replace(0, UserId),
-        success: function(response) {
-            $("#add-emergency-contact-form").html(response);
-            $("#add_emergency_contact_modal").modal('show');
-        }
-    });
-}
-function editEmergencyInfo(UserId, EmgId) {
-    $.ajax({
-        url: "{% url 'AdminEditEmergencyInfo' id=0 emg_id=1 %}".replace(0, UserId).replace(1, EmgId),
-        success: function(response) {
-            $("#edit-emergency-contact-form").html(response);
-            $("#edit_emergency_contact_modal").modal('show');
-        }
-    });
-}
+    function addExperienceInfo(UserId) {
+        $.ajax({
+            url: "{% url 'AdminAddExperienceInfo' id=0 %}".replace(0, UserId),
+            success: function(response) {
+                $("#add-experience-info-form").html(response);
+                $("#add_experience_info_model").modal('show');
+            }
+        });
+    }
+
+    function editExperienceInfo(UserId, ExpId) {
+        $.ajax({
+            url: '/hrms-admin/employee/'+UserId+'/experience-info-edit/'+ExpId,
+            success: function(response) {
+                $("#edit-experience-info-form").html(response);
+                $("#edit_experience_info_model").modal('show');
+            }
+        });
+    }
+
+    function addEmergencyInfo(UserId) {
+        $.ajax({
+            url: "{% url 'AdminAddEmergencyInfo' id=0 %}".replace(0, UserId),
+            success: function(response) {
+                $("#add-emergency-contact-form").html(response);
+                $("#add_emergency_contact_modal").modal('show');
+            }
+        });
+    }
+    function editEmergencyInfo(UserId, EmgId) {
+        $.ajax({
+            url: '/hrms-admin/employee/'+UserId+'/emergency-contact-edit/'+EmgId,
+            success: function(response) {
+                $("#edit-emergency-contact-form").html(response);
+                $("#edit_emergency_contact_modal").modal('show');
+            }
+        });
+    }
 
 
+</script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1600);
 </script>
 
 {% endblock body %}

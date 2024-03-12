@@ -12,6 +12,24 @@ class AddEmployeeForm(forms.ModelForm):
         }
 
 
+class AddClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['username', 'phone', 'dob', 'address', 'nationality', 'email', 'gender', 'client_avatar', 'company_name', 'position']
+        widgets = {
+            'dob': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
+class EditClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = '__all__'
+        widgets = {
+            'dob': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+
 class AddHolidaysForm(forms.ModelForm):
     class Meta:
         model = Holiday
@@ -89,12 +107,50 @@ class EditProjectForm(forms.ModelForm):
 class ProjectAssignForm(forms.ModelForm):
     class Meta:
         model = ProjectAssign
-        fields = '__all__'
+        fields = ['assignee_type', 'employees']
 
-        employee_name = forms.ModelMultipleChoiceField(
+        employees = forms.ModelMultipleChoiceField(
             queryset=User.objects.all(),
             widget=forms.CheckboxSelectMultiple
         )
+
+
+class AddProjectImages(forms.ModelForm):
+    project_image = forms.FileField(widget=forms.ClearableFileInput(attrs={
+        "name": "project_image",
+        "type": "file",
+        "class": "form-control",
+        "multiple": True,
+    }), label="")
+
+    class Meta:
+        model = ProjectImages
+        fields = ['project_image']
+
+
+class AddProjectFiles(forms.ModelForm):
+    project_file = forms.FileField(widget=forms.ClearableFileInput(attrs={
+        "name": "project_file",
+        "type": "file",
+        "class": "form-control",
+        "multiple": True,
+    }), label="")
+
+    class Meta:
+        model = ProjectFile
+        fields = ['project_file']
+
+
+class LeaveStatusUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Leave
+        fields = ['leave_status']
+
+
+class TicketStatusUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Ticket
+        fields = ['ticket_status']
 
 
 class AddTaskForm(forms.ModelForm):
@@ -109,11 +165,24 @@ class EditTaskForm(forms.ModelForm):
         fields = ['task_title']
 
 
+class TaskAssignForm(forms.ModelForm):
+    class Meta:
+        model = TaskAssign
+        fields = ['employees']
+
+        employees = forms.ModelMultipleChoiceField(
+            queryset=User.objects.all(),
+            widget=forms.CheckboxSelectMultiple
+        )
+
+
 class EditProfileInfoForm(forms.ModelForm):
     avatar = forms.ImageField(label='')
+
     class Meta:
         model = User
-        fields = ['username', 'phone', 'dob', 'email', 'address', 'gender', 'date_joined', 'department', 'designation', 'technology','avatar']
+        fields = ['username', 'phone', 'dob', 'email', 'address', 'gender', 'date_joined', 'department', 'designation',
+                  'technology', 'avatar']
         widgets = {
             'dob': forms.DateInput(attrs={'type': 'date'}),
             'date_joined': forms.DateInput(attrs={'type': 'date'}),
@@ -134,7 +203,6 @@ class AddEducationInfoForm(forms.ModelForm):
             'start_year': forms.DateInput(attrs={'type': 'date'}),
             'complete_year': forms.DateInput(attrs={'type': 'date'}),
         }
-
 
 
 class EditEducationInfoForm(forms.ModelForm):
@@ -173,7 +241,8 @@ class AddEmergencyContactForm(forms.ModelForm):
 
     class Meta:
         model = Emergency_Contact
-        fields = ['primary_name', 'primary_con_relationship', 'primary_phone1', 'primary_phone2', 'secondary_name', 'secondary_con_relationship', 'secondary_phone1', 'secondary_phone2']
+        fields = ['primary_name', 'primary_con_relationship', 'primary_phone1', 'primary_phone2', 'secondary_name',
+                  'secondary_con_relationship', 'secondary_phone1', 'secondary_phone2']
 
 
 class EditEmergencyContactForm(forms.ModelForm):
@@ -182,4 +251,35 @@ class EditEmergencyContactForm(forms.ModelForm):
 
     class Meta:
         model = Emergency_Contact
-        fields = ['primary_name', 'primary_con_relationship', 'primary_phone1', 'primary_phone2', 'secondary_name', 'secondary_con_relationship', 'secondary_phone1', 'secondary_phone2']
+        fields = ['primary_name', 'primary_con_relationship', 'primary_phone1', 'primary_phone2', 'secondary_name',
+                  'secondary_con_relationship', 'secondary_phone1', 'secondary_phone2']
+
+
+class AddBankForm(forms.ModelForm):
+    class Meta:
+        model = Bank
+        fields = ['bank_name', 'bank_account_number', 'bank_ifsc_code', 'user_pan_card_number', 'user_aadhar_card_number']
+
+
+class EditBankForm(forms.ModelForm):
+    class Meta:
+        model = Bank
+        fields = ['bank_name', 'bank_account_number', 'bank_ifsc_code', 'user_pan_card_number', 'user_aadhar_card_number']
+
+
+class AddPoliciesForm(forms.ModelForm):
+    policy_file = forms.FileField(widget=forms.ClearableFileInput(attrs={
+        "name": "policy_file",
+        "type": "file",
+        "class": "form-control",
+    }), label="")
+
+    class Meta:
+        model = Policies
+        fields = ['policy_name', 'policy_department', 'policy_file']
+
+
+class InterviewerForm(forms.ModelForm):
+    class Meta:
+        model = Interviewers
+        fields = ['name', 'phone', 'dob', 'address', 'email', 'gender', 'city', 'state', 'experience', 'department', 'technology', 'resume']

@@ -47,3 +47,15 @@ class LeaveStatusChoice(models.TextChoices):
     NEW = ("New", _("New"))
     APPROVED = ("Approved", _("Approved"))
     DECLINED = ("Declined", _("Declined"))
+
+
+class TicketPriorityChoice(models.TextChoices):
+    LOW = ("Low", _("LOW"))
+    MEDIUM = ("Medium", _("MEDIUM"))
+    HIGH = ("High", _("HIGH"))
+
+
+class TicketStatusChoice(models.TextChoices):
+    NEW = ("New", _("New"))
+    APPROVED = ("Approved", _("Approved"))
+    DECLINED = ("Declined", _("Declined"))
