@@ -1,0 +1,78 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block body %}
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+
+				<!-- Page Content -->
+                <div class="content container-fluid">
+
+					<!-- Content Starts -->
+					{% include 'admin/interviewer-nav.html' %}
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Interviewer</a></li>
+									<li class="breadcrumb-item active">Dashboard</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+					<div class="row">
+						<div class="col-md-12">
+							<div class="table-responsive">
+								<table class="table table-striped custom-table" id="employee_list_table">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Employee ID</th>
+											<th>Email</th>
+											<th>Mobile</th>
+											<th class="text-nowrap">Join Date</th>
+											<th>Department</th>
+											<th class="text-right no-sort">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									{% for emp in employeedetails %}
+										<tr>
+											<td>
+												<h2 class="table-avatar">
+													<a href="{% url 'AdminProfileView' emp.id %}"><img class="avatar" alt="" src="{{emp.avatar.url}}"></a>
+													<a href="{% url 'AdminProfileView' emp.id %}">{{emp.username}} <span>{{emp.designation}} | {{emp.technology}}</span></a>
+												</h2>
+											</td>
+											<td>EMP-{{emp.id}}</td>
+											<td>{{emp.email}}</td>
+											<td>{{emp.phone}}</td>
+											<td>{{emp.date_joined|date:"d - M - Y"}}</td>
+											<td>{{emp.department}}</td>
+											<td class="text-right">
+												<div class="d-flex justify-content-end">
+													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-danger" onclick="deleteEmployee({{emp.id}})">Delete</button>
+												</div>
+											</td>
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+
+
+					<!-- /Content End -->
+
+                </div>
+				<!-- /Page Content -->
+
+            </div>
+			<!-- /Page Wrapper -->
+
+{% endblock body %}

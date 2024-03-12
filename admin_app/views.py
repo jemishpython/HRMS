@@ -1132,3 +1132,26 @@ def DeletePolicies(request, id):
     return redirect('AdminPoliciesView')
 
 
+@login_required(login_url="Login")
+def InterviewerDash(request):
+    return render(request, "admin/interview-dashboard.html")
+
+
+def InterviewerForm(request):
+    print("---------------------------------------------------------------------")
+    form = InterviewerForm(request.POST or None)
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Interviewer data save successfully')
+                return redirect('AdminInterviewerDash')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    else:
+        messages.error(request, f"--------------------------- : {form.errors}")
+    context = {'form': form}
+    return render(request, "interviewer_form.html", context)

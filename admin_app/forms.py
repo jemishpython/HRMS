@@ -277,3 +277,9 @@ class AddPoliciesForm(forms.ModelForm):
     class Meta:
         model = Policies
         fields = ['policy_name', 'policy_department', 'policy_file']
+
+
+class InterviewerForm(forms.ModelForm):
+    class Meta:
+        model = Interviewers
+        fields = ['name', 'phone', 'dob', 'address', 'email', 'gender', 'city', 'state', 'experience', 'department', 'technology', 'resume']
