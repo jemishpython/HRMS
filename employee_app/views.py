@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.conf import settings
@@ -293,9 +295,11 @@ def EmployeeLogout(request):
 
 @login_required(login_url="EmployeeLogin")
 def Holidays(request):
+    year = date.today()
     holidaylist = Holiday.objects.all().order_by('holiday_date')
     context = {
         'holidaylist': holidaylist,
+        'year': year,
     }
     return render(request, "employee/holidays_list.html", context)
 

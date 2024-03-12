@@ -500,9 +500,11 @@ def DeleteBank(request, id, emg_id):
 
 @login_required(login_url="Login")
 def Holidays(request):
+    year = date.today()
     holidaylist = Holiday.objects.all().order_by('holiday_date')
     context = {
         'holidaylist': holidaylist,
+        'year': year,
     }
     return render(request, "admin/holidays_list.html", context)
 
