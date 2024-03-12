@@ -14,7 +14,7 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     EditTaskForm, EditTechnologyForm, AddTechnologyForm, AddExperienceInfoForm, EditProfileInfoForm, \
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
     EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm, LeaveStatusUpdateForm, TicketStatusUpdateForm, \
-    AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles, AddPoliciesForm
+    AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles, AddPoliciesForm, InterviewerForm
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies
@@ -1137,10 +1137,8 @@ def InterviewerDash(request):
     return render(request, "admin/interview-dashboard.html")
 
 
-def InterviewerForm(request):
-    print("---------------------------------------------------------------------")
+def AddInterviewerForm(request):
     form = InterviewerForm(request.POST or None)
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
     if request.method == 'POST':
         try:
             if form.is_valid():
@@ -1152,6 +1150,5 @@ def InterviewerForm(request):
         except Exception as e:
             messages.error(request, f"ERROR : {e}")
     else:
-        messages.error(request, f"--------------------------- : {form.errors}")
-    context = {'form': form}
-    return render(request, "interviewer_form.html", context)
+        messages.error(request, f"--------------ERROR------------- : {form.errors}")
+    return render(request, "interviewer_form.html", {'form': form})

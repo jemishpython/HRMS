@@ -271,20 +271,20 @@ class Policies(models.Model):
 
 
 class Interviewers(models.Model):
-    name = models.CharField(verbose_name='Name', max_length=100, blank=True, null=True)
+    name = models.CharField(verbose_name='Name', max_length=100, null=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="phone number entered in format +910987654321 .")
     country_code = models.IntegerField(blank=True, null=True)
-    phone = models.CharField(validators=[phone_regex], max_length=17)
-    dob = models.DateField(verbose_name='Birth Date', null=True, blank=True)
-    address = models.CharField(verbose_name='Address', max_length=400, blank=True, null=True)
-    email = models.EmailField(verbose_name='Email Address', max_length=255, blank=True)
-    gender = models.CharField(verbose_name='Gender', choices=GenderTypeChoice.choices, default=GenderTypeChoice.MALE,max_length=255)
-    city = models.CharField(verbose_name='City', max_length=50, blank=True, null=True)
-    state = models.CharField(verbose_name='State', max_length=50, blank=True, null=True)
-    experience = models.CharField(verbose_name='Experience', max_length=50, blank=True, null=True)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True, blank=True)
-    technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True, blank=True)
-    resume = models.FileField(verbose_name='Upload Resume', upload_to='interviewer_resume/', null=True, blank=True)
+    phone = models.CharField(validators=[phone_regex], max_length=17, null=True)
+    dob = models.DateField(verbose_name='Birth Date', null=True)
+    address = models.CharField(verbose_name='Address', max_length=400, null=True)
+    email = models.EmailField(verbose_name='Email', max_length=255, null=True)
+    gender = models.CharField(verbose_name='Gender', choices=GenderTypeChoice.choices, default=GenderTypeChoice.MALE,max_length=255, null=True)
+    city = models.CharField(verbose_name='City', max_length=50, null=True)
+    state = models.CharField(verbose_name='State', max_length=50, null=True)
+    experience = models.CharField(verbose_name='Experience', max_length=50, null=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
+    technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True)
+    resume = models.FileField(verbose_name='Upload Resume', upload_to='interviewer_resume/', null=True)
 
     def __str__(self):
         return self.name

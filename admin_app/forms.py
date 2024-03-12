@@ -280,6 +280,17 @@ class AddPoliciesForm(forms.ModelForm):
 
 
 class InterviewerForm(forms.ModelForm):
+    dob = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    gender = forms.ChoiceField(choices=GenderTypeChoice.choices, widget=forms.Select(attrs={'class': 'form-control'}))
+    department = forms.ModelChoiceField(queryset=Department.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    technology = forms.ModelChoiceField(queryset=Technology.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    resume = forms.FileField(widget=forms.ClearableFileInput(attrs={
+        "name": "policy_file",
+        "type": "file",
+        "class": "form-control",
+    }), label="Upload Resume")
+
     class Meta:
         model = Interviewers
         fields = ['name', 'phone', 'dob', 'address', 'email', 'gender', 'city', 'state', 'experience', 'department', 'technology', 'resume']
+
