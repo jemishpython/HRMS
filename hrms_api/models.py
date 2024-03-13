@@ -288,3 +288,17 @@ class Interviewers(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class InterviewQuestions(models.Model):
+    question = models.TextField(verbose_name="Question", null=True, blank=True)
+    option_a = models.CharField(verbose_name="Option A", max_length=100, null=True, blank=True)
+    option_b = models.CharField(verbose_name="Option B", max_length=100, null=True, blank=True)
+    option_c = models.CharField(verbose_name="Option C", max_length=100, null=True, blank=True)
+    option_d = models.CharField(verbose_name="Option D", max_length=100, null=True, blank=True)
+    answer = models.CharField(verbose_name="Answer", max_length=100, null=True, blank=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
+    technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.question

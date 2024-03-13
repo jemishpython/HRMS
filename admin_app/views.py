@@ -14,10 +14,12 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     EditTaskForm, EditTechnologyForm, AddTechnologyForm, AddExperienceInfoForm, EditProfileInfoForm, \
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
     EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm, LeaveStatusUpdateForm, TicketStatusUpdateForm, \
-    AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles, AddPoliciesForm, InterviewerForm
+    AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles, AddPoliciesForm, InterviewerForm, \
+    AddInterviewQuestionForm, EditInterviewQuestionForm
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies, \
+    Interviewers, InterviewQuestions
 
 
 def AdminRegister(request):
@@ -1134,11 +1136,16 @@ def DeletePolicies(request, id):
 
 @login_required(login_url="Login")
 def InterviewerDash(request):
-    return render(request, "admin/interview-dashboard.html")
+    interviewer_list = Interviewers.objects.all()
+
+    context = {
+        'interviewer_list':interviewer_list,
+    }
+    return render(request, "admin/interview-dashboard.html", context)
 
 
-def AddInterviewerForm(request):
-    form = InterviewerForm(request.POST or None)
+def InterviewerApply(request):
+    form = InterviewerForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
         try:
             if form.is_valid():
@@ -1149,6 +1156,63 @@ def AddInterviewerForm(request):
                 messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
             messages.error(request, f"ERROR : {e}")
-    else:
-        messages.error(request, f"--------------ERROR------------- : {form.errors}")
     return render(request, "interviewer_form.html", {'form': form})
+
+
+
+@login_required(login_url="Login")
+def DeleteInterviewer(request, id):
+    delete_interviewer = Interviewers.objects.get(id=id)
+    delete_interviewer.delete()
+    messages.error(request, 'Interviewer Delete successfully')
+    return redirect('AdminInterviewerDash')
+
+
+@login_required(login_url="Login")
+def InterviewQuestion(request):
+    interview_question_list = InterviewQuestions.objects.all()
+    context = {
+        'interview_question_list': interview_question_list,
+    }
+    return render(request, "admin/interview_questions.html",context)
+
+
+@login_required(login_url="Login")
+def AddInterviewQuestion(request):
+    form = AddInterviewQuestionForm(request.POST or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Question add successfully')
+                return redirect('AdminInterviewQuestion')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    return render(request, "admin/add_interview_question.html",{'form': form})
+
+
+@login_required(login_url="Login")
+def EditInterviewQuestion(request, id):
+    edit_interview_question = InterviewQuestions.objects.get(id=id)
+    form = EditInterviewQuestionForm(request.POST or None, instance=edit_interview_question)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.info(request, 'Question edit successfully')
+                return redirect('AdminInterviewQuestion')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    return render(request, "admin/edit_interview_question.html",{'form': form, 'edit_interview_question': edit_interview_question})
+
+
+@login_required(login_url="Login")
+def DeleteInterviewQuestion(request, id):
+    delete_question = InterviewQuestions.objects.get(id=id)
+    delete_question.delete()
+    messages.error(request, 'Question Delete successfully')
+    return redirect('AdminInterviewQuestion')

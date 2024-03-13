@@ -281,9 +281,6 @@ class AddPoliciesForm(forms.ModelForm):
 
 class InterviewerForm(forms.ModelForm):
     dob = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    gender = forms.ChoiceField(choices=GenderTypeChoice.choices, widget=forms.Select(attrs={'class': 'form-control'}))
-    department = forms.ModelChoiceField(queryset=Department.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    technology = forms.ModelChoiceField(queryset=Technology.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     resume = forms.FileField(widget=forms.ClearableFileInput(attrs={
         "name": "policy_file",
         "type": "file",
@@ -294,3 +291,14 @@ class InterviewerForm(forms.ModelForm):
         model = Interviewers
         fields = ['name', 'phone', 'dob', 'address', 'email', 'gender', 'city', 'state', 'experience', 'department', 'technology', 'resume']
 
+
+class AddInterviewQuestionForm(forms.ModelForm):
+    class Meta:
+        model = InterviewQuestions
+        fields = ['question', 'option_a', 'option_b', 'option_c', 'option_d', 'answer', 'technology', 'department']
+
+
+class EditInterviewQuestionForm(forms.ModelForm):
+    class Meta:
+        model = InterviewQuestions
+        fields = ['question', 'option_a', 'option_b', 'option_c', 'option_d', 'answer', 'technology', 'department']

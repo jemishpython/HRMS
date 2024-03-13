@@ -9,6 +9,11 @@
 
 					<!-- Content Starts -->
 					{% include 'admin/interviewer-nav.html' %}
+					<div class="show_message">
+						{% for message in messages %}
+							<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+						{% endfor %}
+					</div>
 
 					<!-- Page Header -->
 					<div class="page-header">
@@ -23,38 +28,95 @@
 					</div>
 					<!-- /Page Header -->
 
+					<!-- Search Filter -->
+					<div class="row filter-row">
+						<div class="col-sm-6 col-md-2">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="name_search">
+								<label class="focus-label">Name</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-1">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="gender_search">
+								<label class="focus-label">Gender</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-2">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="city_search">
+								<label class="focus-label">City</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-2">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="state_search">
+								<label class="focus-label">State</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-1">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="experience_search">
+								<label class="focus-label">Experience</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-2">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="technology_search">
+								<label class="focus-label">Technology</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-2">
+							<div class="form-group form-focus">
+								<input type="text" class="form-control floating" id="department_search">
+								<label class="focus-label">Department</label>
+							</div>
+						</div>
+					</div>
+					<!-- /Search Filter -->
+
 					<div class="row">
 						<div class="col-md-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table" id="employee_list_table">
+								<table class="table table-striped custom-table mb-0 w-100" id="employee_list_table">
 									<thead>
 										<tr>
+											<th>Sr no</th>
 											<th>Name</th>
-											<th>Employee ID</th>
-											<th>Email</th>
 											<th>Mobile</th>
-											<th class="text-nowrap">Join Date</th>
+											<th>Email</th>
+											<th>Birth Date</th>
+											<th>Gender</th>
+											<th>Address</th>
+											<th>City</th>
+											<th>State</th>
+											<th>Experience</th>
+											<th>Technology</th>
 											<th>Department</th>
-											<th class="text-right no-sort">Action</th>
+											<th>Resume</th>
+											<th class="text-center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-									{% for emp in employeedetails %}
+									{% for interviewer in interviewer_list %}
 										<tr>
-											<td>
-												<h2 class="table-avatar">
-													<a href="{% url 'AdminProfileView' emp.id %}"><img class="avatar" alt="" src="{{emp.avatar.url}}"></a>
-													<a href="{% url 'AdminProfileView' emp.id %}">{{emp.username}} <span>{{emp.designation}} | {{emp.technology}}</span></a>
-												</h2>
-											</td>
-											<td>EMP-{{emp.id}}</td>
-											<td>{{emp.email}}</td>
-											<td>{{emp.phone}}</td>
-											<td>{{emp.date_joined|date:"d - M - Y"}}</td>
-											<td>{{emp.department}}</td>
+											<td>{{forloop.counter}}</td>
+											<td>{{interviewer.name}}</td>
+											<td>{{interviewer.phone}}</td>
+											<td>{{interviewer.email}}</td>
+											<td>{{interviewer.dob|date:"d - M - Y"}}</td>
+											<td>{{interviewer.gender}}</td>
+											<td>{{interviewer.address}}</td>
+											<td>{{interviewer.city}}</td>
+											<td>{{interviewer.state}}</td>
+											<td>{{interviewer.experience}}</td>
+											<td>{{interviewer.technology}}</td>
+											<td>{{interviewer.department}}</td>
+											<td>{{interviewer.resume|cut:'interviewer_resume/'}} <span class="ml-2"><a href="{{interviewer.resume.url}}"><i class="las la-download la-lg"></i></a></span></td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
-													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-danger" onclick="deleteEmployee({{emp.id}})">Delete</button>
+													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-info mr-2" onclick="AdminInterviewQuestion">Send Aptitude Test</button>
+													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-danger" onclick="deleteInterviewer({{interviewer.id}})">Delete</button>
 												</div>
 											</td>
 										</tr>
@@ -64,15 +126,84 @@
 							</div>
 						</div>
 					</div>
-
-
-
 					<!-- /Content End -->
 
                 </div>
 				<!-- /Page Content -->
-
+				<!-- Delete Department Modal -->
+				<div class="modal custom-modal fade" id="delete_interviewer_model" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="form-header">
+									<h3>Delete Department</h3>
+									<p>Are you sure want to delete?</p>
+								</div>
+								<div class="modal-btn delete-action">
+									<div class="row">
+										<div class="col-6">
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
+										</div>
+										<div class="col-6">
+											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Delete Department Modal -->
             </div>
 			<!-- /Page Wrapper -->
+
+
+<script>
+function deleteInterviewer(deleteInterviewerId) {
+    $("#delete_interviewer_model").modal('show');
+    if (deleteInterviewerId) {
+        var deleteUrl = "{% url 'AdminDeleteInterviewer' id=0 %}".replace(0, deleteInterviewerId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
+</script>
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+	var table = $('#employee_list_table').DataTable({
+		scrollX: true,
+		dom: 'Blrtip',
+	});
+	$('#name_search').on('keyup', function () {
+	table.column(1).search(this.value).draw();
+	});
+	$('#gender_search').on('keyup', function () {
+		table.column(5).search(this.value).draw();
+	});
+	$('#city_search').on('keyup', function () {
+		table.column(7).search(this.value).draw();
+	});
+	$('#state_search').on('keyup', function () {
+		table.column(8).search(this.value).draw();
+	});
+	$('#experience_search').on('keyup', function () {
+		table.column(9).search(this.value).draw();
+	});
+	$('#technology_search').on('keyup', function () {
+		table.column(10).search(this.value).draw();
+	});
+	$('#department_search').on('keyup', function () {
+		table.column(11).search(this.value).draw();
+	});
+});
+
+window.setTimeout(function() {
+	$(".alert").fadeTo(500, 0).slideUp(500, function(){
+		$(this).remove	();
+	});
+}, 1700);
+</script>
 
 {% endblock body %}
