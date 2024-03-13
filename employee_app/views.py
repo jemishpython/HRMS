@@ -205,7 +205,7 @@ def AddEducationInfo(request, id):
 
 
 @login_required(login_url="EmployeeLogin")
-def EmpEditEducationInfo(request, user_id, edu_id):
+def EmpEditEducationInfo(request, id, edu_id):
     edit_education_info = Education_Info.objects.filter(id=edu_id).first()
     form = EditEducationInfoForm(request.POST or None, instance=edit_education_info)
     if request.method == 'POST':
@@ -213,11 +213,20 @@ def EmpEditEducationInfo(request, user_id, edu_id):
             if form.is_valid():
                 form.save()
                 messages.info(request, 'Education Info Update successfully')
-                return redirect('EmpProfileView', id=user_id)
+                return redirect('EmpProfileView', id=id)
         except Exception as e:
             messages.error(request, 'ERROR : ', e)
     context = {'form': form, 'edit_education_info': edit_education_info}
     return render(request, "employee/edit_education_info.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def DeleteEducation(request, id, edu_id):
+    user_id = User.objects.get(id=id)
+    delete_edu = Education_Info.objects.get(id=edu_id)
+    delete_edu.delete()
+    messages.error(request, 'Education information Delete successfully')
+    return redirect('EmpProfileView', id=user_id.id)
 
 
 @login_required(login_url="EmployeeLogin")
@@ -228,6 +237,7 @@ def AddExperienceInfo(request, id):
             if form.is_valid():
                 experience = form.save(commit=False)
                 experience.employee = User.objects.get(id=id)
+                experience.save()
                 messages.success(request, 'Experience Info Add successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
@@ -244,12 +254,23 @@ def EditExperienceInfo(request, id, exp_id):
         try:
             if form.is_valid():
                 experience = form.save(commit=False)
+                experience.employee = User.objects.get(id=id)
+                experience.save()
                 messages.info(request, 'Experience Info Update successfully')
                 return redirect('EmpProfileView', id=id)
         except Exception as e:
             messages.error(request, 'ERROR : ', e)
     context = {'form': form, 'edit_experience_info': edit_experience_info}
     return render(request, "employee/edit_experience_info.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def DeleteExperience(request, id, exp_id):
+    user_id = User.objects.get(id=id)
+    delete_exp = Experience_Info.objects.get(id=exp_id)
+    delete_exp.delete()
+    messages.error(request, 'Experience information Delete successfully')
+    return redirect('EmpProfileView', id=user_id.id)
 
 
 @login_required(login_url="EmployeeLogin")
@@ -285,6 +306,15 @@ def EditEmergencyInfo(request, id, emg_id):
             messages.error(request, 'ERROR : ', e)
     context = {'form': form, 'edit_emergency_contact': edit_emergency_contact}
     return render(request, "employee/edit_emergency_contact.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def DeleteEmergency(request, id, emg_id):
+    user_id = User.objects.get(id=id)
+    delete_emg = Emergency_Contact.objects.get(id=emg_id)
+    delete_emg.delete()
+    messages.error(request, 'Emergency information Delete successfully')
+    return redirect('EmpProfileView', id=user_id.id)
 
 
 @login_required(login_url="EmployeeLogin")

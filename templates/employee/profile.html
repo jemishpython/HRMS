@@ -217,7 +217,9 @@
 										<div class="card-body">
 											{% if user.id == user_details.id %}
 											<button class="edit-icon ml-2" onclick="addEmergencyInfo({{user_details.id}})"><i class="fa fa-plus"></i></button>
-											<button class="edit-icon mr-1" onclick="editEmergencyInfo({{user_details.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
+												{% if view_emergency_contact.id %}
+												<button class="edit-icon mr-1" onclick="editEmergencyInfo({{user_details.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
+												{% endif %}
 											{% endif %}
 											<h2 class="card-title">Emergency Contact</h2>
 											{% if view_emergency_contact %}
@@ -314,7 +316,7 @@ function addEducationInfo(UserId) {
 
 function editEducationInfo(UserId, EduId) {
     $.ajax({
-        url: `/hrms/employee/emp-profile/education-info-edit/${UserId}/${EduId}`,
+        url: `/hrms/employee/emp-profile/${UserId}/education-info-edit/${EduId}`,
         success: function(response) {
             $("#edit-education-info-form").html(response);
             $("#edit_education_info_model").modal('show');
@@ -335,7 +337,7 @@ function addExperienceInfo(UserId) {
 
 function editExperienceInfo(UserId, ExpId) {
     $.ajax({
-        url: `/hrms/employee/emp-profile/experience-info-edit/${UserId}/${ExpId}`,
+        url: `/hrms/employee/emp-profile/${UserId}/experience-info-edit/${ExpId}`,
         success: function(response) {
             $("#edit-experience-info-form").html(response);
             $("#edit_experience_info_model").modal('show');
@@ -354,7 +356,7 @@ function addEmergencyInfo(UserId) {
 }
 function editEmergencyInfo(UserId, EmgId) {
     $.ajax({
-        url: `/hrms/employee/emp-profile/emergency-contact-edit/${UserId}/${EmgId}`,
+        url: `/hrms/employee/emp-profile/${UserId}/emergency-contact-edit/${EmgId}`,
         success: function(response) {
             $("#edit-emergency-contact-form").html(response);
             $("#edit_emergency_contact_modal").modal('show');
@@ -369,7 +371,7 @@ function editEmergencyInfo(UserId, EmgId) {
         $(".alert").fadeTo(500, 0).slideUp(500, function(){
             $(this).remove();
         });
-    }, 1600);
+    }, 1700);
 </script>
 
 {% endblock body %}

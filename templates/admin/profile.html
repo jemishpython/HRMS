@@ -208,7 +208,9 @@
                         <div class="card user_details-box flex-fill">
                             <div class="card-body">
                                 <button class="edit-icon ml-2" onclick="addEmergencyInfo({{profile.id}})"><i class="fa fa-plus"></i></button>
+                                {% if view_emergency_contact.id %}
                                 <button class="edit-icon mr-1" onclick="editEmergencyInfo({{profile.id}}, {{view_emergency_contact.id}})"><i class="fa fa-pencil"></i></button>
+                                {% endif %}
                                 <h2 class="card-title">Emergency Contact</h2>
                                 {% if view_emergency_contact %}
                                 <div class="d-flex">
@@ -387,7 +389,7 @@
         $(".alert").fadeTo(500, 0).slideUp(500, function(){
             $(this).remove();
         });
-    }, 1600);
+    }, 1700);
 </script>
 
 {% endblock body %}
