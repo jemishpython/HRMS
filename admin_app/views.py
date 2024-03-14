@@ -1159,6 +1159,32 @@ def InterviewerApply(request):
     return render(request, "interviewer_form.html", {'form': form})
 
 
+@login_required(login_url="Login")
+def SendAptitudeTestMail(request, id):
+    interviewer_details = Interviewers.objects.get(id=id)
+
+    forget_password_email = interviewer_details.email
+
+    context = {
+        'username': interviewer_details.name,
+        'user_id': interviewer_details.id,
+        # 'request_url': request.get_host(), #For Liveproject
+    }
+
+    from_email = settings.EMAIL_HOST_USER
+    mail_subject = f"HRMS Aptitude Test Link : {interviewer_details.name}"
+
+    email = loader.render_to_string('admin/aptitude_mail_template.html', context)
+    send_mail(
+        subject=mail_subject,
+        message=email,
+        from_email=from_email,
+        recipient_list=[forget_password_email],
+        html_message=email,
+    )
+    messages.success(request, "Mail Send Successfully")
+    return redirect('AdminInterviewerDash')
+
 
 @login_required(login_url="Login")
 def DeleteInterviewer(request, id):

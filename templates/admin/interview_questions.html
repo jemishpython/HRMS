@@ -49,19 +49,19 @@
 									</thead>
 									<tbody>
 									{% for question in interview_question_list %}
-										<tr>
+										<tr class="">
 											<td>{{forloop.counter}}</td>
 											<td>{{question.question}}</td>
-											<td class="{% if question.answer == question.option_a %} border border-success rounded-pill px-2 py-1 {% endif %}text-center">{{question.option_a}}</td>
-											<td class="{% if question.answer == question.option_b %} border border-success rounded-pill px-2 py-1 {% endif %}text-center">{{question.option_b}}</td>
-											<td class="{% if question.answer == question.option_c %} border border-success rounded-pill px-2 py-1 {% endif %}text-center">{{question.option_c}}</td>
-											<td class="{% if question.answer == question.option_d %} border border-success rounded-pill px-2 py-1 {% endif %}text-center">{{question.option_d}}</td>
+											<td class="text-center text-nowrap"> {% if question.answer == question.option_a %}<i class="fa fa-dot-circle-o text-success mx-2"></i>{% endif %} {{question.option_a}}</td>
+											<td class="text-center text-nowrap"> {% if question.answer == question.option_b %}<i class="fa fa-dot-circle-o text-success mx-2"></i>{% endif %} {{question.option_b}}</td>
+											<td class="text-center text-nowrap"> {% if question.answer == question.option_c %}<i class="fa fa-dot-circle-o text-success mx-2"></i>{% endif %} {{question.option_c}}</td>
+											<td class="text-center text-nowrap"> {% if question.answer == question.option_d %}<i class="fa fa-dot-circle-o text-success mx-2"></i>{% endif %} {{question.option_d}}</td>
 											<td class="text-center">{{question.technology}}</td>
 											<td class="text-center">{{question.department}}</td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
-													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-info mr-2" onclick="editQuestion({{question.id}})">Edit</button>
-													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-danger" onclick="deleteQuestion({{question.id}})">Delete</button>
+													<button class="btn px-1 py-0 rounded d-sm-block text-info mr-2" onclick="editQuestion({{question.id}})">Edit</button>
+													<button class="btn px-1 py-0 rounded d-sm-block text-danger" onclick="deleteQuestion({{question.id}})">Delete</button>
 												</div>
 											</td>
 										</tr>

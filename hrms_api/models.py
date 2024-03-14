@@ -302,3 +302,12 @@ class InterviewQuestions(models.Model):
 
     def __str__(self):
         return self.question
+
+
+class AptitudeTest(models.Model):
+    user_name = models.ForeignKey(Interviewers, on_delete=models.CASCADE, null=True)
+    question = models.TextField(verbose_name="Question", null=True, blank=True)
+    user_answer = models.CharField(verbose_name="Answer", max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.user_name

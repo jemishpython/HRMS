@@ -101,6 +101,8 @@ urlpatterns = [
     path("interview-questions/edit/<int:id>", views.EditInterviewQuestion, name='AdminEditInterviewQuestion'),
     path("interview-questions/delete/<int:id>", views.DeleteInterviewQuestion, name='AdminDeleteInterviewQuestion'),
 
+    path("interviewer/aptitude-test-mail-send/<int:id>", views.SendAptitudeTestMail, name='AdminSendAptitudeTestMail'),
+
     path("policies/", views.PoliciesView, name='AdminPoliciesView'),
     path("policies/add/", views.AddPolicies, name="AdminAddPolicies"),
     path("policies/delete/<int:id>", views.DeletePolicies, name="AdminDeletePolicies"),

@@ -115,7 +115,7 @@
 											<td>{{interviewer.resume|cut:'interviewer_resume/'}} <span class="ml-2"><a href="{{interviewer.resume.url}}"><i class="las la-download la-lg"></i></a></span></td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
-													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-info mr-2" onclick="AdminInterviewQuestion">Send Aptitude Test</button>
+													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-info mr-2" onclick="confirmMailSent({{interviewer.id}})">Send Aptitude Test</button>
 													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-danger" onclick="deleteInterviewer({{interviewer.id}})">Delete</button>
 												</div>
 											</td>
@@ -130,6 +130,7 @@
 
                 </div>
 				<!-- /Page Content -->
+
 				<!-- Delete Department Modal -->
 				<div class="modal custom-modal fade" id="delete_interviewer_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
@@ -154,6 +155,32 @@
 					</div>
 				</div>
 				<!-- /Delete Department Modal -->
+
+				<!-- Sent Email Confirmation Modal -->
+				<div class="modal custom-modal fade" id="sent_mail_confirmation" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="form-header">
+									<h3>Sent Aptitude Test Mail</h3>
+									<p>Are you sure want to sent mail?</p>
+								</div>
+								<div class="modal-btn delete-action">
+									<div class="row">
+										<div class="col-6">
+											<a id="confirmMailSentBtn" href="#" class="btn btn-primary continue-btn">Send</a>
+										</div>
+										<div class="col-6">
+											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- Sent Email Confirmation Modal -->
+
             </div>
 			<!-- /Page Wrapper -->
 
@@ -164,6 +191,14 @@ function deleteInterviewer(deleteInterviewerId) {
     if (deleteInterviewerId) {
         var deleteUrl = "{% url 'AdminDeleteInterviewer' id=0 %}".replace(0, deleteInterviewerId);
         $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
+function confirmMailSent(sentMailInterviewerId) {
+    $("#sent_mail_confirmation").modal('show');
+    if (sentMailInterviewerId) {
+        var mail_url = "{% url 'AdminSendAptitudeTestMail' id=0 %}".replace(0, sentMailInterviewerId);
+        $("#confirmMailSentBtn").attr("href", mail_url);
     }
 }
 
