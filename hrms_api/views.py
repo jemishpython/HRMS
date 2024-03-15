@@ -8,7 +8,7 @@ from hrms_api.models import Interviewers, InterviewQuestions
 
 def AptitudeTest(request, id, technology):
     interviewer_details = Interviewers.objects.get(id=id)
-    interview_question_list = InterviewQuestions.objects.filter(technology=technology)
+    interview_question_list = InterviewQuestions.objects.filter(technology=technology).order_by('?')[:10]
     context = {
         'interview_question_list': interview_question_list,
         'interviewer_details': interviewer_details,
