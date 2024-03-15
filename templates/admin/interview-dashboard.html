@@ -114,7 +114,7 @@
 											<td>{{interviewer.technology}}</td>
 											<td>{{interviewer.department}}</td>
 											<td>{{interviewer.resume|cut:'interviewer_resume/'}} <span class="ml-2"><a href="{{interviewer.resume.url}}"><i class="las la-download la-lg"></i></a></span></td>
-											<td class="text-center" >{% if not interviewer.result %} <span class="text-secondary">Not Attempt</span> {% else %} <span> {{interviewer.result}} </span> {% endif %}</td>
+											<td><a href="{% url 'AdminAptitudeTestResult' interviewer.id %}" class="text-info">View Result</a></td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
 													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-info mr-2" onclick="confirmMailSent({{interviewer.id}})">Send Aptitude Test</button>

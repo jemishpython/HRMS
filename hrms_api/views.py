@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from hrms_api.models import Interviewers, InterviewQuestions
+from hrms_api.models import Interviewers, InterviewQuestions, InterviewerResult
 
 
 # Create your views here.
@@ -30,6 +30,9 @@ def AptitudeTestData(request, id):
                 user_answer_list.append(user_answer)
                 correct_answers.append(question.answer)
 
+                result = InterviewerResult(interviewer=interviewer_detail, question=question, user_answer=user_answer)
+                result.save()
+
             score = sum(user_answer_list[i] == correct_answers[i] for i in range(len(user_answer_list)))
 
             interviewer_detail.result = str(score)
@@ -42,4 +45,4 @@ def AptitudeTestData(request, id):
 
 
 def ThankYouPage(request):
-    return render(request, 'thankyou_page.html')
+    return render(request, 'aptitude_test_thankyou_page.html')

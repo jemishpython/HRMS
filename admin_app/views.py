@@ -19,7 +19,7 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies, \
-    Interviewers, InterviewQuestions
+    Interviewers, InterviewQuestions, InterviewerResult
 
 
 def AdminRegister(request):
@@ -1204,6 +1204,15 @@ def InterviewQuestion(request):
         'interview_question_list': interview_question_list,
     }
     return render(request, "admin/interview_questions.html",context)
+
+
+@login_required(login_url="Login")
+def AptitudeTestResult(request, id):
+    interviewer_results = InterviewerResult.objects.filter(interviewer=id)
+    context = {
+        'interviewer_results': interviewer_results,
+    }
+    return render(request, 'admin/interviewer_result.html', context)
 
 
 @login_required(login_url="Login")

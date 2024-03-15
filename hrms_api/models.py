@@ -303,3 +303,12 @@ class InterviewQuestions(models.Model):
 
     def __str__(self):
         return self.question
+
+
+class InterviewerResult(models.Model):
+    interviewer = models.ForeignKey(Interviewers, verbose_name="Interviewer Name", on_delete=models.CASCADE, blank=True, null=True)
+    question = models.ForeignKey(InterviewQuestions, verbose_name="Interviewer Question", on_delete=models.CASCADE, blank=True, null=True)
+    user_answer = models.CharField(verbose_name="Answer", max_length=100, null=True, blank=True)
+
+    def __str__(self):
+        return self.interviewer
