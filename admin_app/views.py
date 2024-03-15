@@ -112,12 +112,14 @@ def AdminIndex(request):
     project_list = Project.objects.all()
     task_list = Task.objects.all()
     client_list = Client.objects.all()
+    new_leaves_list = Leave.objects.filter(leave_status=LeaveStatusChoice.NEW)
 
     context = {
         'project_list': project_list,
         'task_list': task_list,
         'users': users,
         'client_list': client_list,
+        'new_leaves_list': new_leaves_list,
     }
     return render(request, "admin/index.html", context)
 
@@ -1168,6 +1170,7 @@ def SendAptitudeTestMail(request, id):
     context = {
         'username': interviewer_details.name,
         'user_id': interviewer_details.id,
+        'technology': interviewer_details.technology.id
         # 'request_url': request.get_host(), #For Liveproject
     }
 

@@ -52,57 +52,10 @@
     <![endif]-->
 </head>
 <body>
-
-			<!-- Page Wrapper -->
-            <div class="">
-
-                <div class="content container-fluid">
-
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row">
-							<div class="col text-center mt-5">
-								<h3 class="page-title">Aptitude Test</h3>
-							</div>
-							<!-- Countdown Timer Section -->
-							<div style="position: fixed; top: 10px; right: 10px; color: red; font-size: 24px; mt-5 mr-5" id="countdown_timer"></div>
-						</div>
-					</div>
-					<!-- /Page Header -->
-
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="card">
-								<div class="card-body">
-									 <form action="{% url 'AdminAptitudeTestData' id=interviewer_details.id %}" method="POST" id="form" enctype="multipart/form-data">
-									 {% csrf_token %}
-										<div class="table-responsive">
-											<table class="table table-nowrap table-striped mb-0">
-												<tbody>
-													{% for question in interview_question_list %}
-													<tr class="border-bottom">
-														<td class="w-50 text-wrap"><input hidden type="text" name="question" id="option" value="{{question.question}}"> {{question.question}}</td>
-														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_a" value="{{question.option_a}}"> A. {{question.option_a}}</td>
-														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_b" value="{{question.option_b}}"> B. {{question.option_b}}</td>
-														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_c" value="{{question.option_c}}"> C. {{question.option_c}}</td>
-														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_d" value="{{question.option_d}}"> D. {{question.option_d}}</td>
-														<td hidden>{{question.answer}}</td>
-													</tr>
-													{% endfor %}
-												</tbody>
-											</table>
-										</div>
-										<div class="submit-section">
-											<button class="btn btn-primary submit-btn" type="submit">Submit</button>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
+    <div style="margin-top:10rem;" class="text-center">
+        <h1 class="text-primary display-2">Webmigrates</h1>
+        <h2 class="text-secondary display-4 mt-5">Thank You.</h2>
+    </div>
 
 
 <!-- jQuery -->
@@ -142,31 +95,6 @@
 
 <!-- Custom JS -->
 <script src="{% static 'js/app.js' %}"></script>
-
-<!-- JavaScript for Countdown Timer -->
-<script>
-var countdown_time = new Date().getTime() + 2700000;
-
-var x = setInterval(function() {
-    var now = new Date().getTime();
-    var distance = countdown_time - now;
-
-    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    document.getElementById("countdown_timer").innerHTML ="Time : " + minutes + "m " + seconds + "s ";
-    if (distance < 0) {
-        clearInterval(x);
-        document.getElementById("form").submit(); // Auto-submit the form
-    }
-}, 1000);
-</script>
-<script>
-document.getElementById("form").addEventListener("submit", function(event) {
-    console.log("Form submitted automatically after 45 minutes.");
-});
-</script>
-
 
 
 <script>

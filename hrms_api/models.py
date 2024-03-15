@@ -285,6 +285,7 @@ class Interviewers(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
     technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True)
     resume = models.FileField(verbose_name='Upload Resume', upload_to='interviewer_resume/', null=True)
+    result = models.CharField(verbose_name="Aptitude Test Result", max_length=50, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -302,12 +303,3 @@ class InterviewQuestions(models.Model):
 
     def __str__(self):
         return self.question
-
-
-class AptitudeTest(models.Model):
-    user_name = models.ForeignKey(Interviewers, on_delete=models.CASCADE, null=True)
-    question = models.TextField(verbose_name="Question", null=True, blank=True)
-    user_answer = models.CharField(verbose_name="Answer", max_length=100, null=True, blank=True)
-
-    def __str__(self):
-        return self.user_name

@@ -152,6 +152,90 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-3     d-flex">
+                <div class="card card-table flex-fill">
+                    <div class="card-header d-flex justify-content-between">
+                        <h3 class="card-title mb-0">Leaves</h3>
+                        <h3 class="card-title mb-0">{{new_leaves_list.count}}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table custom-table mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th class="text-right">Status</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for leaves in new_leaves_list %}
+                                <tr>
+                                    <td>
+                                        <h2 class="table-avatar">
+                                            <a href="{% url 'AdminClientDetailView' leaves.leave_user.id %}"><img class="avatar" alt="Client Profile Photo" src="{{leaves.leave_user.avatar.url}}"></a>
+                                            <a href="{% url 'AdminClientDetailView' leaves.leave_user.id %}">{{leaves.leave_user.username}} <span>{{leaves.leave_user.designation}} | {{leaves.leave_user.technology}}</span></a>
+                                        </h2>
+                                    </td>
+                                    <td class="text-right">
+                                        <i class="fa fa-dot-circle-o text-info"></i> {{leaves.leave_status}}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'AdminLeaveList' %}">View all leaves</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 d-flex">
+                <div class="card card-table flex-fill">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0">Recent Projects</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table custom-table mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Project Name</th>
+                                    <th>Progress</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for project in project_list %}
+                                <tr>
+                                    <td>
+                                        <h2><a href="{% url 'AdminProjectDetailsView' project.id %}">{{project.project_name}}</a>
+                                        </h2>
+                                        <small class="block text-ellipsis">
+                                            <span>1</span> <span class="text-muted">open tasks, </span>
+                                            <span>9</span> <span class="text-muted">tasks completed</span>
+                                        </small>
+                                    </td>
+                                    <td>
+                                        <div class="progress progress-xs progress-striped">
+                                            <div class="progress-bar" data-toggle="tooltip" role="progressbar"
+                                                 style="width: 65%" title="65%"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <a href="{% url 'AdminProjectsView' %}">View all leaves</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Statistics Widget -->
         <div class="row">
             <div class="col-md-12 col-lg-6 col-xl d-flex">
