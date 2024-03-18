@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=0" name="viewport">
+    <meta content="Smarthr - Bootstrap Admin Template" name="description">
+    <meta content="admin, estimates, bootstrap, business, corporate, creative, management, minimal, modern, accounts, invoice, html5, responsive, CRM, Projects"
+          name="keywords">
+    <meta content="Dreamguys - Bootstrap Admin Template" name="author">
+    <meta content="noindex, nofollow" name="robots">
+    <title>Login - Webmigrates Admin</title>
+
+    <!-- Favicon -->
+    <link href="{% static 'img/logo.png' %}" rel="shortcut icon" type="image/x-icon">
+
+    <!-- Bootstrap CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Fontawesome CSS -->
+    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">
+
+    <!-- Lineawesome CSS -->
+    <link href="{% static 'css/line-awesome.min.css' %}" rel="stylesheet">
+
+    <!-- Chart CSS -->
+    <link href="{% static 'plugins/morris/morris.css' %}" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- Datatable CSS employee list -->
+    <link href="{% static 'css/dataTables.bootstrap4.min.css' %}" rel="stylesheet">
+
+    <!-- Select2 CSS employee -->
+    <link href="{% static 'css/select2.min.css' %}" rel="stylesheet">
+
+    <!-- Datetimepicker CSS employee -->
+    <link href="{% static 'css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet">
+
+    <!-- Summernote CSS -->
+    <link href="{% static 'plugins/summernote/dist/summernote-bs4.css' %}" rel="stylesheet">
+
+    <!-- Tagsinput CSS profile-->
+    <link href="{% static 'plugins/bootstrap-tagsinput/bootstrap-tagsinput.css' %}" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="{% static 'js/html5shiv.min.js' %}"></script>
+    <script src="{% static 'js/respond.min.js"' %}></script>
+    <![endif]-->
+</head>
+<body>
+
+			<!-- Page Wrapper -->
+            <div class="">
+
+                <div class="content container-fluid">
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col text-center mt-5">
+								<h1 class="text-primary">Aptitude Test Rules</h1>
+							</div>
+							<!-- Countdown Timer Section -->
+						</div>
+					</div>
+					<!-- /Page Header -->
+					<div class="row">
+						<div class="col-lg-12"><h4>Name : {{interviewer_details.name}}</h4></div>
+						<div class="col-lg-12"><h4>Email : {{interviewer_details.email}}</h4></div>
+						<div class="col-lg-12"><h4>Phone : {{interviewer_details.phone}}</h4></div>
+						<div class="col-lg-12"><h4>Apply For : {{interviewer_details.department}} | {{interviewer_details.technology}}</h4></div>
+					</div>
+
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="card">
+								<div class="card-body">
+									<div class="table-responsive">
+										<table class="table table-nowrap table-striped mb-0">
+											<tbody>
+												{% for question in interview_question_list %}
+												<tr class="border-bottom">
+													<td class="w-50 text-wrap"><input hidden type="text" name="question" id="option" value="{{question.question}}"> {{question.question}}</td>
+													<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_a" value="{{question.option_a}}"> A. {{question.option_a}}</td>
+													<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_b" value="{{question.option_b}}"> B. {{question.option_b}}</td>
+													<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_c" value="{{question.option_c}}"> C. {{question.option_c}}</td>
+													<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_d" value="{{question.option_d}}"> D. {{question.option_d}}</td>
+													<td hidden>{{question.answer}}</td>
+												</tr>
+												{% endfor %}
+											</tbody>
+										</table>
+									</div>
+									<div class="m-5 d-flex justify-content-center">
+										<div class="border" style="width:60%">
+											<p style="font-size:1.57rem">Rule 1 : In this quiz you have 20 question for solve.</p>
+											<p style="font-size:1.57rem">Rule 2 : You have only 30 minute for this quiz. After 30 minute quiz will automatic submit.</p>
+											<p style="font-size:1.57rem">Rule 3 : After start quiz </p>
+										</div>
+									</div>
+									<div class="submit-section">
+										<button class="btn btn-primary submit-btn" type="submit">Start Quiz</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+
+<!-- jQuery -->
+<script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+
+<!-- Bootstrap Core JS -->
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
+<!-- Slimscroll JS -->
+<script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+
+<!-- Select2 JS employee-->
+<script src="{% static 'js/select2.min.js' %}"></script>
+
+<!-- Datetimepicker JS employee -->
+<script src="{% static 'js/moment.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
+
+<!-- Tagsinput JS -->
+<script src="{% static 'plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js' %}"></script>
+
+<!-- Datatable JS -->
+<script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'js/dataTables.bootstrap4.min.js' %}"></script>
+
+<!-- Task JS -->
+<script src="{% static 'js/task.js' %}"></script>
+
+<!-- Chart JS -->
+<script src="{% static 'plugins/morris/morris.min.js' %}"></script>
+<script src="{% static 'plugins/raphael/raphael.min.js' %}"></script>
+<script src="{% static 'js/chart.js' %}"></script>
+
+<!-- Summernote JS -->
+<script src="{% static 'plugins/summernote/dist/summernote-bs4.min.js' %}"></script>
+
+<!-- Custom JS -->
+<script src="{% static 'js/app.js' %}"></script>
+
+<script>
+document.getElementById("form").addEventListener("submit", function(event) {
+    console.log("Form submitted automatically after 30 minutes.");
+});
+</script>
+
+
+
+<script>
+window.setTimeout(function() {
+    $(".alert").fadeTo(500, 0).slideUp(500, function(){
+        $(this).remove();
+    });
+}, 1700);
+</script>
+
+</body>
+</html>

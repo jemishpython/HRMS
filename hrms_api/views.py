@@ -46,3 +46,7 @@ def AptitudeTestData(request, id):
 
 def ThankYouPage(request):
     return render(request, 'aptitude_test_thankyou_page.html')
+
+
+def Rules(request):
+    return render(request, 'admin/quiz_rules.html')

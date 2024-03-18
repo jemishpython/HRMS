@@ -52,7 +52,7 @@ def forget_password_mail(request):
     context = {
         'username': user.username,
         'user_id': user.id,
-        # 'request_url': request.get_host(), #For Liveproject
+        'request_url': request.get_host(), #For Liveproject
     }
 
     from_email = settings.EMAIL_HOST_USER

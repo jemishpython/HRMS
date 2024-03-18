@@ -62,7 +62,7 @@ def forget_password_mail(request):
     context = {
         'username': user.username,
         'user_id': user.id,
-        # 'request_url': request.get_host(), #For Liveproject
+        'request_url': request.get_host(), #For Liveproject
     }
 
     from_email = settings.EMAIL_HOST_USER
@@ -1000,8 +1000,7 @@ def UpdateLeaveStatus(request, id):
                     'leave_from': update_leave_status.leave_from,
                     'leave_to': update_leave_status.leave_to,
                     'leave_days': update_leave_status.leave_days,
-                    'current_date': date.today()
-                    # 'request_url': request.get_host(), #For Liveproject
+                    'current_date': date.today(),
                 }
 
                 from_email = settings.EMAIL_HOST_USER
@@ -1064,7 +1063,6 @@ def UpdateTicketstatus(request, id):
                     'ticket_description': update_ticket_status.ticket_description,
                     'ticket_title': update_ticket_status.ticket_title,
                     'current_date': date.today()
-                    # 'request_url': request.get_host(), #For Liveproject
                 }
 
                 from_email = settings.EMAIL_HOST_USER
@@ -1170,8 +1168,8 @@ def SendAptitudeTestMail(request, id):
     context = {
         'username': interviewer_details.name,
         'user_id': interviewer_details.id,
-        'technology': interviewer_details.technology.id
-        # 'request_url': request.get_host(), #For Liveproject
+        'technology': interviewer_details.technology.id,
+        'request_url': request.get_host(), #For Liveproject
     }
 
     from_email = settings.EMAIL_HOST_USER
