@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load crispy_forms_tags %}
 {% load static %}
 <html lang="en">
 <head>
@@ -9,7 +10,7 @@
           name="keywords">
     <meta content="Dreamguys - Bootstrap Admin Template" name="author">
     <meta content="noindex, nofollow" name="robots">
-    <title>HRMS : Forgot Password</title>
+    <title>Login - Webmigrates Admin</title>
 
     <!-- Favicon -->
     <link href="{% static 'img/logo.png' %}" rel="shortcut icon" type="image/x-icon">
@@ -49,71 +50,13 @@
     <script src="{% static 'js/html5shiv.min.js' %}"></script>
     <script src="{% static 'js/respond.min.js"' %}></script>
     <![endif]-->
-
-    <style>
-        *{
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          user-select: none;
-        }
-        .bg-img{
-            background: url('/media/landing_page.jpg');
-            height: 100vh;
-            background-size: cover;
-            background-position: center;
-        }
-        .bg-img:after{
-          position: absolute;
-          content: '';
-          top: 0;
-          left: 0;
-          height: 100%;
-          width: 100%;
-          background: rgba(0,0,0,0.0);
-        }
-        .content{
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          z-index: 999;
-          text-align: center;
-          padding: 5rem 6rem;
-          width: 30rem;
-          transform: translate(-50%,-50%);
-          background: rgba(0,0,0,0.5);
-          box-shadow: -2px 5px 5px 0px rgba(0,0,0,0.8);
-        }
-        .content header{
-          color: white;
-          font-size: 33px;
-          font-weight: 600;
-          margin: 0 0 35px 0;
-          font-family: 'Montserrat',sans-serif;
-        }
-    </style>
 </head>
 <body>
-<div class="bg-img">
-    <div class="content">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-        {% endfor %}
-        <header>Forgot Password</header>
-        <form action="{% url 'update_password' user_id %}" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <input class="form-control" name="admin_password" type="password" placeholder="Password">
-            </div>
-            <div class="form-group">
-                <input class="form-control" name="admin_confirm_password" type="password" placeholder="Confirm Password">
-            </div>
-            <div class="form-group text-center mt-5">
-                <button class="btn btn-primary account-btn form-control" type="submit">Change Password</button>
-            </div>
-        </form>
+    <div style="margin-top:10rem;" class="text-center">
+        <h1 class="text-primary display-2">Webmigrates</h1>
+        <h2 class="text-secondary display-4 mt-5">Thank You.</h2>
+        <h2 class="text-secondary display-4 mt-5">You test submit successfully. Company will call soon. </h2>
     </div>
-</div>
 
 
 <!-- jQuery -->
@@ -153,6 +96,7 @@
 
 <!-- Custom JS -->
 <script src="{% static 'js/app.js' %}"></script>
+
 
 <script>
 window.setTimeout(function() {

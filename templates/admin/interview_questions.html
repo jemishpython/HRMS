@@ -1,0 +1,158 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block body %}
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+
+				<!-- Page Content -->
+                <div class="content container-fluid">
+
+					<!-- Content Starts -->
+					{% include 'admin/interviewer-nav.html' %}
+					<div class="show_message">
+						{% for message in messages %}
+							<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+						{% endfor %}
+					</div>
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row align-items-center">
+							<div class="col">
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Interviewer</a></li>
+									<li class="breadcrumb-item active">Interview Questions</li>
+								</ul>
+							</div>
+							<div class="col-auto float-right ml-auto">
+								<button class="btn add-btn" onclick="addQuestion()"><i class="fa fa-plus"></i> Add Question</button>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+
+					<div class="row">
+						<div class="col-md-12">
+								<table class="table table-striped custom-table mb-0 w-100" id="employee_list_table">
+									<thead>
+										<tr>
+											<th>Sr no</th>
+											<th>Question</th>
+											<th class="text-center">Option A</th>
+											<th class="text-center">Option B</th>
+											<th class="text-center">Option C</th>
+											<th class="text-center">Option D</th>
+											<th class="text-center">Technology</th>
+											<th class="text-center">Department</th>
+											<th class="text-center">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									{% for question in interview_question_list %}
+										<tr class="">
+											<td>{{forloop.counter}}</td>
+											<td>{{question.question}}</td>
+											<td class="text-center text-nowrap"> {% if question.answer == question.option_a %}<i class="fa fa-dot-circle-o text-success mx-2"></i>{% endif %} {{question.option_a}}</td>
+											<td class="text-center text-nowrap"> {% if question.answer == question.option_b %}<i class="fa fa-dot-circle-o text-success mx-2"></i>{% endif %} {{question.option_b}}</td>
+											<td class="text-center text-nowrap"> {% if question.answer == question.option_c %}<i class="fa fa-dot-circle-o text-success mx-2"></i>{% endif %} {{question.option_c}}</td>
+											<td class="text-center text-nowrap"> {% if question.answer == question.option_d %}<i class="fa fa-dot-circle-o text-success mx-2"></i>{% endif %} {{question.option_d}}</td>
+											<td class="text-center">{{question.technology}}</td>
+											<td class="text-center">{{question.department}}</td>
+											<td class="text-right">
+												<div class="d-flex justify-content-end">
+													<button class="btn px-1 py-0 rounded d-sm-block text-info mr-2" onclick="editQuestion({{question.id}})">Edit</button>
+													<button class="btn px-1 py-0 rounded d-sm-block text-danger" onclick="deleteQuestion({{question.id}})">Delete</button>
+												</div>
+											</td>
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+						</div>
+					</div>
+					<!-- /Content End -->
+
+                </div>
+				<!-- /Page Content -->
+
+				<div id="add-interview-question-form"></div>
+
+				<div id="edit-interview-question-form"></div>
+
+
+				<!-- Delete Department Modal -->
+				<div class="modal custom-modal fade" id="delete_interview_question_model" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="form-header">
+									<h3>Delete Department</h3>
+									<p>Are you sure want to delete?</p>
+								</div>
+								<div class="modal-btn delete-action">
+									<div class="row">
+										<div class="col-6">
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
+										</div>
+										<div class="col-6">
+											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Delete Department Modal -->
+            </div>
+			<!-- /Page Wrapper -->
+
+
+<script>
+function addQuestion() {
+    $.ajax({
+        url: "{% url 'AdminAddInterviewQuestion' %}",
+        success: function(response) {
+            $("#add-interview-question-form").html(response);
+            $("#add_interview_question_model").modal('show');
+        }
+    });
+}
+
+function editQuestion(QuestionId) {
+    $.ajax({
+        url: "edit/"+QuestionId,
+        success: function(response) {
+            $("#edit-interview-question-form").html(response);
+            $("#edit_interview_question_model").modal('show');
+        }
+    });
+}
+
+function deleteQuestion(QuestionId) {
+    $("#delete_interview_question_model").modal('show');
+    if (QuestionId) {
+        var deleteUrl = "{% url 'AdminDeleteInterviewQuestion' id=0 %}".replace(0, QuestionId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
+}
+
+</script>
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+	var table = $('#employee_list_table').DataTable({
+		scrollX: true,
+		dom: 'Blrtip',
+	});
+});
+
+window.setTimeout(function() {
+	$(".alert").fadeTo(500, 0).slideUp(500, function(){
+		$(this).remove	();
+	});
+}, 1700);
+</script>
+
+{% endblock body %}

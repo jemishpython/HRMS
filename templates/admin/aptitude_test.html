@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load crispy_forms_tags %}
 {% load static %}
 <html lang="en">
 <head>
@@ -9,7 +10,7 @@
           name="keywords">
     <meta content="Dreamguys - Bootstrap Admin Template" name="author">
     <meta content="noindex, nofollow" name="robots">
-    <title>HRMS : Forgot Password</title>
+    <title>Login - Webmigrates Admin</title>
 
     <!-- Favicon -->
     <link href="{% static 'img/logo.png' %}" rel="shortcut icon" type="image/x-icon">
@@ -49,71 +50,65 @@
     <script src="{% static 'js/html5shiv.min.js' %}"></script>
     <script src="{% static 'js/respond.min.js"' %}></script>
     <![endif]-->
-
-    <style>
-        *{
-          margin: 0;
-          padding: 0;
-          box-sizing: border-box;
-          user-select: none;
-        }
-        .bg-img{
-            background: url('/media/landing_page.jpg');
-            height: 100vh;
-            background-size: cover;
-            background-position: center;
-        }
-        .bg-img:after{
-          position: absolute;
-          content: '';
-          top: 0;
-          left: 0;
-          height: 100%;
-          width: 100%;
-          background: rgba(0,0,0,0.0);
-        }
-        .content{
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          z-index: 999;
-          text-align: center;
-          padding: 5rem 6rem;
-          width: 30rem;
-          transform: translate(-50%,-50%);
-          background: rgba(0,0,0,0.5);
-          box-shadow: -2px 5px 5px 0px rgba(0,0,0,0.8);
-        }
-        .content header{
-          color: white;
-          font-size: 33px;
-          font-weight: 600;
-          margin: 0 0 35px 0;
-          font-family: 'Montserrat',sans-serif;
-        }
-    </style>
 </head>
 <body>
-<div class="bg-img">
-    <div class="content">
-        {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-        {% endfor %}
-        <header>Forgot Password</header>
-        <form action="{% url 'update_password' user_id %}" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <input class="form-control" name="admin_password" type="password" placeholder="Password">
-            </div>
-            <div class="form-group">
-                <input class="form-control" name="admin_confirm_password" type="password" placeholder="Confirm Password">
-            </div>
-            <div class="form-group text-center mt-5">
-                <button class="btn btn-primary account-btn form-control" type="submit">Change Password</button>
-            </div>
-        </form>
-    </div>
-</div>
+
+			<!-- Page Wrapper -->
+            <div class="">
+
+                <div class="content container-fluid">
+
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col text-center mt-5">
+								<h1 class="text-primary">Aptitude Test</h1>
+							</div>
+							<!-- Countdown Timer Section -->
+							<div style="position: fixed; top: 10px; right: 10px; color: red; font-size: 24px; mt-5 mr-5" id="countdown_timer"></div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					<div class="row">
+						<div class="col-lg-12"><h4>Name : {{interviewer_details.name}}</h4></div>
+						<div class="col-lg-12"><h4>Email : {{interviewer_details.email}}</h4></div>
+						<div class="col-lg-12"><h4>Phone : {{interviewer_details.phone}}</h4></div>
+						<div class="col-lg-12"><h4>Apply For : {{interviewer_details.department}} | {{interviewer_details.technology}}</h4></div>
+					</div>
+
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="card">
+								<div class="card-body">
+									 <form action="{% url 'AdminAptitudeTestData' id=interviewer_details.id %}" method="POST" id="form" enctype="multipart/form-data">
+									 {% csrf_token %}
+										<div class="table-responsive">
+											<table class="table table-nowrap table-striped mb-0">
+												<tbody>
+													{% for question in interview_question_list %}
+													<tr class="border-bottom">
+														<td class="w-50 text-wrap"><input hidden type="text" name="question" id="option" value="{{question.question}}"> {{question.question}}</td>
+														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_a" value="{{question.option_a}}"> A. {{question.option_a}}</td>
+														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_b" value="{{question.option_b}}"> B. {{question.option_b}}</td>
+														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_c" value="{{question.option_c}}"> C. {{question.option_c}}</td>
+														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_d" value="{{question.option_d}}"> D. {{question.option_d}}</td>
+														<td hidden>{{question.answer}}</td>
+													</tr>
+													{% endfor %}
+												</tbody>
+											</table>
+										</div>
+										<div class="submit-section">
+											<button class="btn btn-primary submit-btn" type="submit">Submit</button>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
 
 
 <!-- jQuery -->
@@ -153,6 +148,32 @@
 
 <!-- Custom JS -->
 <script src="{% static 'js/app.js' %}"></script>
+
+<!-- JavaScript for Countdown Timer -->
+<script>
+var countdown_time = new Date().getTime() + 1800000;
+
+var x = setInterval(function() {
+    var now = new Date().getTime();
+    var distance = countdown_time - now;
+
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown_timer").innerHTML ="Time : " + minutes + "m " + seconds + "s ";
+    if (distance < 0) {
+        clearInterval(x);
+        document.getElementById("form").submit(); // Auto-submit the form
+    }
+}, 1000);
+</script>
+<script>
+document.getElementById("form").addEventListener("submit", function(event) {
+    console.log("Form submitted automatically after 30 minutes.");
+});
+</script>
+
+
 
 <script>
 window.setTimeout(function() {

@@ -280,6 +280,25 @@ class AddPoliciesForm(forms.ModelForm):
 
 
 class InterviewerForm(forms.ModelForm):
+    dob = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    resume = forms.FileField(widget=forms.ClearableFileInput(attrs={
+        "name": "policy_file",
+        "type": "file",
+        "class": "form-control",
+    }), label="Upload Resume")
+
     class Meta:
         model = Interviewers
         fields = ['name', 'phone', 'dob', 'address', 'email', 'gender', 'city', 'state', 'experience', 'department', 'technology', 'resume']
+
+
+class AddInterviewQuestionForm(forms.ModelForm):
+    class Meta:
+        model = InterviewQuestions
+        fields = ['question', 'option_a', 'option_b', 'option_c', 'option_d', 'answer', 'technology', 'department']
+
+
+class EditInterviewQuestionForm(forms.ModelForm):
+    class Meta:
+        model = InterviewQuestions
+        fields = ['question', 'option_a', 'option_b', 'option_c', 'option_d', 'answer', 'technology', 'department']

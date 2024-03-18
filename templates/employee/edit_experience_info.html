@@ -12,7 +12,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'EmpEditExperienceInfo' user.id edit_experience_info.id %}" method="post">
+                <form action="{% url 'EmpEditExperienceInfo' id=user.id exp_id=edit_experience_info.id %}" method="post">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6">
@@ -42,6 +42,7 @@
                         </div>
                     </div>
                     <div class="submit-section">
+                        <a href="{% url 'EmpDeleteExperienceInfo' id=edit_experience_info.employee.id exp_id=edit_experience_info.id %}" class="btn btn-danger submit-btn mr-5">Delete</a>
                         <button class="btn btn-primary submit-btn">Submit</button>
                     </div>
                 </form>
