@@ -1,3 +1,7 @@
+import datetime
+import uuid
+
+import pytz
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
@@ -1162,6 +1166,9 @@ def InterviewerApply(request):
 @login_required(login_url="Login")
 def SendAptitudeTestMail(request, id):
     interviewer_details = Interviewers.objects.get(id=id)
+    interviewer_details.aptitude_test_token = str(uuid.uuid4())
+    interviewer_details.token_created_at = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
+    interviewer_details.save()
 
     forget_password_email = interviewer_details.email
 
@@ -1170,6 +1177,7 @@ def SendAptitudeTestMail(request, id):
         'user_id': interviewer_details.id,
         'technology': interviewer_details.technology.id,
         'request_url': request.get_host(), #For Liveproject
+        'token': interviewer_details.aptitude_test_token,
     }
 
     from_email = settings.EMAIL_HOST_USER

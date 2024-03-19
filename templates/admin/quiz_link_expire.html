@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load crispy_forms_tags %}
 {% load static %}
 <html lang="en">
 <head>
@@ -51,66 +52,11 @@
     <![endif]-->
 </head>
 <body>
-
-			<!-- Page Wrapper -->
-            <div class="">
-
-                <div class="content container-fluid">
-
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row">
-							<div class="col text-center mt-5">
-								<h1 class="text-primary">Aptitude Test Rules</h1>
-							</div>
-							<!-- Countdown Timer Section -->
-						</div>
-					</div>
-					<!-- /Page Header -->
-					<div class="row">
-						<div class="col-lg-12"><h4>Name : {{interviewer_details.name}}</h4></div>
-						<div class="col-lg-12"><h4>Email : {{interviewer_details.email}}</h4></div>
-						<div class="col-lg-12"><h4>Phone : {{interviewer_details.phone}}</h4></div>
-						<div class="col-lg-12"><h4>Apply For : {{interviewer_details.department}} | {{interviewer_details.technology}}</h4></div>
-					</div>
-
-					<div class="row">
-						<div class="col-lg-12">
-							<div class="card">
-								<div class="card-body">
-									<div class="table-responsive">
-										<table class="table table-nowrap table-striped mb-0">
-											<tbody>
-												{% for question in interview_question_list %}
-												<tr class="border-bottom">
-													<td class="w-50 text-wrap"><input hidden type="text" name="question" id="option" value="{{question.question}}"> {{question.question}}</td>
-													<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_a" value="{{question.option_a}}"> A. {{question.option_a}}</td>
-													<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_b" value="{{question.option_b}}"> B. {{question.option_b}}</td>
-													<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_c" value="{{question.option_c}}"> C. {{question.option_c}}</td>
-													<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_d" value="{{question.option_d}}"> D. {{question.option_d}}</td>
-													<td hidden>{{question.answer}}</td>
-												</tr>
-												{% endfor %}
-											</tbody>
-										</table>
-									</div>
-									<div class="m-5 d-flex justify-content-center">
-										<div class="border" style="width:60%">
-											<p style="font-size:1.57rem">Rule 1 : In this quiz you have 20 question for solve.</p>
-											<p style="font-size:1.57rem">Rule 2 : You have only 30 minute for this quiz. After 30 minute quiz will automatic submit.</p>
-											<p style="font-size:1.57rem">Rule 3 : After start quiz </p>
-										</div>
-									</div>
-									<div class="submit-section">
-										<button class="btn btn-primary submit-btn" type="submit">Start Quiz</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
+    <div style="margin-top:10rem;" class="text-center">
+        <h1 class="text-primary display-2">Webmigrates</h1>
+        <h2 class="text-secondary display-4 mt-5">Hello, {{interviewer_details.name}}</h2>
+        <h2 class="text-secondary display-4 mt-5">Quiz link was expired. Contact our management team.</h2>
+    </div>
 
 
 <!-- jQuery -->
@@ -150,13 +96,6 @@
 
 <!-- Custom JS -->
 <script src="{% static 'js/app.js' %}"></script>
-
-<script>
-document.getElementById("form").addEventListener("submit", function(event) {
-    console.log("Form submitted automatically after 30 minutes.");
-});
-</script>
-
 
 
 <script>

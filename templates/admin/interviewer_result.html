@@ -133,6 +133,10 @@ function deleteQuestion(QuestionId) {
 <script>
 $(document).ready(function () {
 	var table = $('#employee_list_table').DataTable({
+		lengthMenu: [
+			[8, 25, 50, -1],
+			[8, 25, 50, 'All']
+		],
 		scrollX: true,
 		dom: 'Blrtip',
 	});

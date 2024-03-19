@@ -286,6 +286,8 @@ class Interviewers(models.Model):
     technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True)
     resume = models.FileField(verbose_name='Upload Resume', upload_to='interviewer_resume/', null=True)
     result = models.CharField(verbose_name="Aptitude Test Result", max_length=50, null=True, blank=True)
+    aptitude_test_token = models.CharField(max_length=100, null=True, blank=True)
+    token_created_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name

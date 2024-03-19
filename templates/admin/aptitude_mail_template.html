@@ -20,8 +20,11 @@
         <td style="text-align:center; color:#2C2727;"><h4 style="margin:2rem 4rem;">Click below button to start test.<br><span style="color:red"> You have only 30 minute to complete this test after 30 minute test will automatically submit.</span></h4></td>
     </tr>
     <tr>
+        <td style="text-align:center; color:#2C2727"><h4>Token :<strong>{{token}}</strong> </h4></td>
+    </tr>
+    <tr>
         <td style="text-align:center; color:#F6F4F4; padding:1rem 0rem;">
-            <a href="http://{{request_url}}/hrms/interviewer/aptitude-test/{{ user_id }}/{{ technology }}" style="background-color:#3E3939; border:0; padding:1rem 5rem; border-radius: 8rem; text-decoration:none; color:#F6F4F4" title="{{ username }}">Start Test</a>
+            <a href="http://{{request_url}}/hrms/interviewer/aptitude-test/{{ user_id }}/{{ technology }}/{{ token }}" style=   "background-color:#3E3939; border:0; padding:1rem 5rem; border-radius: 8rem; text-decoration:none; color:#F6F4F4" title="{{ username }}">Start Test</a>
         </td>
     </tr>
     <tr>
