@@ -31,6 +31,29 @@
 					</div>
 					<!-- /Page Header -->
 
+					<!-- Search Filter -->
+					<div class="row filter-row">
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="question_search">
+								<label class="focus-label">Question</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group form-focus ">
+								<input type="text" class="form-control floating" id="technology_search">
+								<label class="focus-label">Technology</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group form-focus">
+								<input type="text" class="form-control floating" id="department_search">
+								<label class="focus-label">Department</label>
+							</div>
+						</div>
+					</div>
+					<!-- /Search Filter -->
+
 					<div class="row">
 						<div class="col-md-12">
 								<table class="table table-striped custom-table mb-0 w-100" id="employee_list_table">
@@ -145,6 +168,15 @@ $(document).ready(function () {
 	var table = $('#employee_list_table').DataTable({
 		scrollX: true,
 		dom: 'Blrtip',
+	});
+	$('#question_search').on('keyup', function () {
+	table.column(1).search(this.value).draw();
+	});
+	$('#technology_search').on('keyup', function () {
+		table.column(6).search(this.value).draw();
+	});
+	$('#department_search').on('keyup', function () {
+		table.column(7).search(this.value).draw();
 	});
 });
 
