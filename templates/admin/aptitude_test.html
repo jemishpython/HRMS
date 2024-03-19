@@ -83,20 +83,20 @@
 									 <form action="{% url 'AdminAptitudeTestData' id=interviewer_details.id %}" method="POST" id="form" enctype="multipart/form-data">
 									 {% csrf_token %}
 										<div class="table-responsive d-flex justify-content-center">
-											<table class="table table-nowrap table-striped w-50">
+											<table class="table table-nowrap table-striped w-75">
 												<tbody>
 													{% for question in interview_question_list %}
 													<tr class="border-bottom">
-														<td class="text-wrap" colspan="2"><input hidden type="text" name="question" id="option" value="{{question.question}}"><strong>Question :</strong> {{question.question}}</td>
+														<td class="text-wrap" colspan="2"><input hidden type="text" name="question" id="option" value="{{question.question}}"><strong class="mr-1">Q-{{forloop.counter}} : </strong> {{question.question}}</td>
 														<td hidden>{{question.answer}}</td>
 													</tr>
 													<tr>
-														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_a" value="{{question.option_a}}"> A. {{question.option_a}}</td>
-														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_b" value="{{question.option_b}}"> B. {{question.option_b}}</td>
+														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_a" value="{{question.option_a}}" class="mr-2"> A. {{question.option_a}}</td>
+														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_b" value="{{question.option_b}}" class="mr-2"> B. {{question.option_b}}</td>
 													</tr>
 													<tr>
-														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_c" value="{{question.option_c}}"> C. {{question.option_c}}</td>
-														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_d" value="{{question.option_d}}"> D. {{question.option_d}}</td>
+														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_c" value="{{question.option_c}}" class="mr-2"> C. {{question.option_c}}</td>
+														<td class="text-nowrap"><input type="radio" name="user_answer_{{question.id}}" id="option_d" value="{{question.option_d}}" class="mr-2"> D. {{question.option_d}}</td>
 													</tr>
 													{% endfor %}
 												</tbody>
@@ -176,8 +176,6 @@ document.getElementById("form").addEventListener("submit", function(event) {
     console.log("Form submitted automatically after 30 minutes.");
 });
 </script>
-
-
 
 <script>
 window.setTimeout(function() {
