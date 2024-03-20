@@ -32,18 +32,16 @@ def AptitudeTestData(request, id):
     if request.method == 'POST':
         try:
             user_answer_list = []
-            correct_answers = []
-            interview_question_list = InterviewQuestions.objects.filter(technology=technology_id)
-
+            interview_question_ids = [int(key.split('_')[-1]) for key in request.POST if key.startswith('user_answer_')]
+            interview_question_list = InterviewQuestions.objects.filter(technology=technology_id, id__in=interview_question_ids)
             for question in interview_question_list:
                 user_answer = request.POST.get('user_answer_' + str(question.id), '')
                 user_answer_list.append(user_answer)
-                correct_answers.append(question.answer)
 
                 result = InterviewerResult(interviewer=interviewer_detail, question=question, user_answer=user_answer)
                 result.save()
 
-            score = sum(user_answer_list[i] == correct_answers[i] for i in range(len(user_answer_list)))
+            score = sum(user_answer_list[i] == question.answer for i, question in enumerate(interview_question_list))
 
             interviewer_detail.result = str(score)
             interviewer_detail.save()
