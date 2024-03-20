@@ -3,7 +3,7 @@
 <div class="card" style="">
     <ul class="nav nav-tabs nav-tabs-bottom nav-justified">
         {% with request.resolver_match.url_name as url_name %}
-        <li class="nav-item"><a class="nav-link {% if url_name == 'AdminInterviewerDash' %}active{% endif %}" href="{% url 'AdminInterviewerDash' %}" >Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link {% if url_name == 'AdminInterviewerDash' %}active{% elif url_name == 'AdminAptitudeTestResult' %}active{% endif %}" href="{% url 'AdminInterviewerDash' %}" >Dashboard</a></li>
         <li class="nav-item"><a class="nav-link {% if url_name == 'AdminInterviewQuestion' %}active{% endif %}" href="{% url 'AdminInterviewQuestion' %}">Interview Questions</a></li>
         {% endwith %}
     </ul>

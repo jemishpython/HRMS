@@ -1,6 +1,12 @@
+import datetime
+import uuid
+
+import pytz
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.core.serializers import serialize
+from django.http import JsonResponse
 from django.template import loader
 from datetime import date
 
@@ -62,7 +68,7 @@ def forget_password_mail(request):
     context = {
         'username': user.username,
         'user_id': user.id,
-        # 'request_url': request.get_host(), #For Liveproject
+        'request_url': request.get_host(), #For Liveproject
     }
 
     from_email = settings.EMAIL_HOST_USER
@@ -109,17 +115,21 @@ def update_password(request, pk):
 @login_required(login_url="Login")
 def AdminIndex(request):
     users = User.objects.all()
-    project_list = Project.objects.all()
+    project_list = Project.objects.all()[:5]
     task_list = Task.objects.all()
-    client_list = Client.objects.all()
-    new_leaves_list = Leave.objects.filter(leave_status=LeaveStatusChoice.NEW)
+    client_list = Client.objects.all()[:5]
+    new_ticket_list = Ticket.objects.filter(ticket_status=TicketStatusChoice.NEW)[:5]
+    new_leaves_list = Leave.objects.filter(leave_status=LeaveStatusChoice.NEW)[:5]
+    interviewer_list = Interviewers.objects.all()
 
     context = {
         'project_list': project_list,
         'task_list': task_list,
         'users': users,
         'client_list': client_list,
+        'new_ticket_list': new_ticket_list,
         'new_leaves_list': new_leaves_list,
+        'interviewer_list': interviewer_list,
     }
     return render(request, "admin/index.html", context)
 
@@ -127,7 +137,7 @@ def AdminIndex(request):
 @login_required(login_url="Login")
 def AdminLogout(request):
     logout(request)
-    return render(request, "admin/login.html")
+    return redirect('Login')
 
 
 @login_required(login_url="Login")
@@ -1000,8 +1010,7 @@ def UpdateLeaveStatus(request, id):
                     'leave_from': update_leave_status.leave_from,
                     'leave_to': update_leave_status.leave_to,
                     'leave_days': update_leave_status.leave_days,
-                    'current_date': date.today()
-                    # 'request_url': request.get_host(), #For Liveproject
+                    'current_date': date.today(),
                 }
 
                 from_email = settings.EMAIL_HOST_USER
@@ -1064,7 +1073,6 @@ def UpdateTicketstatus(request, id):
                     'ticket_description': update_ticket_status.ticket_description,
                     'ticket_title': update_ticket_status.ticket_title,
                     'current_date': date.today()
-                    # 'request_url': request.get_host(), #For Liveproject
                 }
 
                 from_email = settings.EMAIL_HOST_USER
@@ -1146,6 +1154,14 @@ def InterviewerDash(request):
     return render(request, "admin/interview-dashboard.html", context)
 
 
+@login_required(login_url="Login")
+def InterviewerDetails(request):
+    interviewer_list = Interviewers.objects.all()
+    data = serialize('json', interviewer_list)
+
+    return JsonResponse(data, safe=False)
+
+
 def InterviewerApply(request):
     form = InterviewerForm(request.POST or None, request.FILES or None)
     if request.method == 'POST':
@@ -1164,14 +1180,18 @@ def InterviewerApply(request):
 @login_required(login_url="Login")
 def SendAptitudeTestMail(request, id):
     interviewer_details = Interviewers.objects.get(id=id)
+    interviewer_details.aptitude_test_token = str(uuid.uuid4())
+    interviewer_details.token_created_at = datetime.datetime.now(pytz.timezone('Asia/Kolkata'))
+    interviewer_details.save()
 
     forget_password_email = interviewer_details.email
 
     context = {
         'username': interviewer_details.name,
         'user_id': interviewer_details.id,
-        'technology': interviewer_details.technology.id
-        # 'request_url': request.get_host(), #For Liveproject
+        'technology': interviewer_details.technology.id,
+        'request_url': request.get_host(), #For Liveproject
+        'token': interviewer_details.aptitude_test_token,
     }
 
     from_email = settings.EMAIL_HOST_USER

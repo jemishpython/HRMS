@@ -166,7 +166,7 @@ class Holiday(models.Model):
 
 class Project(models.Model):
     project_name = models.CharField(verbose_name='Project Name', max_length=100, null=True, blank=True)
-    project_client_name = models.ForeignKey(Client,verbose_name='Project Client Name', on_delete=models.CASCADE, null=True)
+    project_client_name = models.ForeignKey(Client, verbose_name='Project Client Name', on_delete=models.CASCADE, null=True)
     project_start_date = models.DateField(verbose_name='Project Start Date', null=True, blank=True)
     project_end_date = models.DateField(verbose_name='Project End Date', null=True, blank=True)
     project_cost = models.CharField(verbose_name='Project Cost', max_length=50, null=True, blank=True)
@@ -228,7 +228,7 @@ class Leave(models.Model):
     leave_to = models.DateField(verbose_name='Leave To', null=True, blank=True)
     leave_days = models.IntegerField(verbose_name='Leave Days', null=True, blank=True)
     leave_reason = models.CharField(verbose_name='Leave Reason', max_length=255, null=True, blank=True)
-    leave_status = models.CharField(verbose_name='Leave Status', max_length=100, choices=LeaveStatusChoice.choices,default=LeaveStatusChoice.NEW, null=True, blank=True)
+    leave_status = models.CharField(verbose_name='Leave Status', max_length=100, choices=LeaveStatusChoice.choices, default=LeaveStatusChoice.NEW, null=True, blank=True)
     leave_user = models.ForeignKey(User, verbose_name='User Name', on_delete=models.CASCADE, null=True)
 
     def __str__(self):
@@ -278,7 +278,7 @@ class Interviewers(models.Model):
     dob = models.DateField(verbose_name='Birth Date', null=True)
     address = models.CharField(verbose_name='Address', max_length=400, null=True)
     email = models.EmailField(verbose_name='Email', max_length=255, null=True)
-    gender = models.CharField(verbose_name='Gender', choices=GenderTypeChoice.choices, default=GenderTypeChoice.MALE,max_length=255, null=True)
+    gender = models.CharField(verbose_name='Gender', choices=GenderTypeChoice.choices, default=GenderTypeChoice.MALE, max_length=255, null=True)
     city = models.CharField(verbose_name='City', max_length=50, null=True)
     state = models.CharField(verbose_name='State', max_length=50, null=True)
     experience = models.CharField(verbose_name='Experience', max_length=50, null=True)
@@ -286,6 +286,12 @@ class Interviewers(models.Model):
     technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True)
     resume = models.FileField(verbose_name='Upload Resume', upload_to='interviewer_resume/', null=True)
     result = models.CharField(verbose_name="Aptitude Test Result", max_length=50, null=True, blank=True)
+    current_ctc = models.CharField(verbose_name="Current CTC", max_length=100, blank=True, null=True)
+    current_salary = models.IntegerField(verbose_name="Current Salary", blank=True, null=True)
+    expected_salary = models.CharField(verbose_name="Expected  Salary", max_length=50, blank=True, null=True)
+    last_company_name = models.CharField(verbose_name="Last Company Name", max_length=100, blank=True, null=True)
+    aptitude_test_token = models.CharField(max_length=100, null=True, blank=True)
+    token_created_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name

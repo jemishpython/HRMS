@@ -289,7 +289,7 @@ class InterviewerForm(forms.ModelForm):
 
     class Meta:
         model = Interviewers
-        fields = ['name', 'phone', 'dob', 'address', 'email', 'gender', 'city', 'state', 'experience', 'department', 'technology', 'resume']
+        fields = ['name', 'phone', 'dob', 'address', 'email', 'gender', 'city', 'state', 'experience', 'department', 'technology', 'resume', 'current_ctc', 'current_salary', 'expected_salary', 'last_company_name']
 
 
 class AddInterviewQuestionForm(forms.ModelForm):

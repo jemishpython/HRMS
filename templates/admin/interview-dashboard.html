@@ -20,7 +20,7 @@
 						<div class="row align-items-center">
 							<div class="col">
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Interviewer</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'AdminInterviewerDash' %}">Interviewer</a></li>
 									<li class="breadcrumb-item active">Dashboard</li>
 								</ul>
 							</div>
@@ -94,7 +94,8 @@
 											<th>Technology</th>
 											<th>Department</th>
 											<th>Resume</th>
-											<th>Aptitude Test</th>
+											<th>Aptitude Test Score</th>
+											<th>Aptitude Test View Result</th>
 											<th class="text-center">Action</th>
 										</tr>
 									</thead>
@@ -114,7 +115,8 @@
 											<td>{{interviewer.technology}}</td>
 											<td>{{interviewer.department}}</td>
 											<td>{{interviewer.resume|cut:'interviewer_resume/'}} <span class="ml-2"><a href="{{interviewer.resume.url}}"><i class="las la-download la-lg"></i></a></span></td>
-											<td><a href="{% url 'AdminAptitudeTestResult' interviewer.id %}" class="text-info">View Result</a></td>
+											<td class="text-center">Score : <span class="{% if interviewer.result|add:0 < 3 %}text-danger{% elif interviewer.result|add:0 < 6 %}text-primary{% else %}text-success{% endif %}"> {{ interviewer.result }} </span> / 10</td>
+											<td class="text-center"><a href="{% url 'AdminAptitudeTestResult' interviewer.id %}" class="text-info">View Result</a></td>
 											<td class="text-right">
 												<div class="d-flex justify-content-end">
 													<button class="dropdown-item px-1 py-0 rounded d-sm-block text-info mr-2" onclick="confirmMailSent({{interviewer.id}})">Send Aptitude Test</button>
