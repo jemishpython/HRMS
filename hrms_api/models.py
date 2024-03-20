@@ -286,6 +286,10 @@ class Interviewers(models.Model):
     technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True)
     resume = models.FileField(verbose_name='Upload Resume', upload_to='interviewer_resume/', null=True)
     result = models.CharField(verbose_name="Aptitude Test Result", max_length=50, null=True, blank=True)
+    current_ctc = models.CharField(verbose_name="Current CTC", max_length=100, blank=True, null=True)
+    current_salary = models.IntegerField(verbose_name="Current Salary", blank=True, null=True)
+    expected_salary = models.CharField(verbose_name="Expected  Salary", max_length=50, blank=True, null=True)
+    last_company_name = models.CharField(verbose_name="Last Company Name", max_length=100, blank=True, null=True)
     aptitude_test_token = models.CharField(max_length=100, null=True, blank=True)
     token_created_at = models.DateTimeField(null=True, blank=True)
 

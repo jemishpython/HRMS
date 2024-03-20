@@ -5,6 +5,8 @@ import pytz
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.core.serializers import serialize
+from django.http import JsonResponse
 from django.template import loader
 from datetime import date
 
@@ -113,17 +115,21 @@ def update_password(request, pk):
 @login_required(login_url="Login")
 def AdminIndex(request):
     users = User.objects.all()
-    project_list = Project.objects.all()
+    project_list = Project.objects.all()[:5]
     task_list = Task.objects.all()
-    client_list = Client.objects.all()
-    new_leaves_list = Leave.objects.filter(leave_status=LeaveStatusChoice.NEW)
+    client_list = Client.objects.all()[:5]
+    new_ticket_list = Ticket.objects.filter(ticket_status=TicketStatusChoice.NEW)[:5]
+    new_leaves_list = Leave.objects.filter(leave_status=LeaveStatusChoice.NEW)[:5]
+    interviewer_list = Interviewers.objects.all()
 
     context = {
         'project_list': project_list,
         'task_list': task_list,
         'users': users,
         'client_list': client_list,
+        'new_ticket_list': new_ticket_list,
         'new_leaves_list': new_leaves_list,
+        'interviewer_list': interviewer_list,
     }
     return render(request, "admin/index.html", context)
 
@@ -131,7 +137,7 @@ def AdminIndex(request):
 @login_required(login_url="Login")
 def AdminLogout(request):
     logout(request)
-    return render(request, "admin/login.html")
+    return redirect('Login')
 
 
 @login_required(login_url="Login")
@@ -1146,6 +1152,14 @@ def InterviewerDash(request):
         'interviewer_list':interviewer_list,
     }
     return render(request, "admin/interview-dashboard.html", context)
+
+
+@login_required(login_url="Login")
+def InterviewerDetails(request):
+    interviewer_list = Interviewers.objects.all()
+    data = serialize('json', interviewer_list)
+
+    return JsonResponse(data, safe=False)
 
 
 def InterviewerApply(request):

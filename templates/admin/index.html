@@ -1,5 +1,21 @@
 {% extends 'admin/base.html' %}
 {% load static %}
+{% block head %}
+
+<style>
+    .summary-wrap {
+        overflow: hidden;
+       text-overflow: ellipsis;
+       display: -webkit-box;
+       -webkit-line-clamp: 1;
+               line-clamp: 1;
+       -webkit-box-orient: vertical;
+    }
+
+
+</style>
+
+{% endblock head %}
 {% block body %}
 <!-- Page Wrapper -->
 <div class="page-wrapper">
@@ -15,7 +31,7 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-sm-12">
-                    <h3 class="page-title">Welcome {{user.username}}</h3>
+                    <h3 class="page-title">Welcome, {{user.username}}</h3>
                     <ul class="breadcrumb">
                         <li class="breadcrumb-item active">Dashboard</li>
                     </ul>
@@ -49,8 +65,8 @@
                 <div class="card dash-widget">
                     <div class="card-body">
                         <div class="dash-widget-info">
-                            <h3>{{task_list.count}}</h3>
-                            <span>Tasks</span>
+                            <h3>{{interviewer_list.count}}</h3>
+                            <span>Interview Candidate</span>
                         </div>
                     </div>
                 </div>
@@ -70,8 +86,9 @@
         <div class="row">
             <div class="col-md-6 d-flex">
                 <div class="card card-table flex-fill">
-                    <div class="card-header">
-                        <h3 class="card-title mb-0">Clients</h3>
+                    <div class="card-header d-flex justify-content-between">
+                        <a class="card-title mb-0" href="{% url 'AdminClientsView' %}">Clients</a>
+                        <h3 class="card-title mb-0">{{client_list.count}}</h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -102,41 +119,42 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <a href="{% url 'AdminClientsView' %}">View all clients</a>
-                    </div>
                 </div>
             </div>
             <div class="col-md-6 d-flex">
                 <div class="card card-table flex-fill">
-                    <div class="card-header">
-                        <h3 class="card-title mb-0">Recent Projects</h3>
+                    <div class="card-header d-flex justify-content-between">
+                        <a class="card-title mb-0" href="{% url 'AdminProjectsView' %}">Recent Projects</a>
+                        <h3 class="card-title mb-0">{{project_list.count}}</h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table custom-table mb-0">
                                 <thead>
                                 <tr>
+                                    <th>Client Name</th>
                                     <th>Project Name</th>
-                                    <th>Progress</th>
+                                    <th>Project Statuse</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for project in project_list %}
                                 <tr>
                                     <td>
-                                        <h2><a href="{% url 'AdminProjectDetailsView' project.id %}">{{project.project_name}}</a>
+                                        <h2 class="table-avatar">
+                                            <a href="{% url 'AdminClientDetailView' project.project_client_name.id %}"><img class="avatar" alt="Client Profile Photo" src="{{project.project_client_name.client_avatar.url}}"></a>
+                                            <a href="{% url 'AdminClientDetailView' project.project_client_name.id %}">{{project.project_client_name.username}} <span>{{project.project_client_name.position}}</span></a>
                                         </h2>
+                                    </td>
+                                    <td>
+                                        <h2><a href="{% url 'AdminProjectDetailsView' project.id %}">{{project.project_name}}</a></h2>
                                         <small class="block text-ellipsis">
                                             <span>1</span> <span class="text-muted">open tasks, </span>
                                             <span>9</span> <span class="text-muted">tasks completed</span>
                                         </small>
                                     </td>
                                     <td>
-                                        <div class="progress progress-xs progress-striped">
-                                            <div class="progress-bar" data-toggle="tooltip" role="progressbar"
-                                                 style="width: 65%" title="65%"></div>
-                                        </div>
+                                        <i class="fa fa-dot-circle-o {% if project.project_status == 'On Track' %}text-info{% elif project.project_status == 'Postponed' %}text-warning{% elif project.project_status == 'Finished' %}text-success{% else %}text-danger{% endif %}"></i> {{project.project_status}}
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -144,19 +162,15 @@
                             </table>
                         </div>
                     </div>
-
-                    <div class="card-footer">
-                        <a href="{% url 'AdminProjectsView' %}">View all projects</a>
-                    </div>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-3     d-flex">
+            <div class="col-md-4 d-flex">
                 <div class="card card-table flex-fill">
                     <div class="card-header d-flex justify-content-between">
-                        <h3 class="card-title mb-0">Leaves</h3>
+                        <a class="card-title mb-0" href="{% url 'AdminLeaveList' %}">Leaves</a>
                         <h3 class="card-title mb-0">{{new_leaves_list.count}}</h3>
                     </div>
                     <div class="card-body">
@@ -186,41 +200,43 @@
                             </table>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <a href="{% url 'AdminLeaveList' %}">View all leaves</a>
-                    </div>
                 </div>
             </div>
-            <div class="col-md-6 d-flex">
+            <div class="col-md-8 d-flex">
                 <div class="card card-table flex-fill">
-                    <div class="card-header">
-                        <h3 class="card-title mb-0">Recent Projects</h3>
+                    <div class="card-header d-flex justify-content-between">
+                        <a class="card-title mb-0" href="{% url 'AdminTicketList' %}">Tickets</a>
+                        <h3 class="card-title mb-0">{{new_ticket_list.count}}</h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table custom-table mb-0">
                                 <thead>
                                 <tr>
-                                    <th>Project Name</th>
-                                    <th>Progress</th>
+                                    <th>Ticket Title</th>
+                                    <th>Ticket Generator Name</th>
+                                    <th>Ticket Priority</th>
+                                    <th>Ticket Status</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {% for project in project_list %}
+                                {% for ticket in new_ticket_list %}
                                 <tr>
                                     <td>
-                                        <h2><a href="{% url 'AdminProjectDetailsView' project.id %}">{{project.project_name}}</a>
+                                        <h2 class="table-avatar">
+                                            <a href="{% url 'AdminClientDetailView' ticket.ticket_user.id %}"><img class="avatar" alt="Client Profile Photo" src="{{ticket.ticket_user.avatar.url}}"></a>
+                                            <a href="{% url 'AdminClientDetailView' ticket.ticket_user.id %}">{{ticket.ticket_user.username}} <span>{{ticket.ticket_user.designation}} | {{ticket.ticket_user.technology}}</span></a>
                                         </h2>
-                                        <small class="block text-ellipsis">
-                                            <span>1</span> <span class="text-muted">open tasks, </span>
-                                            <span>9</span> <span class="text-muted">tasks completed</span>
-                                        </small>
                                     </td>
                                     <td>
-                                        <div class="progress progress-xs progress-striped">
-                                            <div class="progress-bar" data-toggle="tooltip" role="progressbar"
-                                                 style="width: 65%" title="65%"></div>
-                                        </div>
+                                        <h2>{{ticket.ticket_title}}</h2>
+                                        <small class="block text-ellipsis"><span class="text-muted text-wrap summary-wrap">{{ticket.ticket_description}}</span></small>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-dot-circle-o {% if ticket.ticket_priority == 'High' %}text-danger{% elif ticket.ticket_priority == 'Medium' %}text-warning{% else %}text-info{% endif %}"></i> {{ticket.ticket_priority}}
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-dot-circle-o text-info"></i> {{ticket.ticket_status}}
                                     </td>
                                 </tr>
                                 {% endfor %}
@@ -228,62 +244,9 @@
                             </table>
                         </div>
                     </div>
-
-                    <div class="card-footer">
-                        <a href="{% url 'AdminProjectsView' %}">View all leaves</a>
-                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Statistics Widget -->
-        <div class="row">
-            <div class="col-md-12 col-lg-6 col-xl d-flex">
-                <div class="card flex-fill">
-                    <div class="card-body">
-                        <h4 class="card-title">Today Absent <span class="badge bg-inverse-danger ml-2">5</span></h4>
-                        <div class="leave-info-box">
-                            <div class="media align-items-center">
-                                <a class="avatar" href="profile.html"><img alt="" src="assets/img/user.jpg"></a>
-                                <div class="media-body">
-                                    <div class="text-sm my-0">Martin Lewis</div>
-                                </div>
-                            </div>
-                            <div class="row align-items-center mt-3">
-                                <div class="col-6">
-                                    <h6 class="mb-0">4 Sep 2019</h6>
-                                    <span class="text-sm text-muted">Leave Date</span>
-                                </div>
-                                <div class="col-6 text-right">
-                                    <span class="badge bg-inverse-danger">Pending</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="leave-info-box">
-                            <div class="media align-items-center">
-                                <a class="avatar" href="profile.html"><img alt="" src="assets/img/user.jpg"></a>
-                                <div class="media-body">
-                                    <div class="text-sm my-0">Martin Lewis</div>
-                                </div>
-                            </div>
-                            <div class="row align-items-center mt-3">
-                                <div class="col-6">
-                                    <h6 class="mb-0">4 Sep 2019</h6>
-                                    <span class="text-sm text-muted">Leave Date</span>
-                                </div>
-                                <div class="col-6 text-right">
-                                    <span class="badge bg-inverse-success">Approved</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="load-more text-center">
-                            <a class="text-dark" href="javascript:void(0);">Load More</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Statistics Widget -->
     </div>
     <!-- /Page Content -->
 

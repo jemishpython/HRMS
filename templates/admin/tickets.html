@@ -19,7 +19,7 @@
 							<div class="col">
 								<h3 class="page-title">Tickets</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'AdminIndex' %}">Dashboard</a></li>
 									<li class="breadcrumb-item active">Tickets</li>
 								</ul>
 							</div>
@@ -156,8 +156,8 @@
 										<tr>
 											<td>
 												<h2 class="table-avatar">
-													<a href="profile.html" class="avatar"><img alt="" src="{{ticket.ticket_user.avatar.url}}"></a>
-													<a href="#">{{ticket.ticket_user.username}}<span>{{ticket.ticket_user.designation|default:""}}. {{ticket.ticket_user.technology|default:""}}</span></a>
+													<a href="{% url 'AdminProfileView' ticket.ticket_user.id %}" class="avatar"><img alt="" src="{{ticket.ticket_user.avatar.url}}"></a>
+													<a href="{% url 'AdminProfileView' ticket.ticket_user.id %}">{{ticket.ticket_user.username}}<span>{{ticket.ticket_user.designation|default:""}}. {{ticket.ticket_user.technology|default:""}}</span></a>
 												</h2>
 											</td>
 											<td class="w-25 text-wrap">{{ticket.ticket_title}}</td>

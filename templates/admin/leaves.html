@@ -20,7 +20,7 @@
                 <div class="col">
                     <h3 class="page-title">Leaves</h3>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'AdminIndex' %}">Dashboard</a></li>
                         <li class="breadcrumb-item active">Leaves</li>
                     </ul>
                 </div>
@@ -88,8 +88,8 @@
                         <tr>
                             <td>
                                 <h2 class="table-avatar">
-                                    <a class="avatar" href="profile.html"><img alt="" src="{{leave.leave_user.avatar.url}}"></a>
-                                    <a href="#">{{leave.leave_user.username}}<span>{{leave.leave_user.designation|default:""}}. {{leave.leave_user.technology|default:""}}</span></a>
+                                    <a class="avatar" href="{% url 'AdminProfileView' leave.leave_user.id %}"><img alt="" src="{{leave.leave_user.avatar.url}}"></a>
+                                    <a href="{% url 'AdminProfileView' leave.leave_user.id %}">{{leave.leave_user.username}}<span>{{leave.leave_user.designation|default:""}}. {{leave.leave_user.technology|default:""}}</span></a>
                                 </h2>
                             </td>
                             <td>{{leave.leave_type}}</td>
