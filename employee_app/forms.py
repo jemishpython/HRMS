@@ -12,6 +12,7 @@ class AddLeaveForm(forms.ModelForm):
         widgets = {
             'leave_from': forms.DateInput(attrs={'type': 'date'}),
             'leave_to': forms.DateInput(attrs={'type': 'date'}),
+            'leave_type': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
@@ -22,6 +23,7 @@ class EditLeaveForm(forms.ModelForm):
         widgets = {
             'leave_from': forms.DateInput(attrs={'type': 'date'}),
             'leave_to': forms.DateInput(attrs={'type': 'date'}),
+            'leave_type': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
@@ -35,6 +37,10 @@ class EditProfileInfoForm(forms.ModelForm):
         widgets = {
             'dob': forms.DateInput(attrs={'type': 'date'}),
             'date_joined': forms.DateInput(attrs={'type': 'date'}),
+            'gender': forms.Select(attrs={'class': 'form-control'}),
+            'department': forms.Select(attrs={'class': 'form-control'}),
+            'designation': forms.Select(attrs={'class': 'form-control'}),
+            'technology': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
@@ -42,6 +48,9 @@ class EditPersonalInfoForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['nationality', 'religion', 'marital_status']
+        widgets = {
+            'marital_status': forms.Select(attrs={'class': 'form-control'}),
+        }
 
 
 class AddEducationInfoForm(forms.ModelForm):
@@ -110,6 +119,7 @@ class AddTicketsForm(forms.ModelForm):
         fields = ['ticket_title', 'ticket_create_date', 'ticket_priority', 'ticket_description']
         widgets = {
             'ticket_create_date': forms.DateInput(attrs={'type': 'date', 'value': date.today}),
+            'ticket_priority': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
@@ -119,4 +129,5 @@ class EditTicketsForm(forms.ModelForm):
         fields = ['ticket_title', 'ticket_create_date', 'ticket_priority', 'ticket_description']
         widgets = {
             'ticket_create_date': forms.DateInput(attrs={'type': 'date', 'value': date.today}),
+            'ticket_priority': forms.Select(attrs={'class': 'form-control'}),
         }
