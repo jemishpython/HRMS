@@ -885,6 +885,18 @@ def ProjectDetailsView(request, id):
 
 
 @login_required(login_url="Login")
+def ProjectTask(request):
+    projectlist = Project.objects.all()
+    project_id = id
+
+    context = {
+        'project_id': project_id,
+        'projectlist': projectlist,
+    }
+    return render(request, "admin/tasks.html", context)
+
+
+@login_required(login_url="Login")
 def ProjectTaskList(request, id):
     projectlist = Project.objects.all()
     project_id = id
