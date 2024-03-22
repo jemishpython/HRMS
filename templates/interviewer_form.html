@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {% load static %}
 {% block extra_css %}
+
 <style>
     /* Add custom CSS styles here */
     .form-control {
@@ -16,6 +17,7 @@
     }
 </style>
 {% endblock extra_css %}
+{% block nav %}{% include 'admin/navigationpanel.html' %}{% endblock nav %}
 {% block body %}
 <div class="main-wrapper">
     <div class="page-wrapper">

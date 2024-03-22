@@ -76,7 +76,6 @@ urlpatterns = [
     path("project-assignee/<int:id>", views.AddProjectAssignee, name='AdminAddProjectAssignee'),
     path("<int:project_id>/project-assignee-delete/<int:id>", views.DeleteAssignEmployee, name='AdminDeleteAssignEmployee'),
 
-    path("projects/tasks", views.ProjectTask, name="AdminProjectTask"),
     path("project/<int:id>/tasks", views.ProjectTaskList, name="AdminProjectTaskList"),
     path("project/<int:id>/task-add", views.AddProjectTask, name="AdminAddProjectTask"),
     path("project/<int:projectid>/task-edit/<int:id>", views.EditProjectTask, name="AdminEditProjectTask"),
@@ -89,7 +88,8 @@ urlpatterns = [
     path("tickets", views.TicketList, name='AdminTicketList'),
     path("tickets/status-update/<int:id>", views.UpdateTicketstatus, name='AdminTicketStatusUpdate'),
 
-    path("chat/<int:id>", views.ChatView, name='AdminChatView'),
+    path("chat-view/", views.ChatView, name='AdminChatView'),
+    path("chat/<int:id>", views.Chat, name='AdminChat'),
 
     path("attendance/", views.AttendanceView, name='AdminAttendanceView'),
 
