@@ -492,8 +492,23 @@ def DeleteTicket(request, id):
 
 
 @login_required(login_url="EmployeeLogin")
-def ChatView(request, id):
-    return render(request, "employee/chat.html")
+def ChatView(request):
+    user_list = User.objects.all()
+    context = {
+        'user_list': user_list,
+    }
+    return render(request, "employee/chat.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def Chat(request, id):
+    user_list = User.objects.all()
+    chat_users = User.objects.get(id=id)
+    context = {
+        'chat_users': chat_users,
+        'user_list': user_list,
+    }
+    return render(request, "employee/chat.html", context)
 
 
 @login_required(login_url="EmployeeLogin")
