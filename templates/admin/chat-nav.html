@@ -1,6 +1,5 @@
 {% load static %}
 <!-- Sidebar -->
-
 <div class="sidebar" id="sidebar">
     <div class="sidebar-inner slimscroll">
         <div class="sidebar-menu">
@@ -44,7 +43,7 @@
                 <li class="menu-title">Direct Chats <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
                 {% for user in user_list %}
                 <li>
-                    <a href="{% url 'AdminChat' user.id %}">
+                    <a href="#" id="room-name-{{user.id}}" onclick="redirectToChatRoom('{{user.id}}')">
                         <span class="chat-avatar-sm user-img">
                             <img class="rounded-circle" alt="" src="{{ user.avatar.url }}"><span class="status offline"></span>
                         </span>
