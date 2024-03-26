@@ -17,6 +17,7 @@
 
 			<!-- Chats View -->
 			<div class="col-lg-9 message-view task-view">
+				{% if chat_users %}
 				<div class="chat-window">
 					<div class="fixed-header">
 						<div class="navbar">
@@ -142,6 +143,16 @@
 						</div>
 					</div>
 				</div>
+				{% else %}
+				<div class="chat-window h-100">
+					<div class="d-flex flex-column justify-content-center align-items-center h-100">
+						<div class="mb-5 text-center">
+							<h1 class="display-1 text-muted"><i class="las la-sms la-3x"></i></h1>
+							<h2 class="text-muted ">Hello !</h2>
+						</div>
+					</div>
+				</div>
+				{% endif %}
 			</div>
 			<!-- /Chats View -->
 
