@@ -1,3 +1,4 @@
+import datetime
 from datetime import date
 
 from django.contrib.auth import login, logout
@@ -498,7 +499,12 @@ def ChatView(request, id):
 
 @login_required(login_url="EmployeeLogin")
 def AttendanceView(request, id):
-    return render(request, "employee/attendance-employee.html")
+    current_datetime = datetime.datetime.now()
+
+    context = {
+        'current_datetime': current_datetime,
+    }
+    return render(request, "employee/attendance-employee.html", context)
 
 
 @login_required(login_url="EmployeeLogin")

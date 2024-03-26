@@ -5,7 +5,7 @@ from django.db import models
 # Create your models here.
 from hrms_api.choices import GenderTypeChoice, MaritalStatusChoice, ProjectPriorityChoice, TaskStatusChoice, \
     ProjectStatusChoice, LeaveTypeChoice, LeaveStatusChoice, ProjectAssigneeTypeChoice, TicketPriorityChoice, \
-    TicketStatusChoice
+    TicketStatusChoice, AttendanceStatusChoice
 
 
 class Department(models.Model):
@@ -318,3 +318,10 @@ class InterviewerResult(models.Model):
 
     def __str__(self):
         return self.interviewer
+
+
+class Attendance(models.Model):
+    attendee_user = models.ForeignKey(User, verbose_name="Attendee User", on_delete=models.CASCADE, blank=True, null=True)
+    check_in_time = models.DateTimeField(verbose_name="Check in time", blank=True, null=True)
+    check_out_time = models.DateTimeField(verbose_name="Check in time", blank=True, null=True)
+    attendace_status = models.CharField(verbose_name="Attendance status", max_length=50, choices=AttendanceStatusChoice.choices, default=AttendanceStatusChoice.ABSENT, blank=True, null=True)

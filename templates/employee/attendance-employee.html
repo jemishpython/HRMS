@@ -1,5 +1,12 @@
 {% extends 'employee/base.html' %}
 {% load static %}
+{% block head %}
+<style>
+	.border-5{
+		border-width:5px !important;
+	}
+</style>
+{% endblock head %}
 {% block body %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
@@ -9,7 +16,7 @@
 					<div class="page-header">
 						<div class="row">
 							<div class="col-sm-12">
-								<h3 class="page-title">Attendance</h3>
+								<h3 class="page-title">Attendance | {{current_datetime|date:'d - U - Y'}}</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
 									<li class="breadcrumb-item active">Attendance</li>
@@ -20,131 +27,130 @@
 					<!-- /Page Header -->
 					
 					<div class="row">
-						<div class="col-md-4">
+						<div class="col-md-12">
 							<div class="card punch-status">
-								<div class="card-body">
-									<h5 class="card-title">Timesheet <small class="text-muted">11 Mar 2019</small></h5>
-									<div class="punch-det">
-										<h6>Punch In at</h6>
-										<p>Wed, 11th Mar 2019 10.00 AM</p>
-									</div>
-									<div class="punch-info">
-										<div class="punch-hours">
-											<span>3.45 hrs</span>
+								<div class="card-body d-flex justify-content-between align-items-center">
+									<div class="punch-info mb-0">
+										<div class="border border-muted border-5 rounded-pill px-5 py-5">
+											<span>3 h : 45 m : 60 s</span>
 										</div>
 									</div>
-									<div class="punch-btn-section">
+									<div class="punch-btn-section mb-0">
 										<button type="button" class="btn btn-primary punch-btn">Punch Out</button>
 									</div>
-									<div class="statistics">
-										<div class="row">
-											<div class="col-md-6 col-6 text-center">
-												<div class="stats-box">
-													<p>Break</p>
-													<h6>1.21 hrs</h6>
-												</div>
-											</div>
-											<div class="col-md-6 col-6 text-center">
-												<div class="stats-box">
-													<p>Overtime</p>
-													<h6>3 hrs</h6>
-												</div>
-											</div>
+									<div class="mx-3">
+										<div class="punch-det">
+											<h6>Punch In at</h6>
+											<p>Mon, 11th Mar 2019 10.00 AM</p>
+										</div>
+										<div class="punch-det mb-0">
+											<h6>Punch In at</h6>
+											<p>Mon, 11th Mar 2019 10.00 AM</p>
+										</div>
+									</div>
+									<div class="mx-3">
+										<div class="punch-det">
+											<h6>Break Time</h6>
+											<p>1 hr</p>
+										</div>
+										<div class="punch-det mb-0">
+											<h6>Over Time</h6>
+											<p>Mon, 11th Mar 2019 10.00 AM</p>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="col-md-4">
-							<div class="card att-statistics">
-								<div class="card-body">
-									<h5 class="card-title">Statistics</h5>
-									<div class="stats-list">
-										<div class="stats-info">
-											<p>Today <strong>3.45 <small>/ 8 hrs</small></strong></p>
-											<div class="progress">
-												<div class="progress-bar bg-primary" role="progressbar" style="width: 31%" aria-valuenow="31" aria-valuemin="0" aria-valuemax="100"></div>
-											</div>
-										</div>
-										<div class="stats-info">
-											<p>This Week <strong>28 <small>/ 40 hrs</small></strong></p>
-											<div class="progress">
-												<div class="progress-bar bg-warning" role="progressbar" style="width: 31%" aria-valuenow="31" aria-valuemin="0" aria-valuemax="100"></div>
-											</div>
-										</div>
-										<div class="stats-info">
-											<p>This Month <strong>90 <small>/ 160 hrs</small></strong></p>
-											<div class="progress">
-												<div class="progress-bar bg-success" role="progressbar" style="width: 62%" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>
-											</div>
-										</div>
-										<div class="stats-info">
-											<p>Remaining <strong>90 <small>/ 160 hrs</small></strong></p>
-											<div class="progress">
-												<div class="progress-bar bg-danger" role="progressbar" style="width: 62%" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>
-											</div>
-										</div>
-										<div class="stats-info">
-											<p>Overtime <strong>4</strong></p>
-											<div class="progress">
-												<div class="progress-bar bg-info" role="progressbar" style="width: 22%" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100"></div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="card recent-activity">
-								<div class="card-body">
-									<h5 class="card-title">Today Activity</h5>
-									<ul class="res-activity-list">
-										<li>
-											<p class="mb-0">Punch In at</p>
-											<p class="res-activity-time">
-												<i class="fa fa-clock-o"></i>
-												10.00 AM.
-											</p>
-										</li>
-										<li>
-											<p class="mb-0">Punch Out at</p>
-											<p class="res-activity-time">
-												<i class="fa fa-clock-o"></i>
-												11.00 AM.
-											</p>
-										</li>
-										<li>
-											<p class="mb-0">Punch In at</p>
-											<p class="res-activity-time">
-												<i class="fa fa-clock-o"></i>
-												11.15 AM.
-											</p>
-										</li>
-										<li>
-											<p class="mb-0">Punch Out at</p>
-											<p class="res-activity-time">
-												<i class="fa fa-clock-o"></i>
-												1.30 PM.
-											</p>
-										</li>
-										<li>
-											<p class="mb-0">Punch In at</p>
-											<p class="res-activity-time">
-												<i class="fa fa-clock-o"></i>
-												2.00 PM.
-											</p>
-										</li>
-										<li>
-											<p class="mb-0">Punch Out at</p>
-											<p class="res-activity-time">
-												<i class="fa fa-clock-o"></i>
-												7.30 PM.
-											</p>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
+<!--						<div class="col-md-4">-->
+<!--							<div class="card att-statistics">-->
+<!--								<div class="card-body">-->
+<!--									<h5 class="card-title">Statistics</h5>-->
+<!--									<div class="stats-list">-->
+<!--										<div class="stats-info">-->
+<!--											<p>Today <strong>3.45 <small>/ 8 hrs</small></strong></p>-->
+<!--											<div class="progress">-->
+<!--												<div class="progress-bar bg-primary" role="progressbar" style="width: 31%" aria-valuenow="31" aria-valuemin="0" aria-valuemax="100"></div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										<div class="stats-info">-->
+<!--											<p>This Week <strong>28 <small>/ 40 hrs</small></strong></p>-->
+<!--											<div class="progress">-->
+<!--												<div class="progress-bar bg-warning" role="progressbar" style="width: 31%" aria-valuenow="31" aria-valuemin="0" aria-valuemax="100"></div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										<div class="stats-info">-->
+<!--											<p>This Month <strong>90 <small>/ 160 hrs</small></strong></p>-->
+<!--											<div class="progress">-->
+<!--												<div class="progress-bar bg-success" role="progressbar" style="width: 62%" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										<div class="stats-info">-->
+<!--											<p>Remaining <strong>90 <small>/ 160 hrs</small></strong></p>-->
+<!--											<div class="progress">-->
+<!--												<div class="progress-bar bg-danger" role="progressbar" style="width: 62%" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										<div class="stats-info">-->
+<!--											<p>Overtime <strong>4</strong></p>-->
+<!--											<div class="progress">-->
+<!--												<div class="progress-bar bg-info" role="progressbar" style="width: 22%" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100"></div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
+<!--						<div class="col-md-4">-->
+<!--							<div class="card recent-activity">-->
+<!--								<div class="card-body">-->
+<!--									<h5 class="card-title">Today Activity</h5>-->
+<!--									<ul class="res-activity-list">-->
+<!--										<li>-->
+<!--											<p class="mb-0">Punch In at</p>-->
+<!--											<p class="res-activity-time">-->
+<!--												<i class="fa fa-clock-o"></i>-->
+<!--												10.00 AM.-->
+<!--											</p>-->
+<!--										</li>-->
+<!--										<li>-->
+<!--											<p class="mb-0">Punch Out at</p>-->
+<!--											<p class="res-activity-time">-->
+<!--												<i class="fa fa-clock-o"></i>-->
+<!--												11.00 AM.-->
+<!--											</p>-->
+<!--										</li>-->
+<!--										<li>-->
+<!--											<p class="mb-0">Punch In at</p>-->
+<!--											<p class="res-activity-time">-->
+<!--												<i class="fa fa-clock-o"></i>-->
+<!--												11.15 AM.-->
+<!--											</p>-->
+<!--										</li>-->
+<!--										<li>-->
+<!--											<p class="mb-0">Punch Out at</p>-->
+<!--											<p class="res-activity-time">-->
+<!--												<i class="fa fa-clock-o"></i>-->
+<!--												1.30 PM.-->
+<!--											</p>-->
+<!--										</li>-->
+<!--										<li>-->
+<!--											<p class="mb-0">Punch In at</p>-->
+<!--											<p class="res-activity-time">-->
+<!--												<i class="fa fa-clock-o"></i>-->
+<!--												2.00 PM.-->
+<!--											</p>-->
+<!--										</li>-->
+<!--										<li>-->
+<!--											<p class="mb-0">Punch Out at</p>-->
+<!--											<p class="res-activity-time">-->
+<!--												<i class="fa fa-clock-o"></i>-->
+<!--												7.30 PM.-->
+<!--											</p>-->
+<!--										</li>-->
+<!--									</ul>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
 					</div>
 
 					<!-- Search Filter -->
