@@ -887,7 +887,13 @@ def ProjectDetailsView(request, id):
 @login_required(login_url="Login")
 def ProjectTask(request):
     projectlist = Project.objects.all()
-    return render(request, "admin/task-nav.html", {'projectlist': projectlist})
+    project_id = id
+
+    context = {
+        'project_id': project_id,
+        'projectlist': projectlist,
+    }
+    return render(request, "admin/tasks.html", context)
 
 
 @login_required(login_url="Login")
@@ -1098,8 +1104,23 @@ def UpdateTicketstatus(request, id):
 
 
 @login_required(login_url="Login")
-def ChatView(request, id):
-    return render(request, "admin/chat.html")
+def ChatView(request):
+    user_list = User.objects.all()
+    context = {
+        'user_list':user_list,
+    }
+    return render(request, "admin/chat.html", context)
+
+
+@login_required(login_url="Login")
+def Chat(request, id):
+    user_list = User.objects.all()
+    chat_users = User.objects.get(id=id)
+    context = {
+        'chat_users': chat_users,
+        'user_list': user_list,
+    }
+    return render(request, "admin/chat.html", context)
 
 
 @login_required(login_url="Login")
