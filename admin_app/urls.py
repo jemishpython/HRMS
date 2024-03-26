@@ -62,6 +62,7 @@ urlpatterns = [
     path("clients/profile-info-edit/<int:id>", views.EditClientInfo, name="AdminEditClientInfo"),
     path("clients/<int:user_id>/project-delete/<int:id>", views.ClientDeleteProject, name="AdminClientDeleteProject"),
 
+
     path("projects", views.ProjectsView, name="AdminProjectsView"),
     path("projects/add", views.AddProject, name="AdminAddProjects"),
     path("projects/details-view/<int:id>", views.ProjectDetailsView, name="AdminProjectDetailsView"),
