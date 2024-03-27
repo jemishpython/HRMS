@@ -322,6 +322,11 @@ class InterviewerResult(models.Model):
 
 class Attendance(models.Model):
     attendee_user = models.ForeignKey(User, verbose_name="Attendee User", on_delete=models.CASCADE, blank=True, null=True)
-    check_in_time = models.DateTimeField(verbose_name="Check in time", blank=True, null=True)
-    check_out_time = models.DateTimeField(verbose_name="Check in time", blank=True, null=True)
+    date = models.DateField(verbose_name="Date", blank=True, null=True)
+    check_in_time = models.TimeField(verbose_name="Check in time", blank=True, null=True)
+    check_out_time = models.TimeField(verbose_name="Check in time", blank=True, null=True)
+    production_hour = models.TimeField(verbose_name="Production Time", blank=True, null=True, max_length=20)
     attendace_status = models.CharField(verbose_name="Attendance status", max_length=50, choices=AttendanceStatusChoice.choices, default=AttendanceStatusChoice.ABSENT, blank=True, null=True)
+
+    def __str__(self):
+        return self.attendee_user

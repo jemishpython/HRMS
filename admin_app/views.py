@@ -26,7 +26,7 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies, \
-    Interviewers, InterviewQuestions, InterviewerResult
+    Interviewers, InterviewQuestions, InterviewerResult, Attendance
 
 
 def AdminRegister(request):
@@ -1126,16 +1126,9 @@ def Chat(request, id):
 
 @login_required(login_url="Login")
 def AttendanceView(request):
-    user_list = User.objects.all()
-    current_date = datetime.date.today()
-    current_month = calendar.monthrange(current_date.year, current_date.month)[1]
-    month_range = range(1, current_month + 1)
-    current_day = range(1, current_date.day + 1)
+    attendances = Attendance.objects.all().order_by('-date')
     context = {
-        'user_list': user_list,
-        'current_date': current_date,
-        'month_range': month_range,
-        'current_day': current_day,
+        'attendances': attendances,
     }
     return render(request, "admin/attendance.html", context)
 
