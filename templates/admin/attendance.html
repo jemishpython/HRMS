@@ -31,13 +31,7 @@
 						<div class="col-sm-6 col-md-2">
 							<div class="form-group form-focus">
 								<input type="text" class="form-control floating" id="designation_search">
-								<label class="focus-label">Designation</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus">
-								<input type="text" class="form-control floating" id="technology_search">
-								<label class="focus-label">Technology</label>
+								<label class="focus-label">Designation / Technology</label>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-2">
@@ -49,7 +43,7 @@
 						<div class="col-sm-6 col-md-2">
 							<div class="form-group form-focus select-focus">
 								<select class="form-control floating" id="month_search">
-									<option>-</option>
+									<option value="">---</option>
 									<option>Jan</option>
 									<option>Feb</option>
 									<option>Mar</option>
@@ -69,7 +63,7 @@
 						<div class="col-sm-6 col-md-2">
 							<div class="form-group form-focus select-focus">
 								<select class="form-control floating" id="year_search">
-									<option>-</option>
+									<option value="">---</option>
 									<option>2024</option>
 									<option>2023</option>
 									<option>2022</option>
@@ -77,6 +71,17 @@
 									<option>2020</option>
 								</select>
 								<label class="focus-label">Select Year</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-2">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control" id="attendance_status_search">
+									<option value="">---</option>
+									<option>Present</option>
+									<option>Half Day</option>
+									<option>Absent</option>
+								</select>
+								<label class="focus-label">Attendance Status</label>
 							</div>
 						</div>
                     </div>
@@ -92,6 +97,7 @@
 											<th>Date</th>
 											<th>Punch In</th>
 											<th>Punch Out</th>
+											<th>Production Time</th>
 											<th>Mobile</th>
 											<th>Department</th>
 											<th class="text-center no-sort">Attendance</th>
@@ -109,12 +115,11 @@
 											<td>{{attendee.date|date:'j - M - Y'}}</td>
 											<td>{{attendee.check_in_time|date:'h : i A'}}</td>
 											<td>{{attendee.check_out_time|date:'h : i A'}}</td>
+											<td>{{attendee.production_hour|date:'H : i A'}}</td>
 											<td>{{attendee.attendee_user.phone}}</td>
 											<td>{{attendee.attendee_user.department}}</td>
 											<td class="text-center">
-												<div class="d-flex justify-content-end">
-													<a class="dropdown-item px-1 py-0 rounded d-sm-block text-danger" href="#">{{attendee.attendace_status}}</a>
-												</div>
+												<p><i class="fa fa-dot-circle-o mr-1 {% if attendee.attendace_status == 'Present' %}text-success{% elif attendee.attendace_status == 'Half Day' %}text-warning{% else %}text-danger{% endif %}"></i> {{attendee.attendace_status}}</p>
 											</td>
 										</tr>
 									{% endfor %}
@@ -142,11 +147,11 @@ $(document).ready(function () {
 	 $('#designation_search').on('keyup', function () {
 		table.column(0).search(this.value).draw();
 	});
-	 $('#technology_search').on('keyup', function () {
-		table.column(0).search(this.value).draw();
+	 $('#attendance_status_search').on('change', function () {
+		table.column(7).search(this.value).draw();
 	});
 	 $('#department_search').on('keyup', function () {
-		table.column(5).search(this.value).draw();
+		table.column(6).search(this.value).draw();
 	});
 	$('#year_search').on('change', function () {
 		table.column(1).search(this.value).draw();

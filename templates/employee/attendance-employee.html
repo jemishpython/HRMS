@@ -67,16 +67,16 @@
 											{% endif %}
 										</div>
 									</div>
-									<div>
-										<div class="punch-det">
-											<h6>Break Time</h6>
-											<p>1 hr</p>
-										</div>
+<!--									<div>-->
+<!--										<div class="punch-det">-->
+<!--											<h6>Break Time</h6>-->
+<!--											<p>1 hr</p>-->
+<!--										</div>-->
 <!--										<div class="punch-det mb-0">-->
 <!--											<h6>Over Time</h6>-->
 <!--											<p>Mon, 11th Mar 2019 10.00 AM</p>-->
 <!--										</div>-->
-									</div>
+<!--									</div>-->
 								</div>
 							</div>
 						</div>
@@ -213,7 +213,7 @@ function startTimer() {
 function startInactivityTimeout() {
     inactivityTimeout = setTimeout(function() {
         clearInterval(interval);
-    }, 10000); // 30 seconds of inactivity
+    }, 10000); // 10 seconds of inactivity
 
     window.addEventListener('mousemove', resetInactivityTimeout);
     window.addEventListener('keydown', resetInactivityTimeout);
@@ -223,7 +223,7 @@ function resetInactivityTimeout() {
     clearTimeout(inactivityTimeout);
     inactivityTimeout = setTimeout(function() {
         clearInterval(interval);
-    }, 10000); // 30 seconds of inactivity
+    }, 10000); // 10 seconds of inactivity
 }
 
 function removeActivityListeners() {
