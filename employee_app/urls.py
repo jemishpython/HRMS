@@ -49,6 +49,8 @@ urlpatterns = [
     path("chat/<int:id>", views.ChatView, name="EmpChatView"),
 
     path("attendance/<int:id>", views.AttendanceView, name="EmpAttendanceView"),
+    path("attendance/punch-in/<int:id>", views.PunchIn, name="EmpPunchIn"),
+    path("attendance/<int:id>/punch-out/<int:userid>", views.PunchOut, name="EmpPunchOut"),
 
     path("project/<int:id>", views.ProjectView, name="EmpProjectsView"),
     # path("project/details-view/<int:id>", views.ProjectDetailsView, name="EmpProjectDetailsView"),

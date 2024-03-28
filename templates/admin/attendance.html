@@ -24,32 +24,26 @@
 					<div class="row filter-row">
 						<div class="col-sm-6 col-md-2">
 							<div class="form-group form-focus">
-								<input type="text" class="form-control floating">
+								<input type="text" class="form-control floating" id="emp_name_search">
 								<label class="focus-label">Employee Name</label>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-2">
 							<div class="form-group form-focus">
-								<input type="text" class="form-control floating">
-								<label class="focus-label">Employee Name</label>
+								<input type="text" class="form-control floating" id="designation_search">
+								<label class="focus-label">Designation / Technology</label>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-2">
 							<div class="form-group form-focus">
-								<input type="text" class="form-control floating">
-								<label class="focus-label">Employee Name</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus">
-								<input type="text" class="form-control floating">
-								<label class="focus-label">Employee Name</label>
+								<input type="text" class="form-control floating" id="department_search">
+								<label class="focus-label">Department</label>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-2">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating"> 
-									<option>-</option>
+								<select class="form-control floating" id="month_search">
+									<option value="">---</option>
 									<option>Jan</option>
 									<option>Feb</option>
 									<option>Mar</option>
@@ -68,15 +62,26 @@
 						</div>
 						<div class="col-sm-6 col-md-2">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating"> 
-									<option>-</option>
-									<option>2019</option>
-									<option>2018</option>
-									<option>2017</option>
-									<option>2016</option>
-									<option>2015</option>
+								<select class="form-control floating" id="year_search">
+									<option value="">---</option>
+									<option>2024</option>
+									<option>2023</option>
+									<option>2022</option>
+									<option>2021</option>
+									<option>2020</option>
 								</select>
 								<label class="focus-label">Select Year</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-2">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control" id="attendance_status_search">
+									<option value="">---</option>
+									<option>Present</option>
+									<option>Half Day</option>
+									<option>Absent</option>
+								</select>
+								<label class="focus-label">Attendance Status</label>
 							</div>
 						</div>
                     </div>
@@ -85,29 +90,39 @@
                     <div class="row">
                         <div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table table-nowrap mb-0">
+								<table class="table table-striped custom-table" id="attendance_list_table">
 									<thead>
 										<tr>
-											<th>Employee</th>
-											{% for i in month_range %}
-											<th>{{i}}</th>
-											{% endfor %}
+											<th>Name</th>
+											<th>Date</th>
+											<th>Punch In</th>
+											<th>Punch Out</th>
+											<th>Production Time</th>
+											<th>Mobile</th>
+											<th>Department</th>
+											<th class="text-center no-sort">Attendance</th>
 										</tr>
 									</thead>
 									<tbody>
-										{% for users in user_list %}
+									{% for attendee in attendances %}
 										<tr>
 											<td>
 												<h2 class="table-avatar">
-													<a href="{% url 'AdminProfileView' users.id %}"><img alt="" class="avatar" src="{{users.avatar.url}}"></a>
-													<a href="{% url 'AdminProfileView' users.id %}">{{users.username}}<span>{{users.designation|default:""}}. {{users.technology|default:""}}</span></a>
+													<a href="{% url 'AdminProfileView' attendee.attendee_user.id %}"><img class="avatar" alt="" src="{{attendee.attendee_user.avatar.url}}"></a>
+													<a href="{% url 'AdminProfileView' attendee.attendee_user.id %}">{{attendee.attendee_user.username}} <span>{{attendee.attendee_user.designation}} | {{attendee.attendee_user.technology}}</span></a>
 												</h2>
 											</td>
-											{% for i in current_day %}
-											<td><a href="javascript:void(0);" data-toggle="modal" data-target="#attendance_info"><i class="fa fa-check text-success"></i></a></td>
-											{% endfor %}
+											<td>{{attendee.date|date:'j - M - Y'}}</td>
+											<td>{{attendee.check_in_time|date:'h : i A'}}</td>
+											<td>{{attendee.check_out_time|date:'h : i A'}}</td>
+											<td>{{attendee.production_hour|date:'H : i A'}}</td>
+											<td>{{attendee.attendee_user.phone}}</td>
+											<td>{{attendee.attendee_user.department}}</td>
+											<td class="text-center">
+												<p><i class="fa fa-dot-circle-o mr-1 {% if attendee.attendace_status == 'Present' %}text-success{% elif attendee.attendace_status == 'Half Day' %}text-warning{% else %}text-danger{% endif %}"></i> {{attendee.attendace_status}}</p>
+											</td>
 										</tr>
-										{% endfor %}
+									{% endfor %}
 									</tbody>
 								</table>
 							</div>
@@ -116,112 +131,42 @@
                 </div>
 				<!-- /Page Content -->
 				
-				<!-- Attendance Modal -->
-				<div class="modal custom-modal fade" id="attendance_info" role="dialog">
-					<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-						<div class="modal-content">
-							<div class="modal-header">
-								<h5 class="modal-title">Attendance Info</h5>
-								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-									<span aria-hidden="true">&times;</span>
-								</button>
-							</div>
-							<div class="modal-body">
-								<div class="row">
-									<div class="col-md-6">
-										<div class="card punch-status">
-											<div class="card-body">
-												<h5 class="card-title">Timesheet <small class="text-muted">11 Mar 2019</small></h5>
-												<div class="punch-det">
-													<h6>Punch In at</h6>
-													<p>Wed, 11th Mar 2019 10.00 AM</p>
-												</div>
-												<div class="punch-info">
-													<div class="punch-hours">
-														<span>3.45 hrs</span>
-													</div>
-												</div>
-												<div class="punch-det">
-													<h6>Punch Out at</h6>
-													<p>Wed, 20th Feb 2019 9.00 PM</p>
-												</div>
-												<div class="statistics">
-													<div class="row">
-														<div class="col-md-6 col-6 text-center">
-															<div class="stats-box">
-																<p>Break</p>
-																<h6>1.21 hrs</h6>
-															</div>
-														</div>
-														<div class="col-md-6 col-6 text-center">
-															<div class="stats-box">
-																<p>Overtime</p>
-																<h6>3 hrs</h6>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<div class="card recent-activity">
-											<div class="card-body">
-												<h5 class="card-title">Activity</h5>
-												<ul class="res-activity-list">
-													<li>
-														<p class="mb-0">Punch In at</p>
-														<p class="res-activity-time">
-															<i class="fa fa-clock-o"></i>
-															10.00 AM.
-														</p>
-													</li>
-													<li>
-														<p class="mb-0">Punch Out at</p>
-														<p class="res-activity-time">
-															<i class="fa fa-clock-o"></i>
-															11.00 AM.
-														</p>
-													</li>
-													<li>
-														<p class="mb-0">Punch In at</p>
-														<p class="res-activity-time">
-															<i class="fa fa-clock-o"></i>
-															11.15 AM.
-														</p>
-													</li>
-													<li>
-														<p class="mb-0">Punch Out at</p>
-														<p class="res-activity-time">
-															<i class="fa fa-clock-o"></i>
-															1.30 PM.
-														</p>
-													</li>
-													<li>
-														<p class="mb-0">Punch In at</p>
-														<p class="res-activity-time">
-															<i class="fa fa-clock-o"></i>
-															2.00 PM.
-														</p>
-													</li>
-													<li>
-														<p class="mb-0">Punch Out at</p>
-														<p class="res-activity-time">
-															<i class="fa fa-clock-o"></i>
-															7.30 PM.
-														</p>
-													</li>
-												</ul>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Attendance Modal -->
-				
             </div>
 			<!-- Page Wrapper -->
+
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+	var table = $('#attendance_list_table').DataTable({
+		dom: 'Blrtip',
+	});
+	$('#emp_name_search').on('keyup', function () {
+		table.column(0).search(this.value).draw();
+	});
+	 $('#designation_search').on('keyup', function () {
+		table.column(0).search(this.value).draw();
+	});
+	 $('#attendance_status_search').on('change', function () {
+		table.column(7).search(this.value).draw();
+	});
+	 $('#department_search').on('keyup', function () {
+		table.column(6).search(this.value).draw();
+	});
+	$('#year_search').on('change', function () {
+		table.column(1).search(this.value).draw();
+	});
+	 $('#month_search').on('change', function () {
+		table.column(1).search(this.value).draw();
+	});
+
+});
+
+window.setTimeout(function() {
+	$(".alert").fadeTo(500, 0).slideUp(500, function(){
+		$(this).remove();
+	});
+}, 1700);
+</script>
+
 {% endblock body %}

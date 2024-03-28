@@ -1,4 +1,5 @@
 import datetime
+import time
 from datetime import date
 
 from django.contrib.auth import login, logout
@@ -13,11 +14,12 @@ from django.shortcuts import render, redirect
 
 from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm, EditPersonalInfoForm, \
     AddEducationInfoForm, EditEducationInfoForm, AddExperienceInfoForm, EditExperienceInfoForm, \
-    EditEmergencyContactForm, AddEmergencyContactForm, AddTicketsForm, EditTicketsForm
-from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
+    EditEmergencyContactForm, AddEmergencyContactForm, AddTicketsForm, EditTicketsForm, PunchInForm, PunchOutForm
+from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign, ProjectImages, ProjectFile, Policies
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign, ProjectImages, ProjectFile, Policies, \
+    Attendance
 
 
 def landing(request):
@@ -500,11 +502,115 @@ def ChatView(request, id):
 @login_required(login_url="EmployeeLogin")
 def AttendanceView(request, id):
     current_datetime = datetime.datetime.now()
-
+    attendee = Attendance.objects.filter(attendee_user=id)
+    last_punchIn_id = Attendance.objects.filter(attendee_user=id).last()
     context = {
         'current_datetime': current_datetime,
+        'attendee': attendee,
+        'last_punchIn_id': last_punchIn_id,
     }
     return render(request, "employee/attendance-employee.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def PunchIn(request, id):
+    userid = User.objects.get(id=id)
+    form = PunchInForm(request.POST)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                punchIn = form.save(commit=False)
+                punchIn.date = date.today()
+                punchIn.check_in_time = datetime.datetime.now().time()
+                punchIn.attendee_user = User.objects.get(id=id)
+                punchIn.save()
+                messages.success(request, 'PunchIn successfully')
+                return redirect('EmpAttendanceView', id=userid.id)
+            else:
+                messages.error(request, 'Form not valid : ', form.errors)
+        except Exception as e:
+            messages.error(request, 'ERROR', e)
+    context = {'form': form}
+    return render(request, "employee/attendance-employee.html", context)
+
+
+# --------------------- Based on punchIn and punchOut time------------------------
+@login_required(login_url="EmployeeLogin")
+def PunchOut(request, id, userid):
+    user_id = User.objects.get(id=userid)
+    edit_attendance = Attendance.objects.get(id=id)
+    form = PunchOutForm(request.POST or None, instance=edit_attendance)
+
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                punchOut = form.save(commit=False)
+                punchOut.check_out_time = datetime.datetime.now().time()
+                production_time = datetime.datetime.combine(datetime.date.today(), punchOut.check_out_time) - datetime.datetime.combine(datetime.date.today(), punchOut.check_in_time)
+                punchOut.production_hour = str(production_time)
+
+                half_day_morning_end = datetime.time(13, 0)  # 1 PM
+                half_day_evening_start = datetime.time(13, 0)  # 1 PM
+                half_day_evening_end = datetime.time(18, 30)  # 6:30 PM
+                full_day_start = datetime.time(8, 0)  # 8 AM
+                full_day_end = datetime.time(18, 30)  # 6:30 PM
+
+                if punchOut.check_in_time >= full_day_start and punchOut.check_out_time <= half_day_morning_end:
+                    punchOut.attendace_status = AttendanceStatusChoice.HALF_DAY
+                elif punchOut.check_in_time >= half_day_evening_start and punchOut.check_out_time <= half_day_evening_end:
+                    punchOut.attendace_status = AttendanceStatusChoice.HALF_DAY
+                elif punchOut.check_in_time >= full_day_start and punchOut.check_out_time <= full_day_end:
+                    punchOut.attendace_status = AttendanceStatusChoice.PRESENT
+                else:
+                    punchOut.attendace_status = AttendanceStatusChoice.ABSENT
+
+                punchOut.save()
+                messages.success(request, 'PunchOut successfully')
+                return redirect('EmpAttendanceView', id=user_id.id)
+            else:
+                messages.error(request, 'Form not valid: ' + str(form.errors))
+        except Exception as e:
+            messages.error(request, 'ERROR: ' + str(e))
+
+    context = {'form': form}
+    return render(request, "employee/attendance-employee.html", context)
+
+
+# --------------------- Based on production time------------------------
+#
+#
+# @login_required(login_url="EmployeeLogin")
+# def PunchOut(request, id, userid):
+#     user_id = User.objects.get(id=userid)
+#     edit_attendance = Attendance.objects.get(id=id)
+#     form = PunchOutForm(request.POST or None, instance=edit_attendance)
+#
+#     if request.method == 'POST':
+#         try:
+#             if form.is_valid():
+#                 punchOut = form.save(commit=False)
+#                 punchOut.check_out_time = datetime.datetime.now().time()
+#                 production_time = datetime.datetime.combine(datetime.date.today(), punchOut.check_out_time) - datetime.datetime.combine(datetime.date.today(), punchOut.check_in_time)
+#                 punchOut.production_hour = str(production_time)
+#
+#                 if production_time >= datetime.timedelta(hours=8, minutes=30):
+#                     punchOut.attendace_status = AttendanceStatusChoice.PRESENT
+#                 elif datetime.timedelta(hours=4) <= production_time < datetime.timedelta(hours=4, minutes=40):
+#                     punchOut.attendace_status = AttendanceStatusChoice.HALF_DAY
+#                 else:
+#                     punchOut.attendace_status = AttendanceStatusChoice.ABSENT
+#
+#                 punchOut.save()
+#
+#                 messages.success(request, 'PunchOut successfully')
+#                 return redirect('EmpAttendanceView', id=user_id.id)
+#             else:
+#                 messages.error(request, 'Form not valid: ' + str(form.errors))
+#         except Exception as e:
+#             messages.error(request, 'ERROR: ' + str(e))
+#
+#     context = {'form': form}
+#     return render(request, "employee/attendance-employee.html", context)
 
 
 @login_required(login_url="EmployeeLogin")

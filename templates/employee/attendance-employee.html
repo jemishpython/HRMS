@@ -10,13 +10,19 @@
 {% block body %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
+				<div class="show_message">
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+					{% endfor %}
+				</div>
+
                 <div class="content container-fluid">
-				
+
 					<!-- Page Header -->
 					<div class="page-header">
 						<div class="row">
 							<div class="col-sm-12">
-								<h3 class="page-title">Attendance | {{current_datetime|date:'d - U - Y'}}</h3>
+								<h3 class="page-title">Attendance | {{current_datetime|date:'D, d - M - Y'}}</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
 									<li class="breadcrumb-item active">Attendance</li>
@@ -25,137 +31,60 @@
 						</div>
 					</div>
 					<!-- /Page Header -->
-					
+
 					<div class="row">
 						<div class="col-md-12">
 							<div class="card punch-status">
 								<div class="card-body d-flex justify-content-between align-items-center">
-									<div class="punch-info mb-0">
-										<div class="border border-muted border-5 rounded-pill px-5 py-5">
-											<span>3 h : 45 m : 60 s</span>
+									<div class="punch-info mb-0 w-25">
+										<div class="border border-muted border-5 rounded-pill px-3 py-5 text-center">
+											<span id="timer" style="font-size:2.5rem;">00 h : 00 m : 00 s</span>
 										</div>
 									</div>
-									<div class="punch-btn-section mb-0">
-										<button type="button" class="btn btn-primary punch-btn">Punch Out</button>
+									<div class="punch-btn-section mb-0 d-flex flex-column">
+										<form action="{% url 'EmpPunchIn' user.id %}" method="post">
+										{% csrf_token %}
+											<button type="submit" class="btn btn-primary punch-btn mb-2" id="punchIn" onclick="disableButton()">Punch In</button>
+										</form>
+										{% if last_punchIn_id %}
+										<form action="{% url 'EmpPunchOut' id=last_punchIn_id.id userid=user.id %}" method="post">
+										{% csrf_token %}
+											<button type="submit" class="btn btn-primary punch-btn mb-2" id="punchOut" onclick="enableButton()">Punch Out</button>
+										</form>
+										{% endif %}
 									</div>
-									<div class="mx-3">
+									<div style="width:15rem;">
 										<div class="punch-det">
 											<h6>Punch In at</h6>
-											<p>Mon, 11th Mar 2019 10.00 AM</p>
+											<p>{{last_punchIn_id.check_in_time|date:"h:i: A"}}</p>
 										</div>
 										<div class="punch-det mb-0">
-											<h6>Punch In at</h6>
-											<p>Mon, 11th Mar 2019 10.00 AM</p>
+											<h6>Punch Out at</h6>
+											{% if last_punchIn_id.check_out_time %}
+												<p>{{last_punchIn_id.check_out_time|date:"h:i A"}}</p>
+											{% else %}
+												<p>Show after punchOut</p>
+											{% endif %}
 										</div>
 									</div>
-									<div class="mx-3">
-										<div class="punch-det">
-											<h6>Break Time</h6>
-											<p>1 hr</p>
-										</div>
-										<div class="punch-det mb-0">
-											<h6>Over Time</h6>
-											<p>Mon, 11th Mar 2019 10.00 AM</p>
-										</div>
-									</div>
+<!--									<div>-->
+<!--										<div class="punch-det">-->
+<!--											<h6>Break Time</h6>-->
+<!--											<p>1 hr</p>-->
+<!--										</div>-->
+<!--										<div class="punch-det mb-0">-->
+<!--											<h6>Over Time</h6>-->
+<!--											<p>Mon, 11th Mar 2019 10.00 AM</p>-->
+<!--										</div>-->
+<!--									</div>-->
 								</div>
 							</div>
 						</div>
-<!--						<div class="col-md-4">-->
-<!--							<div class="card att-statistics">-->
-<!--								<div class="card-body">-->
-<!--									<h5 class="card-title">Statistics</h5>-->
-<!--									<div class="stats-list">-->
-<!--										<div class="stats-info">-->
-<!--											<p>Today <strong>3.45 <small>/ 8 hrs</small></strong></p>-->
-<!--											<div class="progress">-->
-<!--												<div class="progress-bar bg-primary" role="progressbar" style="width: 31%" aria-valuenow="31" aria-valuemin="0" aria-valuemax="100"></div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--										<div class="stats-info">-->
-<!--											<p>This Week <strong>28 <small>/ 40 hrs</small></strong></p>-->
-<!--											<div class="progress">-->
-<!--												<div class="progress-bar bg-warning" role="progressbar" style="width: 31%" aria-valuenow="31" aria-valuemin="0" aria-valuemax="100"></div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--										<div class="stats-info">-->
-<!--											<p>This Month <strong>90 <small>/ 160 hrs</small></strong></p>-->
-<!--											<div class="progress">-->
-<!--												<div class="progress-bar bg-success" role="progressbar" style="width: 62%" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--										<div class="stats-info">-->
-<!--											<p>Remaining <strong>90 <small>/ 160 hrs</small></strong></p>-->
-<!--											<div class="progress">-->
-<!--												<div class="progress-bar bg-danger" role="progressbar" style="width: 62%" aria-valuenow="62" aria-valuemin="0" aria-valuemax="100"></div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--										<div class="stats-info">-->
-<!--											<p>Overtime <strong>4</strong></p>-->
-<!--											<div class="progress">-->
-<!--												<div class="progress-bar bg-info" role="progressbar" style="width: 22%" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100"></div>-->
-<!--											</div>-->
-<!--										</div>-->
-<!--									</div>-->
-<!--								</div>-->
-<!--							</div>-->
-<!--						</div>-->
-<!--						<div class="col-md-4">-->
-<!--							<div class="card recent-activity">-->
-<!--								<div class="card-body">-->
-<!--									<h5 class="card-title">Today Activity</h5>-->
-<!--									<ul class="res-activity-list">-->
-<!--										<li>-->
-<!--											<p class="mb-0">Punch In at</p>-->
-<!--											<p class="res-activity-time">-->
-<!--												<i class="fa fa-clock-o"></i>-->
-<!--												10.00 AM.-->
-<!--											</p>-->
-<!--										</li>-->
-<!--										<li>-->
-<!--											<p class="mb-0">Punch Out at</p>-->
-<!--											<p class="res-activity-time">-->
-<!--												<i class="fa fa-clock-o"></i>-->
-<!--												11.00 AM.-->
-<!--											</p>-->
-<!--										</li>-->
-<!--										<li>-->
-<!--											<p class="mb-0">Punch In at</p>-->
-<!--											<p class="res-activity-time">-->
-<!--												<i class="fa fa-clock-o"></i>-->
-<!--												11.15 AM.-->
-<!--											</p>-->
-<!--										</li>-->
-<!--										<li>-->
-<!--											<p class="mb-0">Punch Out at</p>-->
-<!--											<p class="res-activity-time">-->
-<!--												<i class="fa fa-clock-o"></i>-->
-<!--												1.30 PM.-->
-<!--											</p>-->
-<!--										</li>-->
-<!--										<li>-->
-<!--											<p class="mb-0">Punch In at</p>-->
-<!--											<p class="res-activity-time">-->
-<!--												<i class="fa fa-clock-o"></i>-->
-<!--												2.00 PM.-->
-<!--											</p>-->
-<!--										</li>-->
-<!--										<li>-->
-<!--											<p class="mb-0">Punch Out at</p>-->
-<!--											<p class="res-activity-time">-->
-<!--												<i class="fa fa-clock-o"></i>-->
-<!--												7.30 PM.-->
-<!--											</p>-->
-<!--										</li>-->
-<!--									</ul>-->
-<!--								</div>-->
-<!--							</div>-->
-<!--						</div>-->
 					</div>
 
 					<!-- Search Filter -->
 					<div class="row filter-row">
-						<div class="col-sm-3">  
+						<div class="col-sm-3">
 							<div class="form-group form-focus">
 								<div class="cal-icon">
 									<input type="text" class="form-control floating datetimepicker">
@@ -163,9 +92,9 @@
 								<label class="focus-label">Date</label>
 							</div>
 						</div>
-						<div class="col-sm-3"> 
+						<div class="col-sm-3">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating"> 
+								<select class="select floating">
 									<option>-</option>
 									<option>Jan</option>
 									<option>Feb</option>
@@ -183,9 +112,9 @@
 								<label class="focus-label">Select Month</label>
 							</div>
 						</div>
-						<div class="col-sm-3"> 
+						<div class="col-sm-3">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating"> 
+								<select class="select floating">
 									<option>-</option>
 									<option>2019</option>
 									<option>2018</option>
@@ -196,46 +125,37 @@
 								<label class="focus-label">Select Year</label>
 							</div>
 						</div>
-						<div class="col-sm-3">  
-							<a href="#" class="btn btn-success btn-block"> Search </a>  
-						</div>     
+						<div class="col-sm-3">
+							<a href="#" class="btn btn-success btn-block"> Search </a>
+						</div>
                     </div>
 					<!-- /Search Filter -->
-					
+
                     <div class="row">
                         <div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table mb-0">
+								<table class="table table-striped custom-table mb-0" id="attendance_table">
 									<thead>
 										<tr>
-											<th>#</th>
+											<th>Sr No</th>
 											<th>Date </th>
 											<th>Punch In</th>
 											<th>Punch Out</th>
-											<th>Production</th>
 											<th>Break</th>
-											<th>Overtime</th>
+											<th>Production</th>
 										</tr>
 									</thead>
 									<tbody>
+										{% for attendance in attendee %}
 										<tr>
-											<td>1</td>
-											<td>19 Feb 2019</td>
-											<td>10 AM</td>
-											<td>7 PM</td>
-											<td>9 hrs</td>
+											<td>{{forloop.counter}}</td>
+											<td>{{attendance.date|date:'j - M - Y'}}</td>
+											<td>{{attendance.check_in_time|date:'h:i:s A'}}</td>
+											<td>{{attendance.check_out_time|date:'h:i:s A'}}</td>
 											<td>1 hrs</td>
-											<td>0</td>
+											<td>{{attendance.production_hour|date:'H:i:s A'}}</td>
 										</tr>
-										<tr>
-											<td>2</td>
-											<td>20 Feb 2019</td>
-											<td>10 AM</td>
-											<td>7 PM</td>
-											<td>9 hrs</td>
-											<td>1 hrs</td>
-											<td>0</td>
-										</tr>
+										{% endfor %}
 									</tbody>
 								</table>
 							</div>
@@ -243,7 +163,87 @@
                     </div>
                 </div>
 				<!-- /Page Content -->
-				
+
             </div>
 			<!-- Page Wrapper -->
+
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+	var table = $('#attendance_table').DataTable({
+		lengthMenu: [
+			[5, 31, 50, -1],
+			[5, 31, 50, 'All']
+		],
+		dom: 'Blrtip',
+	});
+});
+</script>
+<script>
+var interval;
+var inactivityTimeout;
+
+$('#punchIn').click(function() {
+    var startTime = new Date();
+    localStorage.setItem('startTime', startTime);
+    startTimer();
+    startInactivityTimeout();
+});
+
+$('#punchOut').click(function() {
+    clearInterval(interval);
+    clearTimeout(inactivityTimeout);
+    localStorage.removeItem('startTime');
+    removeActivityListeners();
+});
+
+function startTimer() {
+    var startTime = new Date(localStorage.getItem('startTime'));
+    interval = setInterval(function() {
+        var elapsedTime = new Date() - startTime;
+        var seconds = Math.floor((elapsedTime / 1000) % 60),
+            minutes = Math.floor((elapsedTime / (1000 * 60)) % 60),
+            hours = Math.floor((elapsedTime / (1000 * 60 * 60)) % 24);
+
+        $('#timer').text((hours > 9 ? hours : "0" + hours) + " h : " + (minutes > 9 ? minutes : "0" + minutes) + " m : " + (seconds > 9 ? seconds : "0" + seconds) + " s");
+    }, 1000);
+}
+
+function startInactivityTimeout() {
+    inactivityTimeout = setTimeout(function() {
+        clearInterval(interval);
+    }, 10000); // 10 seconds of inactivity
+
+    window.addEventListener('mousemove', resetInactivityTimeout);
+    window.addEventListener('keydown', resetInactivityTimeout);
+}
+
+function resetInactivityTimeout() {
+    clearTimeout(inactivityTimeout);
+    inactivityTimeout = setTimeout(function() {
+        clearInterval(interval);
+    }, 10000); // 10 seconds of inactivity
+}
+
+function removeActivityListeners() {
+    window.removeEventListener('mousemove', resetInactivityTimeout);
+    window.removeEventListener('keydown', resetInactivityTimeout);
+}
+
+if (localStorage.getItem('startTime')) {
+    startTimer();
+    startInactivityTimeout();
+}
+
+</script>
+<script>
+    window.setTimeout(function() {
+        $(".alert").fadeTo(500, 0).slideUp(500, function(){
+            $(this).remove();
+        });
+    }, 1700);
+</script>
+
+
 {% endblock body %}
