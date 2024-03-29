@@ -31,6 +31,51 @@
 						</div>
 					</div>
 					<!-- /Page Header -->
+					<div class="row">
+						<div class="col-md-12">
+							<div class="card-group m-b-30">
+									<div class="card mr-2" style="border-radius: 1rem; background-color:#e8e3e3;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h4 class="p-3">Total Presence in Month :  <span class="text-success ml-2">{{present_count_monthly.count}}</span></h4>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="card mx-2" style="border-radius: 1rem; background-color:#e8e3e3;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h4 class="p-3">Total Absence in Month :  <span class="text-danger ml-2">{{absent_count_monthly.count}}</span></h4>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="card mx-2" style="border-radius: 1rem; background-color:#e8e3e3;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h4 class="p-3">Total Presence in Year :  <span class="text-success ml-2">{{present_count_year.count}}</span></h4>
+												</div>
+											</div>
+										</div>
+									</div>
+
+									<div class="card ml-2" style="border-radius: 1rem; background-color:#e8e3e3;">
+										<div class="card-body">
+											<div class="d-flex justify-content-center">
+												<div>
+													<h4 class="p-3">Total Absence in Year :  <span class="text-danger ml-2">{{absent_count_year.count}}</span></h4>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+						</div>
+					</div>
 
 					<div class="row">
 						<div class="col-md-12">
@@ -84,49 +129,58 @@
 
 					<!-- Search Filter -->
 					<div class="row filter-row">
-						<div class="col-sm-3">
-							<div class="form-group form-focus">
-								<div class="cal-icon">
-									<input type="text" class="form-control floating datetimepicker">
-								</div>
-								<label class="focus-label">Date</label>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control floating" id="day_search">
+									<option value="">---</option>
+									{% for i in day_range %}
+									<option>{{i}}</option>
+									{% endfor %}
+								</select>
+								<label class="focus-label">Select Day</label>
 							</div>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-6 col-md-3">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating">
-									<option>-</option>
-									<option>Jan</option>
-									<option>Feb</option>
-									<option>Mar</option>
-									<option>Apr</option>
-									<option>May</option>
-									<option>Jun</option>
-									<option>Jul</option>
-									<option>Aug</option>
-									<option>Sep</option>
-									<option>Oct</option>
-									<option>Nov</option>
-									<option>Dec</option>
+								<select class="form-control floating" id="month_search">
+									<option value="">---</option>
+									<option value="Jan">January</option>
+									<option value="Feb">February</option>
+									<option value="Mar">March</option>
+									<option value="Apr">April</option>
+									<option value="May">May</option>
+									<option value="Jun">June</option>
+									<option value="Jul">July</option>
+									<option value="Aug">Auguste</option>
+									<option value="Sep">September</option>
+									<option value="Oct">October</option>
+									<option value="Nov">November</option>
+									<option value="Dec">December</option>
 								</select>
 								<label class="focus-label">Select Month</label>
 							</div>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-6 col-md-3">
 							<div class="form-group form-focus select-focus">
-								<select class="select floating">
-									<option>-</option>
-									<option>2019</option>
-									<option>2018</option>
-									<option>2017</option>
-									<option>2016</option>
-									<option>2015</option>
+								<select class="form-control floating" id="year_search">
+									<option value="">---</option>
+									{% for i in year_range %}
+									<option>{{i}}</option>
+									{% endfor %}
 								</select>
 								<label class="focus-label">Select Year</label>
 							</div>
 						</div>
-						<div class="col-sm-3">
-							<a href="#" class="btn btn-success btn-block"> Search </a>
+						<div class="col-sm-6 col-md-3">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control" id="attendance_status_search">
+									<option value="">---</option>
+									<option>Present</option>
+									<option>Half Day</option>
+									<option>Absent</option>
+								</select>
+								<label class="focus-label">Attendance Status</label>
+							</div>
 						</div>
                     </div>
 					<!-- /Search Filter -->
@@ -138,22 +192,30 @@
 									<thead>
 										<tr>
 											<th>Sr No</th>
+											<th hidden>Day </th>
+											<th hidden>Month </th>
+											<th hidden>Year </th>
 											<th>Date </th>
 											<th>Punch In</th>
 											<th>Punch Out</th>
 											<th>Break</th>
 											<th>Production</th>
+											<th>Status</th>
 										</tr>
 									</thead>
 									<tbody>
 										{% for attendance in attendee %}
 										<tr>
 											<td>{{forloop.counter}}</td>
+											<td hidden>{{attendance.date|date:'j'}}</td>
+											<td hidden>{{attendance.date|date:'M'}}</td>
+											<td hidden>{{attendance.date|date:'Y'}}</td>
 											<td>{{attendance.date|date:'j - M - Y'}}</td>
 											<td>{{attendance.check_in_time|date:'h:i:s A'}}</td>
 											<td>{{attendance.check_out_time|date:'h:i:s A'}}</td>
 											<td>1 hrs</td>
 											<td>{{attendance.production_hour|date:'H:i:s A'}}</td>
+											<td><p><i class="fa fa-dot-circle-o mr-1 {% if attendance.attendance_status == 'Present' %}text-success{% elif attendance.attendance_status == 'Half Day' %}text-warning{% else %}text-danger{% endif %}"></i> {{attendance.attendance_status}}</p></td>
 										</tr>
 										{% endfor %}
 									</tbody>
@@ -177,6 +239,19 @@ $(document).ready(function () {
 			[5, 31, 50, 'All']
 		],
 		dom: 'Blrtip',
+	});
+
+	$('#year_search').on('change', function () {
+		table.column(3).search(this.value).draw();
+	});
+	 $('#month_search').on('change', function () {
+		table.column(2).search(this.value).draw();
+	});
+	 $('#day_search').on('change', function () {
+		table.column(1).search(this.value).draw();
+	});
+		 $('#attendance_status_search').on('change', function () {
+		table.column(9).search(this.value).draw();
 	});
 });
 </script>

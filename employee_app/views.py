@@ -503,11 +503,21 @@ def ChatView(request, id):
 def AttendanceView(request, id):
     current_datetime = datetime.datetime.now()
     attendee = Attendance.objects.filter(attendee_user=id)
+    present_count_monthly = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.PRESENT, date__month=datetime.datetime.now().month)
+    absent_count_monthly = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT, date__month=datetime.datetime.now().month)
+    present_count_year = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.PRESENT, date__year=datetime.datetime.now().year)
+    absent_count_year = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT, date__year=datetime.datetime.now().year)
     last_punchIn_id = Attendance.objects.filter(attendee_user=id).last()
     context = {
         'current_datetime': current_datetime,
         'attendee': attendee,
         'last_punchIn_id': last_punchIn_id,
+        'day_range': range(1, 32),
+        'year_range': range(2020, 2031),
+        'present_count_monthly': present_count_monthly,
+        'absent_count_monthly': absent_count_monthly,
+        'present_count_year': present_count_year,
+        'absent_count_year': absent_count_year,
     }
     return render(request, "employee/attendance-employee.html", context)
 
