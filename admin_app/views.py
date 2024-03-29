@@ -1129,6 +1129,8 @@ def AttendanceView(request):
     attendances = Attendance.objects.all().order_by('-date')
     context = {
         'attendances': attendances,
+        'day_range': range(1, 32),
+        'year_range': range(2020, 2031),
     }
     return render(request, "admin/attendance.html", context)
 
