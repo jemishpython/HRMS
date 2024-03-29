@@ -22,8 +22,8 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
     EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm, LeaveStatusUpdateForm, TicketStatusUpdateForm, \
     AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles, AddPoliciesForm, InterviewerForm, \
-    AddInterviewQuestionForm, EditInterviewQuestionForm
-from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
+    AddInterviewQuestionForm, EditInterviewQuestionForm, EditAttendanceForm
+from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies, \
     Interviewers, InterviewQuestions, InterviewerResult, Attendance
@@ -1131,6 +1131,45 @@ def AttendanceView(request):
         'attendances': attendances,
     }
     return render(request, "admin/attendance.html", context)
+
+
+@login_required(login_url="Login")
+def AttendanceEdit(request, id):
+    edit_attendance = Attendance.objects.get(id=id)
+    form = EditAttendanceForm(request.POST or None, instance=edit_attendance)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                attendance_update = form.save(commit=False)
+                production_time = datetime.datetime.combine(datetime.date.today(),attendance_update.check_out_time) - datetime.datetime.combine(datetime.date.today(), attendance_update.check_in_time)
+                if production_time.total_seconds() / 3600 > 5:
+                    production_time -= datetime.timedelta(hours=1)
+                attendance_update.production_hour = str(production_time)
+
+                half_day_morning_end = datetime.time(13, 0)  # 1 PM
+                half_day_evening_start = datetime.time(13, 0)  # 1 PM
+                half_day_evening_end = datetime.time(18, 30)  # 6:30 PM
+                full_day_start = datetime.time(8, 0)  # 8 AM
+                full_day_end = datetime.time(18, 30)  # 6:30 PM
+
+                if attendance_update.check_in_time >= full_day_start and attendance_update.check_out_time <= half_day_morning_end:
+                    attendance_update.attendance_status = AttendanceStatusChoice.HALF_DAY
+                elif attendance_update.check_in_time >= half_day_evening_start and attendance_update.check_out_time <= half_day_evening_end:
+                    attendance_update.attendance_status = AttendanceStatusChoice.HALF_DAY
+                elif attendance_update.check_in_time >= full_day_start and attendance_update.check_out_time <= full_day_end:
+                    attendance_update.attendance_status = AttendanceStatusChoice.PRESENT
+                else:
+                    attendance_update.attendance_status = AttendanceStatusChoice.ABSENT
+
+                attendance_update.save()
+                messages.info(request, 'Attendance Update successfully')
+                return redirect('AdminAttendanceView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    context = {'form': form, 'edit_attendance': edit_attendance}
+    return render(request, "admin/edit_attendance.html", context)
 
 
 @login_required(login_url="Login")

@@ -326,7 +326,7 @@ class Attendance(models.Model):
     check_in_time = models.TimeField(verbose_name="Check in time", blank=True, null=True)
     check_out_time = models.TimeField(verbose_name="Check in time", blank=True, null=True)
     production_hour = models.TimeField(verbose_name="Production Time", blank=True, null=True, max_length=20)
-    attendace_status = models.CharField(verbose_name="Attendance status", max_length=50, choices=AttendanceStatusChoice.choices, default=AttendanceStatusChoice.ABSENT, blank=True, null=True)
+    attendance_status = models.CharField(verbose_name="Attendance status", max_length=50, choices=AttendanceStatusChoice.choices, default=AttendanceStatusChoice.ABSENT, blank=True, null=True)
 
     def __str__(self):
         return self.attendee_user

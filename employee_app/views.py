@@ -556,13 +556,13 @@ def PunchOut(request, id, userid):
                 full_day_end = datetime.time(18, 30)  # 6:30 PM
 
                 if punchOut.check_in_time >= full_day_start and punchOut.check_out_time <= half_day_morning_end:
-                    punchOut.attendace_status = AttendanceStatusChoice.HALF_DAY
+                    punchOut.attendance_status = AttendanceStatusChoice.HALF_DAY
                 elif punchOut.check_in_time >= half_day_evening_start and punchOut.check_out_time <= half_day_evening_end:
-                    punchOut.attendace_status = AttendanceStatusChoice.HALF_DAY
+                    punchOut.attendance_status = AttendanceStatusChoice.HALF_DAY
                 elif punchOut.check_in_time >= full_day_start and punchOut.check_out_time <= full_day_end:
-                    punchOut.attendace_status = AttendanceStatusChoice.PRESENT
+                    punchOut.attendance_status = AttendanceStatusChoice.PRESENT
                 else:
-                    punchOut.attendace_status = AttendanceStatusChoice.ABSENT
+                    punchOut.attendance_status = AttendanceStatusChoice.ABSENT
 
                 punchOut.save()
                 messages.success(request, 'PunchOut successfully')
@@ -594,11 +594,11 @@ def PunchOut(request, id, userid):
 #                 punchOut.production_hour = str(production_time)
 #
 #                 if production_time >= datetime.timedelta(hours=8, minutes=30):
-#                     punchOut.attendace_status = AttendanceStatusChoice.PRESENT
+#                     punchOut.attendance_status = AttendanceStatusChoice.PRESENT
 #                 elif datetime.timedelta(hours=4) <= production_time < datetime.timedelta(hours=4, minutes=40):
-#                     punchOut.attendace_status = AttendanceStatusChoice.HALF_DAY
+#                     punchOut.attendance_status = AttendanceStatusChoice.HALF_DAY
 #                 else:
-#                     punchOut.attendace_status = AttendanceStatusChoice.ABSENT
+#                     punchOut.attendance_status = AttendanceStatusChoice.ABSENT
 #
 #                 punchOut.save()
 #

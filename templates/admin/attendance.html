@@ -100,7 +100,8 @@
 											<th>Production Time</th>
 											<th>Mobile</th>
 											<th>Department</th>
-											<th class="text-center no-sort">Attendance</th>
+											<th class="text-center">Attendance</th>
+											<th class="text-center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -119,7 +120,10 @@
 											<td>{{attendee.attendee_user.phone}}</td>
 											<td>{{attendee.attendee_user.department}}</td>
 											<td class="text-center">
-												<p><i class="fa fa-dot-circle-o mr-1 {% if attendee.attendace_status == 'Present' %}text-success{% elif attendee.attendace_status == 'Half Day' %}text-warning{% else %}text-danger{% endif %}"></i> {{attendee.attendace_status}}</p>
+												<p><i class="fa fa-dot-circle-o mr-1 {% if attendee.attendance_status == 'Present' %}text-success{% elif attendee.attendance_status == 'Half Day' %}text-warning{% else %}text-danger{% endif %}"></i> {{attendee.attendance_status}}</p>
+											</td>
+											<td>
+												<button class="p-0 ml-4 text-info border-0 " onclick="editAttendance({{attendee.id}})">Edit</button>
 											</td>
 										</tr>
 									{% endfor %}
@@ -130,6 +134,8 @@
                     </div>
                 </div>
 				<!-- /Page Content -->
+
+				<div id="edit-attendance-form"></div>
 				
             </div>
 			<!-- Page Wrapper -->
@@ -161,6 +167,18 @@ $(document).ready(function () {
 	});
 
 });
+
+
+
+function editAttendance(editAttendanceId) {
+    $.ajax({
+        url: "edit/"+ editAttendanceId + "/",
+        success: function(response) {
+            $("#edit-attendance-form").html(response);
+            $("#edit_attendance_model").modal('show');
+        }
+    });
+}
 
 window.setTimeout(function() {
 	$(".alert").fadeTo(500, 0).slideUp(500, function(){

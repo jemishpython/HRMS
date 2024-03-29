@@ -347,3 +347,14 @@ class EditInterviewQuestionForm(forms.ModelForm):
             'department': forms.Select(attrs={'class': 'form-control'}),
             'technology': forms.Select(attrs={'class': 'form-control'}),
         }
+
+
+class EditAttendanceForm(forms.ModelForm):
+    class Meta:
+        model = Attendance
+        fields = ['date', 'check_in_time', 'check_out_time']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'}),
+            'check_in_time': forms.TimeInput(attrs={'type': 'time', 'step': 'any'}),
+            'check_out_time': forms.TimeInput(attrs={'type': 'time', 'step': 'any'}),
+        }
