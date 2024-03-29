@@ -1341,3 +1341,14 @@ def DeleteInterviewQuestion(request, id):
     delete_question.delete()
     messages.error(request, 'Question Delete successfully')
     return redirect('AdminInterviewQuestion')
+
+
+@login_required(login_url="Login")
+def EmployeeSalarySlip(request):
+    user_list = User.objects.all()
+    context = {
+        'user_list': user_list,
+        'day_range': range(1, 32),
+        'year_range': range(2020, 2031),
+    }
+    return render(request, "admin/employee_salary.html", context)

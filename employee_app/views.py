@@ -680,3 +680,8 @@ def PoliciesView(request):
         'policies': policies,
     }
     return render(request, "employee/policies.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def SalarySlip(request):
+    return render(request, "employee/salary_slip.html")

@@ -96,6 +96,8 @@ urlpatterns = [
     path("attendance/", views.AttendanceView, name='AdminAttendanceView'),
     path("attendance/edit/<int:id>/", views.AttendanceEdit, name='AdminAttendanceEdit'),
 
+    path("employee-salary-slip/", views.EmployeeSalarySlip, name='AdminEmployeeSalaryView'),
+
     path("interviewer-list/", views.InterviewerDash, name='AdminInterviewerDash'),
     path("interviewer-detail/", views.InterviewerDetails, name='AdminInterviewerDetails'),
     path("interviewer-form/", views.InterviewerApply, name='AdminInterviewerForm'),

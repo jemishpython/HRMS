@@ -84,6 +84,7 @@ class User(AbstractUser):
     marital_status = models.CharField(verbose_name='Marital Status', choices=MaritalStatusChoice.choices, default=MaritalStatusChoice.SINGLE, null=True, max_length=255)
     religion = models.CharField(verbose_name='Religion', max_length=20, null=True)
     technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True, blank=True)
+    salary = models.IntegerField(verbose_name="Employee Salary", null=True, blank=True)
 
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []

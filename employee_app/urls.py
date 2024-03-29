@@ -62,4 +62,6 @@ urlpatterns = [
 
     path("policies/", views.PoliciesView, name='EmpPoliciesView'),
 
+    path("salary-slip/", views.SalarySlip, name='EmpSalarySlip'),
+
 ]
