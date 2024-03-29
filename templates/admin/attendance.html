@@ -4,6 +4,11 @@
 {% block nav %}{% include 'admin/navigationpanel.html' %}{% endblock nav %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
+				<div class="show_message">
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+					{% endfor %}
+				</div>
                 <div class="content container-fluid">
 				
 					<!-- Page Header -->
