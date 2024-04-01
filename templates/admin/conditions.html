@@ -20,11 +20,11 @@
 								<h3 class="page-title">Policies</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="{% url 'AdminIndex' %}">Dashboard</a></li>
-									<li class="breadcrumb-item active">Policies</li>
+									<li class="breadcrumb-item active">Conditions</li>
 								</ul>
 							</div>
 							<div class="col-auto float-right ml-auto">
-								<button class="btn add-btn" onclick="addPolicies()"><i class="fa fa-plus"></i> Add Policie</button>
+								<button class="btn add-btn" onclick="addCondition()"><i class="fa fa-plus"></i> Add Condition</button>
 							</div>
 						</div>
 					</div>
@@ -33,28 +33,27 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table mb-0">
+								<table class="table table-striped custom-table mb-0" id="condition_table">
 									<thead>
 										<tr>
 											<th>Sr NO</th>
-											<th>Policy Name </th>
-											<th>Department</th>
+											<th>Condition Title </th>
+											<th>Conditional Amount </th>
 											<th>Created Date</th>
-											<th>File</th>
-											<th class="text-right">Action</th>
+											<th class="text-center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-										{% for policy in policies %}
+										{% for condition in conditions %}
 										<tr class="holiday-upcoming">
 											<td>{{forloop.counter}}</td>
-											<td>{{policy.policy_name}}</td>
-											<td>{{policy.policy_department}}</td>
-											<td>{{policy.policy_create_date|date:"j - F - Y"}}</td>
-											<td>{{policy.policy_file|cut:'policies/'}}</td>
-											<td class="text-right">
-												<div class="d-flex justify-content-end">
-													<button class="p-0 ml-4 text-danger border-0 " onclick="deletePolicy({{policy.id}})">Delete</button>
+											<td>{{condition.condition_title}}</td>
+											<td>{{condition.conditional_amount}} {{condition.conditional_object}}</td>
+											<td>{{condition.condition_create_date|date:"j - F - Y"}}</td>
+											<td class="text-center">
+												<div class="d-flex justify-content-around">
+													<button class="p-0 ml-4 text-info border-0 " onclick="editCondition({{condition.id}})">Edit</button>
+													<button class="p-0 ml-4 text-danger border-0 " onclick="deleteCondition({{condition.id}})">Delete</button>
 												</div>
 											</td>
 										</tr>
@@ -68,11 +67,13 @@
 				<!-- /Page Content -->
 
 
-				<div id="add-policy-form"></div>
+				<div id="add-condition-form"></div>
+
+				<div id="edit-condition-form"></div>
 
 
 				<!-- Delete Holiday Modal -->
-				<div class="modal custom-modal fade" id="delete_policy_model" role="dialog">
+				<div class="modal custom-modal fade" id="delete_condition_model" role="dialog">
 					<div class="modal-dialog modal-dialog-centered">
 						<div class="modal-content">
 							<div class="modal-body">
@@ -99,31 +100,48 @@
 			<!-- /Page Wrapper -->
 
 <script>
-function addPolicies() {
+function addCondition() {
     $.ajax({
-        url: "{% url 'AdminAddPolicies' %}",
+        url: "{% url 'AdminAddCondition' %}",
         success: function(response) {
-            $("#add-policy-form").html(response);
-            $("#add_policy_model").modal('show');
+            $("#add-condition-form").html(response);
+            $("#add_condition_model").modal('show');
+        }
+    });
+}
+function editCondition(editConditionID) {
+    $.ajax({
+        url: "edit/" + editConditionID,
+        success: function(response) {
+            $("#edit-condition-form").html(response);
+            $("#edit_condition_model").modal('show');
         }
     });
 }
 
-function deletePolicy(deletePolicyId) {
-    $("#delete_policy_model").modal('show');
-    if (deletePolicyId) {
-        var deleteUrl = "{% url 'AdminDeletePolicies' id=0 %}".replace(0, deletePolicyId);
+function deleteCondition(deleteConditionId) {
+    $("#delete_condition_model").modal('show');
+    if (deleteConditionId) {
+        var deleteUrl = "{% url 'AdminDeleteCondition' id=0 %}".replace(0, deleteConditionId);
         $("#confirmDeleteBtn").attr("href", deleteUrl);
     }
 }
 
 </script>
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
 <script>
-    window.setTimeout(function() {
-        $(".alert").fadeTo(500, 0).slideUp(500, function(){
-            $(this).remove();
-        });
-    }, 1700);
+$(document).ready(function () {
+	var table = $('#condition_table').DataTable({
+		dom: 'Blrtip',
+	});
+});
+
+window.setTimeout(function() {
+	$(".alert").fadeTo(500, 0).slideUp(500, function(){
+		$(this).remove();
+	});
+}, 1700);
 </script>
 
 {% endblock body %}

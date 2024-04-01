@@ -110,6 +110,11 @@ urlpatterns = [
     path("interviewer/aptitude-test-mail-send/<int:id>", views.SendAptitudeTestMail, name='AdminSendAptitudeTestMail'),
     path("interviewer/aptitude-test-result/<int:id>", views.AptitudeTestResult, name='AdminAptitudeTestResult'),
 
+    path("condition-and-rules/", views.ConditionsView, name='AdminConditionsView'),
+    path("condition-and-rules/add/", views.AddConditon, name="AdminAddCondition"),
+    path("condition-and-rules/edit/<int:id>/", views.EditCondition, name="AdminEditCondition"),
+    path("condition-and-rules/delete/<int:id>/", views.DeleteCondition, name="AdminDeleteCondition"),
+
     path("policies/", views.PoliciesView, name='AdminPoliciesView'),
     path("policies/add/", views.AddPolicies, name="AdminAddPolicies"),
     path("policies/delete/<int:id>", views.DeletePolicies, name="AdminDeletePolicies"),

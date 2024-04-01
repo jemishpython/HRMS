@@ -331,3 +331,13 @@ class Attendance(models.Model):
 
     def __str__(self):
         return self.attendee_user
+
+
+class Conditions(models.Model):
+    condition_title = models.CharField(verbose_name="Condition Title", max_length=250, blank=True, null=True)
+    conditional_amount = models.IntegerField(verbose_name="Conditional Amount", blank=True, null=True)
+    conditional_object = models.CharField(verbose_name="Conditional Object", max_length=10, blank=True, null=True)
+    condition_create_date = models.DateField(verbose_name="Create Date", null=True, blank=True)
+
+    def __str__(self):
+        return self.condition_title

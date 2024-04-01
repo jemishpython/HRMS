@@ -22,11 +22,11 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
     EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm, LeaveStatusUpdateForm, TicketStatusUpdateForm, \
     AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles, AddPoliciesForm, InterviewerForm, \
-    AddInterviewQuestionForm, EditInterviewQuestionForm, EditAttendanceForm
+    AddInterviewQuestionForm, EditInterviewQuestionForm, EditAttendanceForm, AddConditionForm, EditConditionForm
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies, \
-    Interviewers, InterviewQuestions, InterviewerResult, Attendance
+    Interviewers, InterviewQuestions, InterviewerResult, Attendance, Conditions
 
 
 def AdminRegister(request):
@@ -1175,6 +1175,63 @@ def AttendanceEdit(request, id):
 
 
 @login_required(login_url="Login")
+def ConditionsView(request):
+    conditions = Conditions.objects.all()
+
+    context = {
+        'conditions': conditions,
+    }
+    return render(request, "admin/conditions.html", context)
+
+
+@login_required(login_url="Login")
+def AddConditon(request):
+    form = AddConditionForm(request.POST or None)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                conditions = form.save(commit=False)
+                conditions.condition_create_date = date.today()
+                conditions.save()
+                messages.success(request, 'Condition & Rules add successfully')
+                return redirect('AdminConditionsView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    context = {'form': form}
+    return render(request, "admin/add_condition.html", context)
+
+
+@login_required(login_url="Login")
+def EditCondition(request, id):
+    edit_condition = Conditions.objects.get(id=id)
+    form = EditConditionForm(request.POST or None, instance=edit_condition)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                conditions = form.save(commit=False)
+                conditions.condition_create_date = date.today()
+                conditions.save()
+                messages.info(request, 'Condition & Rules update successfully')
+                return redirect('AdminConditionsView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+                messages.error(request, f"ERROR : {e}")
+    context = {'form': form, 'edit_condition': edit_condition}
+    return render(request, "admin/edit_condition.html", context)
+
+
+@login_required(login_url="Login")
+def DeleteCondition(request, id):
+    delete_condition = Conditions.objects.get(id=id)
+    delete_condition.delete()
+    messages.error(request, 'Condition Delete successfully')
+    return redirect('AdminConditionsView')
+
+
+@login_required(login_url="Login")
 def PoliciesView(request):
     policies = Policies.objects.all()
 
@@ -1193,7 +1250,7 @@ def AddPolicies(request):
                 polices = form.save(commit=False)
                 polices.policy_create_date = date.today()
                 polices.save()
-                messages.success(request, 'Policies add successfully')
+                messages.success(request, 'Policy add successfully')
                 return redirect('AdminPoliciesView')
             else:
                 messages.error(request, f"Form Not Valid : {form.errors}")
@@ -1207,7 +1264,7 @@ def AddPolicies(request):
 def DeletePolicies(request, id):
     delete_policy = Policies.objects.get(id=id)
     delete_policy.delete()
-    messages.error(request, 'PoliciesDelete successfully')
+    messages.error(request, 'Policy Delete successfully')
     return redirect('AdminPoliciesView')
 
 
