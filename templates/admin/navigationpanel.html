@@ -14,7 +14,13 @@
                 <li><a href="{% url 'AdminDepartmentView' %}" class="{% if url_name == 'AdminDepartmentView' %}text-white{% endif %}"><i class="las la-building"></i><span>Department</span></a></li>
                 <li><a href="{% url 'AdminDesignationView' %}" class="{% if url_name == 'AdminDesignationView' %}text-white{% endif %}"><i class="lab la-buffer"></i><span>Designation</span></a></li>
                 <li><a href="{% url 'AdminTechnologyView' %}" class="{% if url_name == 'AdminTechnologyView' %}text-white{% endif %}"><i class="las la-code"></i><span>Technology</span></a></li>
-                <li><a href="{% url 'AdminEmployeeSalaryView' %}" class="{% if url_name == 'AdminEmployeeSalaryView' %}text-white{% endif %}"><i class="las la-money-bill-alt"></i><span>Employee Salary Slip</span></a></li>
+
+                <li class="submenu"><a href="#" class="{% if url_name == 'AdminEmployeeSalaryView' %}text-white{% endif %}"><i class="las la-money-bill-alt"></i><span>Employee Salary</span><span class="menu-arrow"></span></a>
+                    <ul style="display:none;">
+                        <li><a href="{% url 'AdminEmployeeSalaryView' %}" class="{% if url_name == 'AdminEmployeeSalaryView' %}text-white{% endif %}">Generate Salary Slip</a></li>
+                    </ul>
+                </li>
+
                 <li><a href="{% url 'AdminTicketList' %}" class="{% if url_name == 'AdminTicketList' %}text-white{% endif %}"><i class="la la-ticket"></i> <span>Tickets</span></a></li>
                 <li><a href="{% url 'AdminChatView' %}" class="{% if url_name == 'AdminChatView' %}text-white{% endif %}"><i class="las la-comments"></i><span>Chat</span></a></li>
                 <li><a href="{% url 'AdminClientsView' %}" class="{% if url_name == 'AdminClientsView' %}text-white{% endif %}"><i class="las la-handshake"></i><span>Clients</span></a></li>
@@ -22,8 +28,14 @@
                 <li><a href="{% url 'AdminProjectsView' %}" class="{% if url_name == 'AdminProjectsView' %}text-white{% endif %}"><i class="lab la-product-hunt"></i><span>Projects</span></a></li>
                 <li><a href="{% url 'AdminProjectTask' %}" class="{% if url_name == 'AdminProjectTask' %}text-white{% endif %}"><i class="las la-tasks"></i><span>Tasks</span></a></li>
 <!--                <li class="menu-title"><span>Company</span></li>-->
-                <li><a href="{% url 'AdminInterviewerDash' %}" class="{% if url_name == 'AdminInterviewerDash' %}text-white{% elif url_name == 'AdminInterviewQuestion' %}text-white{% elif url_name == 'AdminAptitudeTestResult' %}text-white{% endif %}"><i class="las la-clone"></i><span>Interviewer</span></a></li>
-                <li><a href="{% url 'AdminInterviewerForm' %}" class="{% if url_name == 'AdminInterviewerForm' %}text-white{% endif %}"><i class="lab la-wpforms"></i><span>Interviewer Form</span></a></li>
+
+                <li class="submenu"><a href="#" class="{% if url_name == 'AdminInterviewerDash' %}text-white{% elif url_name == 'AdminInterviewerForm' %}text-white{% elif url_name == 'AdminInterviewQuestion' %}text-white{% endif %}"><i class="las la-clone"></i><span>Interview</span><span class="menu-arrow"></span></a>
+                    <ul style="display:none;">
+                        <li><a href="{% url 'AdminInterviewerDash' %}" class="{% if url_name == 'AdminInterviewerDash' %}text-white{% elif url_name == 'AdminInterviewQuestion' %}text-white{% elif url_name == 'AdminAptitudeTestResult' %}text-white{% endif %}"><span>Interviewer Details</span></a></li>
+                        <li><a href="{% url 'AdminInterviewQuestion' %}" class="{% if url_name == 'AdminInterviewQuestion' %}text-white{% endif %}"><span>Interview Questions</span></a></li>
+                        <li><a href="{% url 'AdminInterviewerForm' %}" class="{% if url_name == 'AdminInterviewerForm' %}text-white{% endif %}"><span>Interviewer Form</span></a></li>
+                    </ul>
+                </li>
                 <li><a href="{% url 'AdminConditionsView' %}" class="{% if url_name == 'AdminConditionsView' %}text-white{% endif %}"><i class="las la-clipboard-check"></i><span>Conditions & Rules</span></a></li>
                 <li><a href="{% url 'AdminPoliciesView' %}" class="{% if url_name == 'AdminPoliciesView' %}text-white{% endif %}"><i class="las la-file-pdf"></i><span>Policies</span></a></li>
 <!--                <li><a href="{% url 'AdminDepartmentView' %}"><span>Leads</span></a></li>-->

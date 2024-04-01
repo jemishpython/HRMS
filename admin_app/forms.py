@@ -370,3 +370,9 @@ class EditConditionForm(forms.ModelForm):
     class Meta:
         model = Conditions
         fields = ['condition_title', 'conditional_amount', 'conditional_object']
+
+
+class EditEmployeeSalarySlipForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['salary']

@@ -321,18 +321,6 @@ class InterviewerResult(models.Model):
         return self.interviewer
 
 
-class Attendance(models.Model):
-    attendee_user = models.ForeignKey(User, verbose_name="Attendee User", on_delete=models.CASCADE, blank=True, null=True)
-    date = models.DateField(verbose_name="Date", blank=True, null=True)
-    check_in_time = models.TimeField(verbose_name="Check in time", blank=True, null=True)
-    check_out_time = models.TimeField(verbose_name="Check in time", blank=True, null=True)
-    production_hour = models.TimeField(verbose_name="Production Time", blank=True, null=True, max_length=20)
-    attendance_status = models.CharField(verbose_name="Attendance status", max_length=50, choices=AttendanceStatusChoice.choices, default=AttendanceStatusChoice.ABSENT, blank=True, null=True)
-
-    def __str__(self):
-        return self.attendee_user
-
-
 class Conditions(models.Model):
     condition_title = models.CharField(verbose_name="Condition Title", max_length=250, blank=True, null=True)
     conditional_amount = models.IntegerField(verbose_name="Conditional Amount", blank=True, null=True)
@@ -341,3 +329,25 @@ class Conditions(models.Model):
 
     def __str__(self):
         return self.condition_title
+
+
+class Attendance(models.Model):
+    attendee_user = models.ForeignKey(User, verbose_name="Attendee User", on_delete=models.CASCADE, blank=True, null=True)
+    date = models.DateField(verbose_name="Date", blank=True, null=True)
+    check_in_time = models.TimeField(verbose_name="Check in time", blank=True, null=True)
+    check_out_time = models.TimeField(verbose_name="Check in time", blank=True, null=True)
+    break_time = models.ForeignKey(Conditions, verbose_name='Break Time', on_delete=models.CASCADE, blank=True, null=True)
+    production_hour = models.TimeField(verbose_name="Production Time", blank=True, null=True, max_length=20)
+    attendance_status = models.CharField(verbose_name="Attendance status", max_length=50, choices=AttendanceStatusChoice.choices, default=AttendanceStatusChoice.ABSENT, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.attendee_user)
+
+
+class SalarySlip(models.Model):
+    user_name = models.ForeignKey(User, verbose_name="User Name", on_delete=models.CASCADE, blank=True, null=True)
+    final_salary_amount = models.CharField(verbose_name="Final Salary Amount", max_length=10, null=True, blank=True)
+    generate_date = models.DateField(verbose_name="Generate Date", null=True, blank=True)
+
+    def __str__(self):
+        return str(self.user_name)

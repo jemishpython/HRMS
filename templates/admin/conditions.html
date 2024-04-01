@@ -17,7 +17,7 @@
 					<div class="page-header">
 						<div class="row align-items-center">
 							<div class="col">
-								<h3 class="page-title">Policies</h3>
+								<h3 class="page-title">Conditions & Rules</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="{% url 'AdminIndex' %}">Dashboard</a></li>
 									<li class="breadcrumb-item active">Conditions</li>
@@ -48,7 +48,11 @@
 										<tr class="holiday-upcoming">
 											<td>{{forloop.counter}}</td>
 											<td>{{condition.condition_title}}</td>
+											{% if condition.conditional_object %}
 											<td>{{condition.conditional_amount}} {{condition.conditional_object}}</td>
+											{% else %}
+											<td>{{condition.conditional_amount}}</td>
+											{% endif %}
 											<td>{{condition.condition_create_date|date:"j - F - Y"}}</td>
 											<td class="text-center">
 												<div class="d-flex justify-content-around">

@@ -27,16 +27,10 @@
 					
 					<!-- Search Filter -->
 					<div class="row filter-row">
-						<div class="col-sm-6 col-md-2">
+						<div class="col-sm-6 col-md-3">
 							<div class="form-group form-focus">
 								<input type="text" class="form-control floating" id="emp_name_search">
-								<label class="focus-label">Employee Name</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus">
-								<input type="text" class="form-control floating" id="designation_search">
-								<label class="focus-label">Designation / Technology</label>
+								<label class="focus-label">Employee Name / Designation / Technology</label>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-2">
@@ -45,72 +39,29 @@
 								<label class="focus-label">Department</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-1">
-							<div class="form-group form-focus select-focus">
-								<select class="form-control floating" id="day_search">
-									<option value="">---</option>
-									{% for i in day_range %}
-									<option>{{i}}</option>
-									{% endfor %}
-								</select>
-								<label class="focus-label">Select Day</label>
-							</div>
-						</div>
 						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus select-focus">
-								<select class="form-control floating" id="month_search">
-									<option value="">---</option>
-									<option value="Jan">January</option>
-									<option value="Feb">February</option>
-									<option value="Mar">March</option>
-									<option value="Apr">April</option>
-									<option value="May">May</option>
-									<option value="Jun">June</option>
-									<option value="Jul">July</option>
-									<option value="Aug">Auguste</option>
-									<option value="Sep">September</option>
-									<option value="Oct">October</option>
-									<option value="Nov">November</option>
-									<option value="Dec">December</option>
-								</select>
-								<label class="focus-label">Select Month</label>
+							<div class="form-group form-focus">
+								<input type="number" class="form-control floating" id="salary_search">
+								<label class="focus-label">Salary</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-1">
-							<div class="form-group form-focus select-focus">
-								<select class="form-control floating" id="year_search">
-									<option value="">---</option>
-									{% for i in year_range %}
-									<option>{{i}}</option>
-									{% endfor %}
-								</select>
-								<label class="focus-label">Select Year</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus select-focus">
-								<select class="form-control" id="attendance_status_search">
-									<option value="">---</option>
-									<option>Present</option>
-									<option>Half Day</option>
-									<option>Absent</option>
-								</select>
-								<label class="focus-label">Attendance Status</label>
-							</div>
-						</div>
+
+
+
                     </div>
 					<!-- /Search Filter -->
 					
                     <div class="row">
                         <div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table" id="attendance_list_table">
+								<table class="table table-striped custom-table" id="salary_list_table">
 									<thead>
 										<tr>
 											<th>Name</th>
 											<th>Email</th>
 											<th>Mobile</th>
 											<th>Department</th>
+											<th>Salary</th>
 											<th class="text-center">Action</th>
 										</tr>
 									</thead>
@@ -126,12 +77,18 @@
 											<td>{{user.email}}</td>
 											<td>{{user.phone}}</td>
 											<td>{{user.department}}</td>
-											<td class="text-center">
-												<button class="p-0 ml-4 border-0 text-info" onclick="editAttendance({{user.id}})">Edit</button>
-												<button style="color:green" class="p-0 ml-4 border-0" onclick="editAttendance({{user.id}})">Generate Pay Slip</button>
+											<td>{{user.salary}}</td>
+											<td class="text-center d-flex justify-content-around">
+												<button class="p-0 ml-4 border-0 text-info" onclick="editSalarySlip({{user.id}})">Edit</button>
+												{% if user.id in users_with_slip_generated %}
+													<a style="color:green" href="#">Slip Generated</a>
+												{% else %}
+													<a style="color:green" href="{% url 'AdminGenerateEmployeeSalarySlip' id=user.id %}">Generate Pay Slip</a>
+												{% endif %}
 											</td>
 										</tr>
 									{% endfor %}
+
 									</tbody>
 								</table>
 							</div>
@@ -140,7 +97,7 @@
                 </div>
 				<!-- /Page Content -->
 
-				<div id="edit-attendance-form"></div>
+				<div id="edit-salary_slip-form"></div>
 				
             </div>
 			<!-- Page Wrapper -->
@@ -149,7 +106,7 @@
 <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
 <script>
 $(document).ready(function () {
-	var table = $('#attendance_list_table').DataTable({
+	var table = $('#salary_list_table').DataTable({
 		dom: 'Blrtip',
 	});
 	$('#emp_name_search').on('keyup', function () {
@@ -157,9 +114,6 @@ $(document).ready(function () {
 	});
 	 $('#designation_search').on('keyup', function () {
 		table.column(0).search(this.value).draw();
-	});
-	 $('#attendance_status_search').on('change', function () {
-		table.column(7).search(this.value).draw();
 	});
 	 $('#department_search').on('keyup', function () {
 		table.column(6).search(this.value).draw();
@@ -178,12 +132,12 @@ $(document).ready(function () {
 
 
 
-function editAttendance(editAttendanceId) {
+function editSalarySlip(editSalarySlipUserID) {
     $.ajax({
-        url: "edit/"+ editAttendanceId + "/",
+        url: "edit/"+ editSalarySlipUserID,
         success: function(response) {
-            $("#edit-attendance-form").html(response);
-            $("#edit_attendance_model").modal('show');
+            $("#edit-salary_slip-form").html(response);
+            $("#edit_salary_slip_model").modal('show');
         }
     });
 }

@@ -1,5 +1,6 @@
 import datetime
 import calendar
+import time
 import uuid
 
 import pytz
@@ -22,11 +23,12 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     EditPersonalInfoForm, AddEducationInfoForm, EditEducationInfoForm, EditExperienceInfoForm, AddEmergencyContactForm, \
     EditEmergencyContactForm, AddBankForm, EditBankForm, TaskAssignForm, LeaveStatusUpdateForm, TicketStatusUpdateForm, \
     AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles, AddPoliciesForm, InterviewerForm, \
-    AddInterviewQuestionForm, EditInterviewQuestionForm, EditAttendanceForm, AddConditionForm, EditConditionForm
+    AddInterviewQuestionForm, EditInterviewQuestionForm, EditAttendanceForm, AddConditionForm, EditConditionForm, \
+    EditEmployeeSalarySlipForm
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies, \
-    Interviewers, InterviewQuestions, InterviewerResult, Attendance, Conditions
+    Interviewers, InterviewQuestions, InterviewerResult, Attendance, Conditions, SalarySlip
 
 
 def AdminRegister(request):
@@ -1137,6 +1139,7 @@ def AttendanceView(request):
 
 @login_required(login_url="Login")
 def AttendanceEdit(request, id):
+    lunch_break_time = Conditions.objects.get(condition_title="Lunch break time")
     edit_attendance = Attendance.objects.get(id=id)
     form = EditAttendanceForm(request.POST or None, instance=edit_attendance)
     if request.method == 'POST':
@@ -1144,22 +1147,21 @@ def AttendanceEdit(request, id):
             if form.is_valid():
                 attendance_update = form.save(commit=False)
                 production_time = datetime.datetime.combine(datetime.date.today(),attendance_update.check_out_time) - datetime.datetime.combine(datetime.date.today(), attendance_update.check_in_time)
-                if production_time.total_seconds() / 3600 > 5:
-                    production_time -= datetime.timedelta(hours=1)
+                if production_time >= datetime.timedelta(hours=5, minutes=55):
+                    if lunch_break_time:
+                        production_time -= datetime.timedelta(hours=lunch_break_time.conditional_amount)
+                    else:
+                        production_time -= datetime.timedelta(hours=1)
                 attendance_update.production_hour = str(production_time)
 
-                half_day_morning_end = datetime.time(13, 0)  # 1 PM
-                half_day_evening_start = datetime.time(13, 0)  # 1 PM
-                half_day_evening_end = datetime.time(18, 30)  # 6:30 PM
-                full_day_start = datetime.time(8, 0)  # 8 AM
-                full_day_end = datetime.time(18, 30)  # 6:30 PM
-
-                if attendance_update.check_in_time >= full_day_start and attendance_update.check_out_time <= half_day_morning_end:
-                    attendance_update.attendance_status = AttendanceStatusChoice.HALF_DAY
-                elif attendance_update.check_in_time >= half_day_evening_start and attendance_update.check_out_time <= half_day_evening_end:
-                    attendance_update.attendance_status = AttendanceStatusChoice.HALF_DAY
-                elif attendance_update.check_in_time >= full_day_start and attendance_update.check_out_time <= full_day_end:
+                if attendance_update.check_in_time >= datetime.time(7,50) and attendance_update.check_out_time >= datetime.time(18, 25) and production_time >= datetime.timedelta(hours=8, minutes=30):
                     attendance_update.attendance_status = AttendanceStatusChoice.PRESENT
+                elif attendance_update.check_in_time >= datetime.time(7, 50) and attendance_update.check_out_time >= datetime.time(15, 55) and production_time >= datetime.timedelta(hours=5, minutes=55):
+                    attendance_update.attendance_status = AttendanceStatusChoice.PRESENT
+                elif attendance_update.check_in_time >= datetime.time(7, 50) and attendance_update.check_out_time <= datetime.time(13, 00) and datetime.timedelta(hours=3, minutes=55) <= production_time <= datetime.timedelta(hours=5, minutes=5):
+                    attendance_update.attendance_status = AttendanceStatusChoice.HALF_DAY
+                elif attendance_update.check_in_time >= datetime.time(13, 50) and attendance_update.check_out_time >= datetime.time(18, 25) and production_time >= datetime.timedelta(hours=4, minutes=30):
+                    attendance_update.attendance_status = AttendanceStatusChoice.HALF_DAY
                 else:
                     attendance_update.attendance_status = AttendanceStatusChoice.ABSENT
 
@@ -1403,9 +1405,57 @@ def DeleteInterviewQuestion(request, id):
 @login_required(login_url="Login")
 def EmployeeSalarySlip(request):
     user_list = User.objects.all()
+    current_date = date.today().month
+    salary_slip_date = SalarySlip.objects.filter(generate_date__month=current_date)
+    users_with_slip_generated = set(salary_slip_date.values_list('user_name__id', flat=True))
+
     context = {
         'user_list': user_list,
-        'day_range': range(1, 32),
-        'year_range': range(2020, 2031),
+        'current_date': current_date,
+        'users_with_slip_generated': users_with_slip_generated,
     }
     return render(request, "admin/employee_salary.html", context)
+
+
+@login_required(login_url="Login")
+def EditEmployeeSalarySlip(request, id):
+    edit_employee_salary_slip = User.objects.get(id=id)
+    form = EditEmployeeSalarySlipForm(request.POST or None, instance=edit_employee_salary_slip)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.info(request, 'Salary slip update successfully')
+                return redirect('AdminEmployeeSalaryView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    context = {
+        'form': form,
+        'edit_employee_salary_slip': edit_employee_salary_slip,
+    }
+    return render(request, "admin/edit_employee_salary_slip.html", context)
+
+
+@login_required(login_url="Login")
+def GenerateEmployeeSalarySlip(request, id):
+    user_details = User.objects.get(id=id)
+    absent_condition = Conditions.objects.get(condition_title='Absent amount')
+    paid_leave_condition = Conditions.objects.get(condition_title='Paid leave amount')
+    total_paid_leave = Conditions.objects.get(condition_title='Total paid leave')
+    leave_list = Leave.objects.filter(leave_user=id)
+    approved_leaves_count = leave_list.filter(leave_status=LeaveStatusChoice.APPROVED).count()
+    remaining_leaves_count = (total_paid_leave.conditional_amount - approved_leaves_count)
+    current_month = date.today().month
+    absent_count = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT, date__month=current_month).count()
+    # total_salary_amount = user_details.salary + (absent_count * absent_condition.conditional_amount) + (paid_leave_condition.conditional_amount * remaining_leaves_count)     -- monthlty add
+    total_salary_amount = user_details.salary + (absent_count * absent_condition.conditional_amount)
+
+    salary_details = SalarySlip()
+    salary_details.user_name = User.objects.get(id=id)
+    salary_details.generate_date = datetime.date.today()
+    salary_details.final_salary_amount = total_salary_amount
+    salary_details.save()
+
+    return redirect('AdminEmployeeSalaryView')
