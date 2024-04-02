@@ -1,10 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block body %}
+{% block nav %}{% include 'admin/navigationpanel.html' %}{% endblock nav %}
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
 
-</body>
-</html>
+                <div class="m-5 d-flex justify-content-end">
+                    <a href="{% url 'AdminEmployeeSalarySlipPDF' salary_slip_details.id %}" class="btn btn-outline-secondary" style="font-size:1rem;"><i class="las la-print"></i>PDF</a>
+                </div>
+
+                <!-- Page Content -->
+                <div class="row m-4">
+                    <div class="col-lg-12">
+                        <div class="my-2 d-flex justify-content-between">
+                            <div>
+                                <img src="{% static 'img/logo2.png' %}" alt="company logo" width="100rem">
+                            </div>
+                            <div class="d-flex align-self-center">
+                                <img src="{% static 'img/font_without_logo.png' %}" alt="company logo" width="300rem">
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <div class="my-3" style="width:70%;">
+                                <div>
+                                    <h3>Employee Details : </h3>
+                                    <div class="d-flex">
+                                        <div class="mr-3 align-self-center">
+                                            <img src="{{salary_slip_details.user_name.avatar.url}}" alt="profile-img" width="200rem;">
+                                        </div>
+                                        <div class="m-2 d-flex">
+                                            <div class="mr-1">
+                                                <h4>Name </h4>
+                                                <h4>Phone </h4>
+                                                <h4>Email </h4>
+                                                <h4 class="text-nowrap">Address </h4>
+                                                <h4>Department</h4>
+                                                <h4>Designation</h4>
+                                                <h4>Technology</h4>
+                                            </div>
+                                            <div class="ml-1">
+                                                <h4>: {{salary_slip_details.user_name.username}}</h4>
+                                                <h4>: {{salary_slip_details.user_name.phone}}</h4>
+                                                <h4>: {{salary_slip_details.user_name.email}}</h4>
+                                                <h4>: {{salary_slip_details.user_name.address}}</h4>
+                                                <h4>: {{salary_slip_details.user_name.department}}</h4>
+                                                <h4>: {{salary_slip_details.user_name.designation}}</h4>
+                                                <h4>: {{salary_slip_details.user_name.technology}}</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="my-3" style="width:30%;">
+                                <div>
+                                    <h3>Company Details : </h3>
+                                    <div class="d-flex">
+                                        <div class="m-2 d-flex">
+                                            <div class="mr-1">
+                                                <h4>Name </h4>
+                                                <h4>Phone </h4>
+                                                <h4>Email </h4>
+                                                <h4 class="text-nowrap">Address </h4>
+                                            </div>
+                                            <div class="ml-1">
+                                                <h4>:  Webmigrates Technology LLP</h4>
+                                                <h4>: 1234567890</h4>
+                                                <h4>: webmigrates123@gmail.com</h4>
+                                                <h4>: 306, 3rd floor, Tapi Arched, Motavarachha, Surat</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="my-3 mx-5 border">
+                            <table class="table">
+                                <tr>
+                                    <td>Salary</td>
+                                    <td class="text-right">{{salary_slip_details.user_name.salary}}</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td class="text-right"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+				<!-- /Page Content -->
+				
+            </div>
+			<!-- Page Wrapper -->
+
+{% endblock body %}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Slip</title>
+</head>
+<body>
+    <div class="container">
+        <table class="company-logo-table" style="margin-bottom:20pt;">
+            <tr style="margin:10pt 0;">
+                <td><img src="{{company_logo1}}" alt="Company Logo" class="logo" height="80pt" width="80pt"></td>
+                <td style="text-align: right;"><img src="{{company_logo2}}" alt="Company Logo" class="logo" height="80pt"></td>
+            </tr>
+        </table>
+        <hr>
+        <table class="employee-info-table" style="margin: 30pt 0">
+            <tbody>
+                <tr>
+                    <td style="text-align:center;">
+                        <img src="{{salary_slip_pdf.user_name.avatar.path}}" alt="Employee Image" class="employee-image" height="120pt" width="120pt">
+                    </td>
+                    <td>
+                        <div class="employee-info">
+                            <p><strong>Name :</strong> {{salary_slip_pdf.user_name.username}}</p>
+                            <p><strong>Phone :</strong> {{salary_slip_pdf.user_name.phone}}</p>
+                            <p><strong>Email :</strong> {{salary_slip_pdf.user_name.email}}</p>
+                            <p><strong>Department :</strong> {{salary_slip_pdf.user_name.department}}</p>
+                            <p><strong>Designation :</strong> {{salary_slip_pdf.user_name.designation}}</p>
+                            <p><strong>Technology :</strong> {{salary_slip_pdf.user_name.technology}}</p>
+                        </div>
+                    </td>
+                    <td style="vertical-align: top;">
+                        <div class="company-info">
+                            <p><strong>Id :</strong> IW {{salary_slip_pdf.user_name.id}}</p>
+                            <p><strong>Date of Joining :</strong> {{salary_slip_pdf.user_name.date_joined|date:'d - F - Y'}}</p>
+                            <p><strong>Total Working Days :</strong> {{total_weekdays}}</p>
+                            <p><strong>Bank Name :</strong> {{bank_details.bank_name}}</p>
+                            <p><strong>Bank Account Number:</strong> {{bank_details.bank_account_number}}</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        <table style="margin:30pt;">
+            <tr>
+                <td style="border-bottom:1px solid #ddd;"><p>Salary</p></td>
+                <td style="text-align:right; border-bottom:1px solid #ddd;">{{salary_slip_pdf.user_name.salary}}</td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>

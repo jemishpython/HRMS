@@ -15,10 +15,10 @@
 					<div class="page-header">
 						<div class="row">
 							<div class="col-sm-12">
-								<h3 class="page-title">Employee Salary</h3>
+								<h3 class="page-title">Employee Salary Slip</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-									<li class="breadcrumb-item active">Employee Salary</li>
+									<li class="breadcrumb-item active">Salary Slip List</li>
 								</ul>
 							</div>
 						</div>
@@ -61,43 +61,64 @@
 											<th>Email</th>
 											<th>Mobile</th>
 											<th>Department</th>
-											<th>Salary</th>
+											<th>Generate Date</th>
+											<th>Final Salary Amount</th>
 											<th class="text-center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-									{% for user in user_list %}
+									{% for salary_slip in salary_slip_list %}
 										<tr>
 											<td>
 												<h2 class="table-avatar">
-													<a href="{% url 'AdminProfileView' user.id %}"><img class="avatar" alt="" src="{{user.avatar.url}}"></a>
-													<a href="{% url 'AdminProfileView' user.id %}">{{user.username}} <span>{{user.designation}} | {{user.technology}}</span></a>
+													<a href="{% url 'AdminProfileView' salary_slip.user_name.id %}"><img class="avatar" alt="" src="{{salary_slip.user_name.avatar.url}}"></a>
+													<a href="{% url 'AdminProfileView' salary_slip.user_name.id %}">{{salary_slip.user_name.username}} <span>{{salary_slip.user_name.designation}} | {{salary_slip.user_name.technology}}</span></a>
 												</h2>
 											</td>
-											<td>{{user.email}}</td>
-											<td>{{user.phone}}</td>
-											<td>{{user.department}}</td>
-											<td>{{user.salary}}</td>
+											<td>{{salary_slip.user_name.email}}</td>
+											<td>{{salary_slip.user_name.phone}}</td>
+											<td>{{salary_slip.user_name.department}}</td>
+											<td>{{salary_slip.generate_date|date:'d - F - Y'}}</td>
+											<td>{{salary_slip.final_salary_amount}}</td>
 											<td class="text-center d-flex justify-content-around">
-												<button class="p-0 ml-4 border-0 text-info" onclick="editSalarySlip({{user.id}})">Edit</button>
-												{% if user.id in users_with_slip_generated %}
-													<a style="color:green" href="#">Slip Generated</a>
-												{% else %}
-													<a style="color:green" href="{% url 'AdminGenerateEmployeeSalarySlip' id=user.id %}">Generate Pay Slip</a>
-												{% endif %}
+												<a href="{% url 'AdminEmployeeSalarySlipView' salary_slip.id %}" class="p-0 ml-4 border-0 text-info">View Salary Slip</a>
+												<button class="p-0 ml-4 border-0 text-danger" onclick="deleteSalarySlip({{salary_slip.id}})">Delete</button>
 											</td>
 										</tr>
 									{% endfor %}
-
 									</tbody>
 								</table>
 							</div>
                         </div>
                     </div>
                 </div>
-				<!-- /Page Content -->
-
-				<div id="edit-salary_slip-form"></div>
+				<!-- /Page Content -->	
+				
+				
+				<!-- Delete Salary Slip Modal -->
+				<div class="modal custom-modal fade" id="delete_salary_slip_model" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="form-header">
+									<h3>Delete Salary Slip</h3>
+									<p>Are you sure want to delete?</p>
+								</div>
+								<div class="modal-btn delete-action">
+									<div class="row">
+										<div class="col-6">
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
+										</div>
+										<div class="col-6">
+											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Delete Salary Slip Modal -->
 				
             </div>
 			<!-- Page Wrapper -->
@@ -130,17 +151,14 @@ $(document).ready(function () {
 
 });
 
-
-
-function editSalarySlip(editSalarySlipUserID) {
-    $.ajax({
-        url: "edit/"+ editSalarySlipUserID,
-        success: function(response) {
-            $("#edit-salary_slip-form").html(response);
-            $("#edit_salary_slip_model").modal('show');
-        }
-    });
+function deleteSalarySlip(deleteSalarySlipId) {
+    $("#delete_salary_slip_model").modal('show');
+    if (deleteSalarySlipId) {
+        var deleteUrl = "{% url 'AdminDeleteSalarySlip' id=0 %}".replace(0, deleteSalarySlipId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
 }
+
 
 window.setTimeout(function() {
 	$(".alert").fadeTo(500, 0).slideUp(500, function(){

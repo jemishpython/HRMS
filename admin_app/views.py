@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.core.serializers import serialize
-from django.http import JsonResponse
+from django.http import JsonResponse, response, HttpResponse
 from django.template import loader
 from datetime import date
 
@@ -16,6 +16,10 @@ from django.contrib.auth import logout, login
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
+from django.template.loader import get_template
+from django_pdfkit import PDFView
+from pdfkit import PDFKit
+from xhtml2pdf import pisa
 
 from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, AddDepartmentForm, EditDepartmentForm, \
     AddDesignationForm, EditDesignationForm, EditProjectForm, AddProjectForm, ProjectAssignForm, AddTaskForm, \
@@ -1403,7 +1407,7 @@ def DeleteInterviewQuestion(request, id):
 
 
 @login_required(login_url="Login")
-def EmployeeSalarySlip(request):
+def SalarySlipDashboard(request):
     user_list = User.objects.all()
     current_date = date.today().month
     salary_slip_date = SalarySlip.objects.filter(generate_date__month=current_date)
@@ -1414,7 +1418,7 @@ def EmployeeSalarySlip(request):
         'current_date': current_date,
         'users_with_slip_generated': users_with_slip_generated,
     }
-    return render(request, "admin/employee_salary.html", context)
+    return render(request, "admin/generate_employee_salary_slip.html", context)
 
 
 @login_required(login_url="Login")
@@ -1426,7 +1430,7 @@ def EditEmployeeSalarySlip(request, id):
             if form.is_valid():
                 form.save()
                 messages.info(request, 'Salary slip update successfully')
-                return redirect('AdminEmployeeSalaryView')
+                return redirect('AdminSalarySlipDashboard')
             else:
                 messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
@@ -1458,4 +1462,60 @@ def GenerateEmployeeSalarySlip(request, id):
     salary_details.final_salary_amount = total_salary_amount
     salary_details.save()
 
-    return redirect('AdminEmployeeSalaryView')
+    return redirect('AdminSalarySlipDashboard')
+
+
+@login_required(login_url="Login")
+def EmployeeSalarySlipList(request):
+    salary_slip_list = SalarySlip.objects.all()
+
+    context = {
+        'salary_slip_list':salary_slip_list,
+    }
+    return render(request, "admin/salary_slip_list.html", context)
+
+
+@login_required(login_url="Login")
+def EmployeeSalarySlipView(request, id):
+    salary_slip_details = SalarySlip.objects.get(id=id)
+
+    context = {
+        'salary_slip_details': salary_slip_details,
+    }
+    return render(request, "admin/salary_slip.html", context)
+
+
+@login_required(login_url="Login")
+def SalarySlipPDFCreate(request, id):
+    salary_slip_pdf = SalarySlip.objects.get(id=id)
+    current_date = datetime.date.today()
+    bank_details = Bank.objects.get(employee=salary_slip_pdf.user_name.id)
+    total_weekdays = sum(1 for day in range(1, calendar.monthrange(current_date.year, current_date.month)[1] + 1) if
+                         calendar.weekday(current_date.year, current_date.month, day) < 5)
+    template_path = 'admin/salary_slip_pdf.html'
+    context = {
+        'salary_slip_pdf': salary_slip_pdf,
+        'total_weekdays': total_weekdays,
+        'bank_details': bank_details,
+        'company_logo1': 'static/img/logo3.png',
+        'company_logo2': 'static/img/font_without_logo.png',
+    }
+    # Rendered template
+    template = get_template(template_path)
+    html = template.render(context)
+    # Create a PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'filename="{salary_slip_pdf.user_name.username}_Salary_Slip_{salary_slip_pdf.generate_date}.pdf"'
+    pisa_status = pisa.CreatePDF(
+       html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+
+
+@login_required(login_url="Login")
+def DeleteSalarySlip(request, id):
+    delete_salary_slip = SalarySlip.objects.get(id=id)
+    delete_salary_slip.delete()
+    messages.error(request, 'Salary Slip Delete successfully')
+    return redirect("AdminEmployeeSalarySlipList")
