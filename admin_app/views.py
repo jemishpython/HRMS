@@ -75,7 +75,7 @@ def forget_password_mail(request):
     context = {
         'username': user.username,
         'user_id': user.id,
-        'request_url': request.get_host(), #For Liveproject
+        'request_url': request.get_host(),  # For Liveproject
     }
 
     from_email = settings.EMAIL_HOST_USER
@@ -1114,7 +1114,7 @@ def UpdateTicketstatus(request, id):
 def ChatView(request):
     user_list = User.objects.all()
     context = {
-        'user_list':user_list,
+        'user_list': user_list,
     }
     return render(request, "admin/chat.html", context)
 
@@ -1150,7 +1150,9 @@ def AttendanceEdit(request, id):
         try:
             if form.is_valid():
                 attendance_update = form.save(commit=False)
-                production_time = datetime.datetime.combine(datetime.date.today(),attendance_update.check_out_time) - datetime.datetime.combine(datetime.date.today(), attendance_update.check_in_time)
+                production_time = datetime.datetime.combine(datetime.date.today(),
+                                                            attendance_update.check_out_time) - datetime.datetime.combine(
+                    datetime.date.today(), attendance_update.check_in_time)
                 if production_time >= datetime.timedelta(hours=5, minutes=55):
                     if lunch_break_time:
                         production_time -= datetime.timedelta(hours=lunch_break_time.conditional_amount)
@@ -1158,13 +1160,22 @@ def AttendanceEdit(request, id):
                         production_time -= datetime.timedelta(hours=1)
                 attendance_update.production_hour = str(production_time)
 
-                if attendance_update.check_in_time >= datetime.time(7,50) and attendance_update.check_out_time >= datetime.time(18, 25) and production_time >= datetime.timedelta(hours=8, minutes=30):
+                if attendance_update.check_in_time >= datetime.time(7,
+                                                                    50) and attendance_update.check_out_time >= datetime.time(
+                        18, 25) and production_time >= datetime.timedelta(hours=8, minutes=30):
                     attendance_update.attendance_status = AttendanceStatusChoice.PRESENT
-                elif attendance_update.check_in_time >= datetime.time(7, 50) and attendance_update.check_out_time >= datetime.time(15, 55) and production_time >= datetime.timedelta(hours=5, minutes=55):
+                elif attendance_update.check_in_time >= datetime.time(7,
+                                                                      50) and attendance_update.check_out_time >= datetime.time(
+                        15, 55) and production_time >= datetime.timedelta(hours=5, minutes=55):
                     attendance_update.attendance_status = AttendanceStatusChoice.PRESENT
-                elif attendance_update.check_in_time >= datetime.time(7, 50) and attendance_update.check_out_time <= datetime.time(13, 00) and datetime.timedelta(hours=3, minutes=55) <= production_time <= datetime.timedelta(hours=5, minutes=5):
+                elif attendance_update.check_in_time >= datetime.time(7,
+                                                                      50) and attendance_update.check_out_time <= datetime.time(
+                        13, 00) and datetime.timedelta(hours=3, minutes=55) <= production_time <= datetime.timedelta(
+                        hours=5, minutes=5):
                     attendance_update.attendance_status = AttendanceStatusChoice.HALF_DAY
-                elif attendance_update.check_in_time >= datetime.time(13, 50) and attendance_update.check_out_time >= datetime.time(18, 25) and production_time >= datetime.timedelta(hours=4, minutes=30):
+                elif attendance_update.check_in_time >= datetime.time(13,
+                                                                      50) and attendance_update.check_out_time >= datetime.time(
+                        18, 25) and production_time >= datetime.timedelta(hours=4, minutes=30):
                     attendance_update.attendance_status = AttendanceStatusChoice.HALF_DAY
                 else:
                     attendance_update.attendance_status = AttendanceStatusChoice.ABSENT
@@ -1224,7 +1235,7 @@ def EditCondition(request, id):
             else:
                 messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-                messages.error(request, f"ERROR : {e}")
+            messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'edit_condition': edit_condition}
     return render(request, "admin/edit_condition.html", context)
 
@@ -1279,7 +1290,7 @@ def InterviewerDash(request):
     interviewer_list = Interviewers.objects.all()
 
     context = {
-        'interviewer_list':interviewer_list,
+        'interviewer_list': interviewer_list,
     }
     return render(request, "admin/interview-dashboard.html", context)
 
@@ -1320,7 +1331,7 @@ def SendAptitudeTestMail(request, id):
         'username': interviewer_details.name,
         'user_id': interviewer_details.id,
         'technology': interviewer_details.technology.id,
-        'request_url': request.get_host(), #For Liveproject
+        'request_url': request.get_host(),  # For Liveproject
         'token': interviewer_details.aptitude_test_token,
     }
 
@@ -1353,7 +1364,7 @@ def InterviewQuestion(request):
     context = {
         'interview_question_list': interview_question_list,
     }
-    return render(request, "admin/interview_questions.html",context)
+    return render(request, "admin/interview_questions.html", context)
 
 
 @login_required(login_url="Login")
@@ -1378,7 +1389,7 @@ def AddInterviewQuestion(request):
                 messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
             messages.error(request, f"ERROR : {e}")
-    return render(request, "admin/add_interview_question.html",{'form': form})
+    return render(request, "admin/add_interview_question.html", {'form': form})
 
 
 @login_required(login_url="Login")
@@ -1395,7 +1406,8 @@ def EditInterviewQuestion(request, id):
                 messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
             messages.error(request, f"ERROR : {e}")
-    return render(request, "admin/edit_interview_question.html",{'form': form, 'edit_interview_question': edit_interview_question})
+    return render(request, "admin/edit_interview_question.html",
+                  {'form': form, 'edit_interview_question': edit_interview_question})
 
 
 @login_required(login_url="Login")
@@ -1444,17 +1456,22 @@ def EditEmployeeSalarySlip(request, id):
 
 @login_required(login_url="Login")
 def GenerateEmployeeSalarySlip(request, id):
+    current_date = datetime.date.today()
+    salary_month = current_date.replace(day=1) - datetime.timedelta(days=1)
     user_details = User.objects.get(id=id)
     absent_condition = Conditions.objects.get(condition_title='Absent amount')
     paid_leave_condition = Conditions.objects.get(condition_title='Paid leave amount')
-    total_paid_leave = Conditions.objects.get(condition_title='Total paid leave')
-    leave_list = Leave.objects.filter(leave_user=id)
-    approved_leaves_count = leave_list.filter(leave_status=LeaveStatusChoice.APPROVED).count()
-    remaining_leaves_count = (total_paid_leave.conditional_amount - approved_leaves_count)
-    current_month = date.today().month
-    absent_count = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT, date__month=current_month).count()
-    # total_salary_amount = user_details.salary + (absent_count * absent_condition.conditional_amount) + (paid_leave_condition.conditional_amount * remaining_leaves_count)     -- monthlty add
-    total_salary_amount = user_details.salary + (absent_count * absent_condition.conditional_amount)
+    approved_leaves_count = Leave.objects.filter(leave_user=id, leave_status=LeaveStatusChoice.APPROVED, leave_from__month=salary_month.month).count()
+    absent_count = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT, date__month=salary_month.month).count()
+    half_day_count = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.HALF_DAY, date__month=salary_month.month).count()
+    check_out_time_start = datetime.time(16, 20)
+    around_430_count = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.PRESENT, date__month=salary_month.month, check_out_time__gte=check_out_time_start, production_hour__lte=production_hour).count()
+    print(around_430_count,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+
+    if approved_leaves_count == 0:
+        total_salary_amount = user_details.salary + (absent_count * absent_condition.conditional_amount) + (half_day_count * absent_condition.conditional_amount * 0.5) + paid_leave_condition.conditional_amount
+    else:
+        total_salary_amount = user_details.salary + (absent_count * absent_condition.conditional_amount) + (half_day_count * absent_condition.conditional_amount * 0.5)
 
     salary_details = SalarySlip()
     salary_details.user_name = User.objects.get(id=id)
@@ -1470,44 +1487,106 @@ def EmployeeSalarySlipList(request):
     salary_slip_list = SalarySlip.objects.all()
 
     context = {
-        'salary_slip_list':salary_slip_list,
+        'salary_slip_list': salary_slip_list,
     }
     return render(request, "admin/salary_slip_list.html", context)
 
 
 @login_required(login_url="Login")
 def EmployeeSalarySlipView(request, id):
+    dearness_allowance = Conditions.objects.get(condition_title="Dearness Allowance")
+    professional_tax = Conditions.objects.get(condition_title="Professional Tax")
+    pf = Conditions.objects.get(condition_title="PF")
+    bonus = Conditions.objects.get(condition_title="Bonus")
+    tds = Conditions.objects.get(condition_title="TDS")
+    city_compensatory_allowance = Conditions.objects.get(condition_title="City Compensatory Allowance")
+    assistant_allowance = Conditions.objects.get(condition_title="Assistant Allowance")
+    medical_allowance = Conditions.objects.get(condition_title="Medical Allowance")
+    paid_leave = Conditions.objects.get(condition_title="Paid leave amount")
     salary_slip_details = SalarySlip.objects.get(id=id)
+    employee_id = salary_slip_details.user_name.id
+    current_date = datetime.date.today()
+    salary_month = current_date.replace(day=1) - datetime.timedelta(days=1)
+    bank_details = Bank.objects.filter(employee=employee_id).first()
+    absent_days = Attendance.objects.filter(attendee_user=employee_id, attendance_status=AttendanceStatusChoice.ABSENT, date__month=salary_month.month).count()
+    attend_half_days = Attendance.objects.filter(attendee_user=employee_id, attendance_status=AttendanceStatusChoice.HALF_DAY, date__month=salary_month.month).count()
+    leave_taken = Leave.objects.filter(leave_user=employee_id, leave_status=LeaveStatusChoice.APPROVED,leave_from__month=salary_month.month).count()
+    total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if calendar.weekday(salary_month.year, salary_month.month, day) < 5)
+    number_of_working_day_attend = total_weekdays - leave_taken - absent_days - (0.5 * attend_half_days)
 
     context = {
         'salary_slip_details': salary_slip_details,
+        'dearness_allowance': dearness_allowance,
+        'professional_tax': professional_tax,
+        'pf': pf,
+        'bonus': bonus,
+        'tds': tds,
+        'city_compensatory_allowance': city_compensatory_allowance,
+        'medical_allowance': medical_allowance,
+        'paid_leave': paid_leave,
+        'assistant_allowance': assistant_allowance,
+        'total_weekdays': total_weekdays,
+        'bank_details': bank_details,
+        'current_date': current_date,
+        'salary_month': salary_month,
+        'number_of_working_day_attend': number_of_working_day_attend,
+        'leave_taken': leave_taken,
     }
     return render(request, "admin/salary_slip.html", context)
 
 
 @login_required(login_url="Login")
 def SalarySlipPDFCreate(request, id):
+    dearness_allowance = Conditions.objects.get(condition_title="Dearness Allowance")
+    professional_tax = Conditions.objects.get(condition_title="Professional Tax")
+    pf = Conditions.objects.get(condition_title="PF")
+    bonus = Conditions.objects.get(condition_title="Bonus")
+    tds = Conditions.objects.get(condition_title="TDS")
+    paid_leave = Conditions.objects.get(condition_title="Paid leave amount")
+    city_compensatory_allowance = Conditions.objects.get(condition_title="City Compensatory Allowance")
+    assistant_allowance = Conditions.objects.get(condition_title="Assistant Allowance")
+    medical_allowance = Conditions.objects.get(condition_title="Medical Allowance")
     salary_slip_pdf = SalarySlip.objects.get(id=id)
+    employee_id = salary_slip_pdf.user_name.id
     current_date = datetime.date.today()
-    bank_details = Bank.objects.get(employee=salary_slip_pdf.user_name.id)
-    total_weekdays = sum(1 for day in range(1, calendar.monthrange(current_date.year, current_date.month)[1] + 1) if
-                         calendar.weekday(current_date.year, current_date.month, day) < 5)
+    salary_month = current_date.replace(day=1) - datetime.timedelta(days=1)
+    bank_details = Bank.objects.filter(employee=employee_id).first()
+    leave_taken = Leave.objects.filter(leave_user=employee_id, leave_status=LeaveStatusChoice.APPROVED,
+                                       leave_from__month=salary_month.month).count()
+    total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if
+                         calendar.weekday(salary_month.year, salary_month.month, day) < 5)
+    number_of_working_day_attend = total_weekdays - leave_taken
     template_path = 'admin/salary_slip_pdf.html'
     context = {
+        'dearness_allowance': dearness_allowance,
+        'professional_tax': professional_tax,
+        'pf': pf,
+        'bonus': bonus,
+        'tds': tds,
+        'city_compensatory_allowance': city_compensatory_allowance,
+        'medical_allowance': medical_allowance,
+        'assistant_allowance': assistant_allowance,
         'salary_slip_pdf': salary_slip_pdf,
+        'paid_leave': paid_leave,
         'total_weekdays': total_weekdays,
         'bank_details': bank_details,
-        'company_logo1': 'static/img/logo3.png',
+        'current_date': current_date,
+        'salary_month': salary_month,
+        'number_of_working_day_attend': number_of_working_day_attend,
+        'leave_taken': leave_taken,
+        'company_logo1': 'static/img/logo_font.png',
         'company_logo2': 'static/img/font_without_logo.png',
+        'stamp': 'static/img/company_stamp.png',
     }
     # Rendered template
     template = get_template(template_path)
     html = template.render(context)
     # Create a PDF
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'filename="{salary_slip_pdf.user_name.username}_Salary_Slip_{salary_slip_pdf.generate_date}.pdf"'
+    response[
+        'Content-Disposition'] = f'attachment; filename="{salary_slip_pdf.user_name.username}_Salary_Slip_{salary_slip_pdf.generate_date}.pdf"'
     pisa_status = pisa.CreatePDF(
-       html, dest=response)
+        html, dest=response)
     if pisa_status.err:
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     return response
