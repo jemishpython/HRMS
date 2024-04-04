@@ -59,3 +59,9 @@ class TicketStatusChoice(models.TextChoices):
     NEW = ("New", _("New"))
     APPROVED = ("Approved", _("Approved"))
     DECLINED = ("Declined", _("Declined"))
+
+
+class AttendanceStatusChoice(models.TextChoices):
+    PRESENT = ("Present", _("PRESENT"))
+    ABSENT = ("Absent", _("ABSENT"))
+    HALF_DAY = ("Half Day", _("HALF_DAY"))

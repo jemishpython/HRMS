@@ -1,0 +1,44 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!-- Edit Attendance Modal -->
+		<div class="modal fade" id="edit_attendance_model" role="dialog" tabindex="-1" aria-hidden="true" aria-labelledby="editModelToggleLabel">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Attendance</h3>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form method="post" action="edit/{{edit_attendance.id}}/" id="form">
+							{% csrf_token %}
+							<div class="form-group d-flex justify-content-start">
+									<div class="profile-img m-2"><img class="avatar" alt="" src="{{edit_attendance.attendee_user.avatar.url}}"></div>
+									<div class="align-self-center ml-3">
+										<h4>{{edit_attendance.attendee_user.username}}</h4>
+										<small class="d-block text-secondary">{{edit_attendance.attendee_user.designation}} | {{edit_attendance.attendee_user.technology}}</small>
+									</div>
+									<div class="align-self-center ml-auto">
+										<h4 class="ml-2"><i class="fa fa-dot-circle-o mr-1 {% if edit_attendance.attendance_status == 'Present' %}text-success{% elif edit_attendance.attendance_status == 'Half Day' %}text-warning{% else %}text-danger{% endif %}"></i>{{edit_attendance.attendance_status}}</h4>
+									</div>
+							</div>
+							<div class="form-group">
+								{{ form.date|as_crispy_field }}
+							</div>
+							<div class="form-group">
+								{{ form.check_in_time|as_crispy_field }}
+							</div>
+							<div class="form-group">
+								{{ form.check_out_time|as_crispy_field }}
+							</div>
+							<div class="submit-section">
+								<button class="btn btn-primary submit-btn" type="submit">Submit</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Edit Attendance Modal -->

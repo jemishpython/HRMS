@@ -1,0 +1,204 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block body %}
+{% block nav %}{% include 'employee/navigationpanel.html' %}{% endblock nav %}
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+
+                <div class="m-5 d-flex justify-content-between">
+                    <a href="{% url 'EmpSalarySlipList' salary_slip_details.user_name.id %}" class="btn btn-outline-secondary" style="font-size:1rem;"><i class="las la-long-arrow-alt-left"></i> BACK</a>
+                    <a href="{% url 'EmpSalarySlipPDF' salary_slip_details.id %}" class="btn btn-outline-secondary" style="font-size:1rem;"><i class="las la-print"></i> PDF</a>
+                </div>
+
+                <!-- Page Content -->
+                <div class="row m-4">
+                    <div class="col-lg-12">
+                        <div class="my-2 d-flex justify-content-between">
+                            <div>
+                                <img src="{% static 'img/logo_font.png' %}" alt="company logo" height="100rem">
+                            </div>
+                            <div class="d-flex align-self-end my-0 mx-3">
+                                <p class="m-0">Date : {{current_date|date:'d - F - Y'}}</p>
+                            </div>
+                        </div>
+                        <hr class="mb-5">
+                        <div class="d-flex justify-content-between mx-4 my-2" style="background-color:#efeaea;">
+                            <div class="my-3 d-flex" style="width:100%;">
+                                <div class="mx-5 align-self-center">
+                                    <img src="{{salary_slip_details.user_name.avatar.url}}" alt="profile-img" width="200rem;">
+                                </div>
+                                <div class="my-2 mx-5 d-flex">
+                                    <div class="mr-1">
+                                        <h5>Id </h5>
+                                        <h5>Name </h5>
+                                        <h5>Phone </h5>
+                                        <h5>Email </h5>
+                                        <h5 class="text-nowrap">Address </h5>
+                                        <h5>Department</h5>
+                                        <h5>Designation</h5>
+                                        <h5>Technology</h5>
+                                    </div>
+                                    <div class="ml-1">
+                                        <h5>: IW{{salary_slip_details.user_name.id}}</h5>
+                                        <h5>: {{salary_slip_details.user_name.username}}</h5>
+                                        <h5>: {{salary_slip_details.user_name.phone}}</h5>
+                                        <h5>: {{salary_slip_details.user_name.email}}</h5>
+                                        <h5>: {{salary_slip_details.user_name.address}}</h5>
+                                        <h5>: {{salary_slip_details.user_name.department}}</h5>
+                                        <h5>: {{salary_slip_details.user_name.designation}}</h5>
+                                        <h5>: {{salary_slip_details.user_name.technology}}</h5>
+                                    </div>
+                                </div>
+                                <div class="my-2 mx-5 d-flex">
+                                    <div class="mr-1">
+                                        <h5>Date of Joining </h5>
+                                        <h5>Salary Month </h5>
+                                        <h5>Total Working Days </h5>
+                                        <h5>Number of Working Days Attend </h5>
+                                        <h5>Leave Taken</h5>
+                                        <h5>&nbsp;</h5>
+                                        <h5>Bank Name</h5>
+                                        <h5>Bank Account Number</h5>
+                                    </div>
+                                    <div class="ml-1">
+                                        <h5>: {{salary_slip_details.user_name.date_joined|date:'d - F - Y'}}</h5>
+                                        <h5>: {{salary_month|date:'F - Y'}}</h5>
+                                        <h5>: {{total_weekdays}}</h5>
+                                        <h5>: {{number_of_working_day_attend}}</h5>
+                                        <h5>: {{leave_taken}}</h5>
+                                        <h5>&nbsp;</h5>
+                                        <h5>: {{bank_details.bank_name}}</h5>
+                                        <h5>: {{bank_details.bank_account_number}}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="my-3 mx-5 border">
+                            <table class="w-100 table-bordered" style="background-color: #F6F4F4;">
+                                <thead>
+                                    <tr style="background-color:#ff944d;">
+                                        <th class="w-25 py-2 px-3 text-center" colspan="2">Income</th>
+                                        <th class="w-25 py-2 px-3 text-center" colspan="2">Deduction</th>
+                                    </tr>
+                                    <tr style="background-color:#ffd1b3;">
+                                        <th class="w-25 py-2 px-3">Particulars</th>
+                                        <th class="w-25 py-2 px-3 text-center">Amount</th>
+                                        <th class="w-25 py-2 px-3">Particulars</th>
+                                        <th class="w-25 py-2 px-3 text-center">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 py-2 px-3">Basic Salary</td>
+                                        <td class="w-25 py-2 px-3 text-center">{{salary_slip_details.user_name.salary}}</td>
+                                        <td class="w-25 py-2 px-3">PF</td>
+                                        {% if professional_tax.conditional_amount == None %}
+                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                        {% else %}
+                                            <td class="w-25 py-2 px-3 text-center">{{professional_tax.conditional_amount}}</td>
+                                        {% endif %}
+                                    </tr>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 py-2 px-3">Dearness Allowance</td>
+                                        {% if dearness_allowance.conditional_amount == None %}
+                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                        {% else %}
+                                        <td class="w-25 py-2 px-3 text-center">{{dearness_allowance.conditional_amount}}</td>
+                                        {% endif %}
+                                        <td class="w-25 py-2 px-3">Professional Tax</td>
+                                        {% if pf.conditional_amount == None %}
+                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                        {% else %}
+                                            <td class="w-25 py-2 px-3 text-center">{{pf.conditional_amount}}</td>
+                                        {% endif %}
+                                    </tr>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 py-2 px-3">Paid leave amount</td>
+                                        {% if paid_leave.conditional_amount == None %}
+                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                        {% else %}
+                                            <td class="w-25 py-2 px-3 text-center">{{paid_leave.conditional_amount}}</td>
+                                        {% endif %}
+                                        <td class="w-25 py-2 px-3">TDS</td>
+                                        {% if tds.conditional_amount == None %}
+                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                        {% else %}
+                                            <td class="w-25 py-2 px-3 text-center">{{tds.conditional_amount}}</td>
+                                        {% endif %}
+                                    </tr>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 py-2 px-3">Bonus</td>
+                                        {% if bonus.conditional_amount == None %}
+                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                        {% else %}
+                                            <td class="w-25 py-2 px-3 text-center">{{bonus.conditional_amount}}</td>
+                                        {% endif %}
+                                        <td class="w-25 py-2 px-3">&nbsp;</td>
+                                        <td class="w-25 py-2 px-3 text-center">&nbsp;</td>
+                                    </tr>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 py-2 px-3">City Compensatory Allowance</td>
+                                        {% if city_compensatory_allowance.conditional_amount == None %}
+                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                        {% else %}
+                                            <td class="w-25 py-2 px-3 text-center">{{city_compensatory_allowance.conditional_amount}}</td>
+                                        {% endif %}
+                                        <td class="w-25 py-2 px-3">&nbsp;</td>
+                                        <td class="w-25 py-2 px-3 text-center">&nbsp;</td>
+                                    </tr>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 py-2 px-3">Assistant Allowance</td>
+                                        {% if assistant_allowance.conditional_amount == None %}
+                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                        {% else %}
+                                            <td class="w-25 py-2 px-3 text-center">{{assistant_allowance.conditional_amount}}</td>
+                                        {% endif %}
+                                        <td class="w-25 py-2 px-3">&nbsp;</td>
+                                        <td class="w-25 py-2 px-3 text-center">&nbsp;</td>
+                                    </tr>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 py-2 px-3">Medical Allowance</td>
+                                        {% if medical_allowance.conditional_amount == None %}
+                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                        {% else %}
+                                            <td class="w-25 py-2 px-3 text-center">{{medical_allowance.conditional_amount}}</td>
+                                        {% endif %}
+                                        <td class="w-25 py-2 px-3">&nbsp;</td>
+                                        <td class="w-25 py-2 px-3 text-center">&nbsp;</td>
+                                    </tr>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 py-2 px-3">Total</td>
+                                        <td class="w-25 py-2 px-3 text-center">{{salary_slip_details.final_salary_amount}}</td>
+                                        <td class="w-25 py-2 px-3">Total</td>
+                                        <td class="w-25 py-2 px-3 text-center">{{salary_slip_details.final_salary_amount}}</td>
+                                    </tr>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 py-2 px-3" colspan="4"></td>
+                                    </tr>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 py-2 px-3" colspan="3" style="background-color:#ffd1b3;">Net Salary</td>
+                                        <td class="w-25 py-2 px-3 text-center">{{salary_slip_details.final_salary_amount}}</td>
+                                    </tr>
+                                    <tr style="background-color:#F6F4F4;">
+                                        <td class="w-25 text-center" colspan="2" style="vertical-align: bottom; padding:1rem 10rem 0 10rem;"><p class="">Employee Signature</p></td>
+                                        <td class="w-25 text-center float-bottom" colspan="2" style="vertical-align: bottom; padding:1rem 10rem 0 10rem;">
+                                            <img src="{% static 'img/company_stamp.png' %}" alt="Company Stamp" width="150rem" class="my-4">
+                                            <p>Employer Signature</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center m-5 pt-5">
+                            <p>403, Tapi Arcade, B/H Police Station, Abrama Rd, Mota Varachha, Surat,Gujarat-394105</p>
+                            <p><a href="mailto:info@webmigrates.com" class="text-primary">info@webmigrates.com</a> | <a href="https://www.webmigrates.com/" class="text-primary">www.webmigrates.com</a> | +91 9033575195</p>
+                        </div>
+                    </div>
+                </div>
+				<!-- /Page Content -->
+				
+            </div>
+			<!-- Page Wrapper -->
+
+{% endblock body %}

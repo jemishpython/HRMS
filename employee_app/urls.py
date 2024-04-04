@@ -46,9 +46,12 @@ urlpatterns = [
     path("<int:userid>/tickets-update/<int:id>", views.EditTicket, name="EmpEditTicket"),
     path("<int:id>/tickets/delete", views.DeleteTicket, name="EmpDeleteTicket"),
 
-    path("chat/<int:id>", views.ChatView, name="EmpChatView"),
+    path("chat-view/", views.ChatView, name='EmpChatView'),
+    path("chat/<int:id>", views.Chat, name='EmpChat'),
 
     path("attendance/<int:id>", views.AttendanceView, name="EmpAttendanceView"),
+    path("attendance/punch-in/<int:id>", views.PunchIn, name="EmpPunchIn"),
+    path("attendance/<int:id>/punch-out/<int:userid>", views.PunchOut, name="EmpPunchOut"),
 
     path("project/<int:id>", views.ProjectView, name="EmpProjectsView"),
     # path("project/details-view/<int:id>", views.ProjectDetailsView, name="EmpProjectDetailsView"),
@@ -59,5 +62,9 @@ urlpatterns = [
     path("<int:user_id>/project/<int:id>/tasks", views.ProjectTaskList, name="EmpProjectTaskList"),
 
     path("policies/", views.PoliciesView, name='EmpPoliciesView'),
+
+    path("salary-slip-list/<int:id>", views.SalarySlipList, name='EmpSalarySlipList'),
+    path("salary-slip-view/<int:id>", views.SalarySlipView, name='EmpSalarySlipView'),
+    path("salary-slip-pdg/<int:id>", views.SalarySlipPDFCreate, name='EmpSalarySlipPDF'),
 
 ]

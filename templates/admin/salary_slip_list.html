@@ -15,10 +15,10 @@
 					<div class="page-header">
 						<div class="row">
 							<div class="col-sm-12">
-								<h3 class="page-title">Attendance</h3>
+								<h3 class="page-title">Employee Salary Slip</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-									<li class="breadcrumb-item active">Attendance</li>
+									<li class="breadcrumb-item active">Salary Slip List</li>
 								</ul>
 							</div>
 						</div>
@@ -27,16 +27,10 @@
 					
 					<!-- Search Filter -->
 					<div class="row filter-row">
-						<div class="col-sm-6 col-md-2">
+						<div class="col-sm-6 col-md-4">
 							<div class="form-group form-focus">
 								<input type="text" class="form-control floating" id="emp_name_search">
-								<label class="focus-label">Employee Name</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus">
-								<input type="text" class="form-control floating" id="designation_search">
-								<label class="focus-label">Designation / Technology</label>
+								<label class="focus-label">Employee Name / Designation / Technology</label>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-2">
@@ -45,15 +39,10 @@
 								<label class="focus-label">Department</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-1">
-							<div class="form-group form-focus select-focus">
-								<select class="form-control floating" id="day_search">
-									<option value="">---</option>
-									{% for i in day_range %}
-									<option>{{i}}</option>
-									{% endfor %}
-								</select>
-								<label class="focus-label">Select Day</label>
+						<div class="col-sm-6 col-md-2">
+							<div class="form-group form-focus">
+								<input type="number" class="form-control floating" id="salary_search">
+								<label class="focus-label">Salary</label>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-2">
@@ -76,7 +65,7 @@
 								<label class="focus-label">Select Month</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-1">
+						<div class="col-sm-6 col-md-2">
 							<div class="form-group form-focus select-focus">
 								<select class="form-control floating" id="year_search">
 									<option value="">---</option>
@@ -87,63 +76,45 @@
 								<label class="focus-label">Select Year</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus select-focus">
-								<select class="form-control" id="attendance_status_search">
-									<option value="">---</option>
-									<option>Present</option>
-									<option>Half Day</option>
-									<option>Absent</option>
-								</select>
-								<label class="focus-label">Attendance Status</label>
-							</div>
-						</div>
                     </div>
 					<!-- /Search Filter -->
 					
                     <div class="row">
                         <div class="col-lg-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table" id="attendance_list_table">
+								<table class="table table-striped custom-table" id="salary_list_table">
 									<thead>
 										<tr>
 											<th>Name</th>
-											<th hidden>Day</th>
-											<th hidden>Month</th>
-											<th hidden>Year</th>
-											<th>Date</th>
-											<th>Punch In</th>
-											<th>Punch Out</th>
-											<th>Production Time</th>
+											<th>Email</th>
 											<th>Mobile</th>
 											<th>Department</th>
-											<th class="text-center">Attendance</th>
+											<th>Generate Date</th>
+											<th hidden>Generate Month</th>
+											<th hidden>Generate Year</th>
+											<th>Final Salary Amount</th>
 											<th class="text-center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-									{% for attendee in attendances %}
+									{% for salary_slip in salary_slip_list %}
 										<tr>
 											<td>
 												<h2 class="table-avatar">
-													<a href="{% url 'AdminProfileView' attendee.attendee_user.id %}"><img class="avatar" alt="" src="{{attendee.attendee_user.avatar.url}}"></a>
-													<a href="{% url 'AdminProfileView' attendee.attendee_user.id %}">{{attendee.attendee_user.username}} <span>{{attendee.attendee_user.designation}} | {{attendee.attendee_user.technology}}</span></a>
+													<a href="{% url 'AdminProfileView' salary_slip.user_name.id %}"><img class="avatar" alt="" src="{{salary_slip.user_name.avatar.url}}"></a>
+													<a href="{% url 'AdminProfileView' salary_slip.user_name.id %}">{{salary_slip.user_name.username}} <span>{{salary_slip.user_name.designation}} | {{salary_slip.user_name.technology}}</span></a>
 												</h2>
 											</td>
-											<td hidden>{{attendee.date|date:'j'}}</td>
-											<td hidden>{{attendee.date|date:'M'}}</td>
-											<td hidden>{{attendee.date|date:'Y'}}</td>
-											<td>{{attendee.date|date:'j - M - Y'}}</td>
-											<td>{{attendee.check_in_time|date:'h : i A'}}</td>
-											<td>{{attendee.check_out_time|date:'h : i A'}}</td>
-											<td>{{attendee.production_hour|date:'H : i '}} hour</td>
-											<td>{{attendee.attendee_user.phone}}</td>
-											<td>{{attendee.attendee_user.department}}</td>
-											<td class="text-center">
-												<p><i class="fa fa-dot-circle-o mr-1 {% if attendee.attendance_status == 'Present' %}text-success{% elif attendee.attendance_status == 'Half Day' %}text-warning{% else %}text-danger{% endif %}"></i> {{attendee.attendance_status}}</p>
-											</td>
-											<td>
-												<button class="p-0 ml-4 text-info border-0 " onclick="editAttendance({{attendee.id}})">Edit</button>
+											<td>{{salary_slip.user_name.email}}</td>
+											<td>{{salary_slip.user_name.phone}}</td>
+											<td>{{salary_slip.user_name.department}}</td>
+											<td>{{salary_slip.generate_date|date:'d - F - Y'}}</td>
+											<td hidden>{{salary_slip.generate_date|date:'F'}}</td>
+											<td hidden>{{salary_slip.generate_date|date:'Y'}}</td>
+											<td>{{salary_slip.final_salary_amount}}</td>
+											<td class="text-center d-flex justify-content-around">
+												<a href="{% url 'AdminEmployeeSalarySlipView' salary_slip.id %}" class="p-0 ml-4 border-0 text-info">View Salary Slip</a>
+												<button class="p-0 ml-4 border-0 text-danger" onclick="deleteSalarySlip({{salary_slip.id}})">Delete</button>
 											</td>
 										</tr>
 									{% endfor %}
@@ -153,9 +124,33 @@
                         </div>
                     </div>
                 </div>
-				<!-- /Page Content -->
-
-				<div id="edit-attendance-form"></div>
+				<!-- /Page Content -->	
+				
+				
+				<!-- Delete Salary Slip Modal -->
+				<div class="modal custom-modal fade" id="delete_salary_slip_model" role="dialog">
+					<div class="modal-dialog modal-dialog-centered">
+						<div class="modal-content">
+							<div class="modal-body">
+								<div class="form-header">
+									<h3>Delete Salary Slip</h3>
+									<p>Are you sure want to delete?</p>
+								</div>
+								<div class="modal-btn delete-action">
+									<div class="row">
+										<div class="col-6">
+											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
+										</div>
+										<div class="col-6">
+											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /Delete Salary Slip Modal -->
 				
             </div>
 			<!-- Page Wrapper -->
@@ -164,44 +159,34 @@
 <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
 <script>
 $(document).ready(function () {
-	var table = $('#attendance_list_table').DataTable({
+	var table = $('#salary_list_table').DataTable({
 		dom: 'Blrtip',
 	});
 	$('#emp_name_search').on('keyup', function () {
 		table.column(0).search(this.value).draw();
 	});
-	 $('#designation_search').on('keyup', function () {
-		table.column(0).search(this.value).draw();
-	});
-	 $('#attendance_status_search').on('change', function () {
-		table.column(7).search(this.value).draw();
-	});
 	 $('#department_search').on('keyup', function () {
-		table.column(6).search(this.value).draw();
-	});
-	$('#year_search').on('change', function () {
 		table.column(3).search(this.value).draw();
 	});
+	$('#year_search').on('change', function () {
+		table.column(6).search(this.value).draw();
+	});
 	 $('#month_search').on('change', function () {
-		table.column(2).search(this.value).draw();
+		table.column(5).search(this.value).draw();
 	});
-	 $('#day_search').on('change', function () {
-		table.column(1).search(this.value).draw();
+	 $('#salary_search').on('keyup', function () {
+		table.column(7).search(this.value).draw();
 	});
-
 });
 
-
-
-function editAttendance(editAttendanceId) {
-    $.ajax({
-        url: "edit/"+ editAttendanceId + "/",
-        success: function(response) {
-            $("#edit-attendance-form").html(response);
-            $("#edit_attendance_model").modal('show');
-        }
-    });
+function deleteSalarySlip(deleteSalarySlipId) {
+    $("#delete_salary_slip_model").modal('show');
+    if (deleteSalarySlipId) {
+        var deleteUrl = "{% url 'AdminDeleteSalarySlip' id=0 %}".replace(0, deleteSalarySlipId);
+        $("#confirmDeleteBtn").attr("href", deleteUrl);
+    }
 }
+
 
 window.setTimeout(function() {
 	$(".alert").fadeTo(500, 0).slideUp(500, function(){

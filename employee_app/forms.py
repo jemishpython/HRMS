@@ -131,3 +131,15 @@ class EditTicketsForm(forms.ModelForm):
             'ticket_create_date': forms.DateInput(attrs={'type': 'date', 'value': date.today}),
             'ticket_priority': forms.Select(attrs={'class': 'form-control'}),
         }
+
+
+class PunchInForm(forms.ModelForm):
+    class Meta:
+        model = Attendance
+        fields = ['attendee_user', 'date', 'check_in_time']
+
+
+class PunchOutForm(forms.ModelForm):
+    class Meta:
+        model = Attendance
+        fields = ['check_out_time', 'production_hour']

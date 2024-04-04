@@ -1,0 +1,35 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!-- Edit Employee Salary Slip Modal -->
+		<div class="modal fade" id="edit_salary_slip_model" role="dialog" tabindex="-1" aria-hidden="true" aria-labelledby="editModelToggleLabel">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Edit Employee Salary Slip</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<form method="post" action="{% url 'AdminEditEmployeeSalarySlip' id=edit_employee_salary_slip.id %}" id="form">
+							{% csrf_token %}
+							<div class="form-group d-flex justify-content-start">
+								<div class="profile-img m-2"><img class="avatar" alt="" src="{{edit_employee_salary_slip.avatar.url}}"></div>
+								<div class="align-self-center ml-3">
+									<h4>{{edit_employee_salary_slip.username}}</h4>
+									<small class="d-block text-secondary">{{edit_employee_salary_slip.designation}} | {{edit_employee_salary_slip.technology}}</small>
+								</div>
+							</div>
+							<div class="form-group">
+								{{ form.salary|as_crispy_field }}
+							</div>
+							<div class="submit-section">
+								<button class="btn btn-primary submit-btn" type="submit">Submit</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Edit Employee Salary Slip Modal -->

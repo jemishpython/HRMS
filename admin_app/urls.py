@@ -91,9 +91,18 @@ urlpatterns = [
     path("tickets/status-update/<int:id>", views.UpdateTicketstatus, name='AdminTicketStatusUpdate'),
 
     path("chat-view/", views.ChatView, name='AdminChatView'),
-    path("chat/<int:id>", views.Chat, name='AdminChat'),
+    path("chat/<int:id>/", views.Chat, name='AdminChat'),
 
     path("attendance/", views.AttendanceView, name='AdminAttendanceView'),
+    path("attendance/edit/<int:id>/", views.AttendanceEdit, name='AdminAttendanceEdit'),
+
+    path("employee-salary-slip/", views.SalarySlipDashboard, name='AdminSalarySlipDashboard'),
+    path("employee-salary-slip/edit/<int:id>", views.EditEmployeeSalarySlip, name='AdminEditEmployeeSalarySlip'),
+    path("employee-salary-slip/generate/<int:id>", views.GenerateEmployeeSalarySlip, name='AdminGenerateEmployeeSalarySlip'),
+    path("employee-salary-slip/list/", views.EmployeeSalarySlipList, name='AdminEmployeeSalarySlipList'),
+    path("employee-salary-slip/pdf/<int:id>", views.SalarySlipPDFCreate, name='AdminEmployeeSalarySlipPDF'),
+    path("employee-salary-slip/view/<int:id>", views.EmployeeSalarySlipView, name='AdminEmployeeSalarySlipView'),
+    path("employee-salary-slip/delete/<int:id>", views.DeleteSalarySlip, name='AdminDeleteSalarySlip'),
 
     path("interviewer-list/", views.InterviewerDash, name='AdminInterviewerDash'),
     path("interviewer-detail/", views.InterviewerDetails, name='AdminInterviewerDetails'),
@@ -106,6 +115,11 @@ urlpatterns = [
 
     path("interviewer/aptitude-test-mail-send/<int:id>", views.SendAptitudeTestMail, name='AdminSendAptitudeTestMail'),
     path("interviewer/aptitude-test-result/<int:id>", views.AptitudeTestResult, name='AdminAptitudeTestResult'),
+
+    path("condition-and-rules/", views.ConditionsView, name='AdminConditionsView'),
+    path("condition-and-rules/add/", views.AddConditon, name="AdminAddCondition"),
+    path("condition-and-rules/edit/<int:id>/", views.EditCondition, name="AdminEditCondition"),
+    path("condition-and-rules/delete/<int:id>/", views.DeleteCondition, name="AdminDeleteCondition"),
 
     path("policies/", views.PoliciesView, name='AdminPoliciesView'),
     path("policies/add/", views.AddPolicies, name="AdminAddPolicies"),

@@ -1,3 +1,6 @@
+import datetime
+import time
+import calendar
 from datetime import date
 
 from django.contrib.auth import login, logout
@@ -5,18 +8,22 @@ from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.http import HttpResponse
 from django.template import loader
 from django import forms
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm, EditPersonalInfoForm, \
     AddEducationInfoForm, EditEducationInfoForm, AddExperienceInfoForm, EditExperienceInfoForm, \
-    EditEmergencyContactForm, AddEmergencyContactForm, AddTicketsForm, EditTicketsForm
-from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice
+    EditEmergencyContactForm, AddEmergencyContactForm, AddTicketsForm, EditTicketsForm, PunchInForm, PunchOutForm
+from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
-    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign, ProjectImages, ProjectFile, Policies
+    Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign, ProjectImages, ProjectFile, Policies, \
+    Attendance, Conditions, SalarySlip
 
 
 def landing(request):
@@ -364,10 +371,11 @@ def TechnologyView(request):
 @login_required(login_url="EmployeeLogin")
 def Leaves(request, id):
     leave_list = Leave.objects.filter(leave_user=id)
+    total_paid_leave = Conditions.objects.get(condition_title='Total paid leave')
     new_leaves_count = leave_list.filter(leave_status=LeaveStatusChoice.NEW).count()
     approved_leaves_count = leave_list.filter(leave_status=LeaveStatusChoice.APPROVED).count()
     decline_leaves_count = leave_list.filter(leave_status=LeaveStatusChoice.DECLINED).count()
-    remaining_leaves_count = (12 - approved_leaves_count)
+    remaining_leaves_count = (total_paid_leave.conditional_amount - approved_leaves_count)
     leave_status = LeaveStatusChoice.choices
     context = {
         'leave_list': leave_list,
@@ -376,6 +384,7 @@ def Leaves(request, id):
         'approved_leaves_count': approved_leaves_count,
         'decline_leaves_count': decline_leaves_count,
         'remaining_leaves_count': remaining_leaves_count,
+        'total_paid_leave': total_paid_leave.conditional_amount,
     }
     return render(request, "employee/leaves-employee.html", context)
 
@@ -492,13 +501,116 @@ def DeleteTicket(request, id):
 
 
 @login_required(login_url="EmployeeLogin")
-def ChatView(request, id):
-    return render(request, "employee/chat.html")
+def ChatView(request):
+    user_list = User.objects.all()
+    context = {
+        'user_list': user_list,
+    }
+    return render(request, "employee/chat.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def Chat(request, id):
+    user_list = User.objects.all()
+    chat_users = User.objects.get(id=id)
+    context = {
+        'chat_users': chat_users,
+        'user_list': user_list,
+    }
+    return render(request, "employee/chat.html", context)
 
 
 @login_required(login_url="EmployeeLogin")
 def AttendanceView(request, id):
-    return render(request, "employee/attendance-employee.html")
+    current_datetime = datetime.datetime.now()
+    attendee = Attendance.objects.filter(attendee_user=id)
+    present_count_monthly = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.PRESENT, date__month=datetime.datetime.now().month)
+    absent_count_monthly = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT, date__month=datetime.datetime.now().month)
+    present_count_year = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.PRESENT, date__year=datetime.datetime.now().year)
+    absent_count_year = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT, date__year=datetime.datetime.now().year)
+    last_punchIn_id = Attendance.objects.filter(attendee_user=id).last()
+    lunch_break_time = Conditions.objects.get(condition_title="Lunch break time")
+    context = {
+        'current_datetime': current_datetime,
+        'attendee': attendee,
+        'last_punchIn_id': last_punchIn_id,
+        'day_range': range(1, 32),
+        'year_range': range(2020, 2031),
+        'present_count_monthly': present_count_monthly,
+        'absent_count_monthly': absent_count_monthly,
+        'present_count_year': present_count_year,
+        'absent_count_year': absent_count_year,
+        'lunch_break_time': lunch_break_time.conditional_amount,
+    }
+    return render(request, "employee/attendance-employee.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def PunchIn(request, id):
+    userid = User.objects.get(id=id)
+    form = PunchInForm(request.POST)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                punchIn = form.save(commit=False)
+                punchIn.date = date.today()
+                punchIn.check_in_time = datetime.datetime.now().time()
+                punchIn.attendee_user = User.objects.get(id=id)
+                punchIn.break_time = Conditions.objects.get(condition_title="Lunch break time")
+                punchIn.save()
+                messages.success(request, 'PunchIn successfully')
+                return redirect('EmpAttendanceView', id=userid.id)
+            else:
+                messages.error(request, 'Form not valid : ', form.errors)
+                return redirect('EmpAttendanceView', id=userid.id)
+        except Exception as e:
+            messages.error(request, 'ERROR', e)
+            return redirect('EmpAttendanceView', id=userid.id)
+    context = {'form': form}
+    return render(request, "employee/attendance-employee.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def PunchOut(request, id, userid):
+    lunch_break_time = Conditions.objects.get(condition_title="Lunch break time")
+    user_id = User.objects.get(id=userid)
+    edit_attendance = Attendance.objects.get(id=id)
+    form = PunchOutForm(request.POST or None, instance=edit_attendance)
+
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                punchOut = form.save(commit=False)
+                punchOut.check_out_time = datetime.datetime.now().time()
+                production_time = datetime.datetime.combine(datetime.date.today(), punchOut.check_out_time) - datetime.datetime.combine(datetime.date.today(), punchOut.check_in_time)
+                if production_time >= datetime.timedelta(hours=5, minutes=55):
+                    if lunch_break_time:
+                        production_time -= datetime.timedelta(hours=lunch_break_time.conditional_amount)
+                    else:
+                        production_time -= datetime.timedelta(hours=1)
+                punchOut.production_hour = str(production_time)
+
+                if punchOut.check_in_time >= datetime.time(7, 50) and punchOut.check_out_time >= datetime.time(18, 25) and production_time >= datetime.timedelta(hours=8, minutes=30):
+                    punchOut.attendance_status = AttendanceStatusChoice.PRESENT
+                elif punchOut.check_in_time >= datetime.time(7, 50) and punchOut.check_out_time >= datetime.time(15, 55) and production_time >= datetime.timedelta(hours=5, minutes=55):
+                    punchOut.attendance_status = AttendanceStatusChoice.PRESENT
+                elif punchOut.check_in_time >= datetime.time(7, 50) and punchOut.check_out_time <= datetime.time(13, 00) and datetime.timedelta(hours=3, minutes=55) <= production_time <= datetime.timedelta(hours=5, minutes=5):
+                    punchOut.attendance_status = AttendanceStatusChoice.HALF_DAY
+                elif punchOut.check_in_time >= datetime.time(13,50) and punchOut.check_out_time >= datetime.time(18, 25) and production_time >= datetime.timedelta(hours=4, minutes=30):
+                    punchOut.attendance_status = AttendanceStatusChoice.HALF_DAY
+                else:
+                    punchOut.attendance_status = AttendanceStatusChoice.ABSENT
+
+                punchOut.save()
+                messages.success(request, 'PunchOut successfully')
+                return redirect('EmpAttendanceView', id=user_id.id)
+            else:
+                messages.error(request, 'Form not valid: ' + str(form.errors))
+        except Exception as e:
+            messages.error(request, 'ERROR: ' + str(e))
+
+    context = {'form': form}
+    return render(request, "employee/attendance-employee.html", context)
 
 
 @login_required(login_url="EmployeeLogin")
@@ -568,3 +680,118 @@ def PoliciesView(request):
         'policies': policies,
     }
     return render(request, "employee/policies.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def SalarySlipList(request, id):
+    salary_slip_list = SalarySlip.objects.filter(user_name=id)
+    context = {
+        'salary_slip_list':salary_slip_list,
+        'year_range': range(2020, 2031),
+    }
+    return render(request, "employee/salary_slip_list.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def SalarySlipView(request, id):
+    dearness_allowance = Conditions.objects.get(condition_title="Dearness Allowance")
+    professional_tax = Conditions.objects.get(condition_title="Professional Tax")
+    pf = Conditions.objects.get(condition_title="PF")
+    bonus = Conditions.objects.get(condition_title="Bonus")
+    tds = Conditions.objects.get(condition_title="TDS")
+    city_compensatory_allowance = Conditions.objects.get(condition_title="City Compensatory Allowance")
+    assistant_allowance = Conditions.objects.get(condition_title="Assistant Allowance")
+    medical_allowance = Conditions.objects.get(condition_title="Medical Allowance")
+    paid_leave = Conditions.objects.get(condition_title="Paid leave amount")
+    salary_slip_details = SalarySlip.objects.get(id=id)
+    employee_id = salary_slip_details.user_name.id
+    current_date = datetime.date.today()
+    salary_month = current_date.replace(day=1) - datetime.timedelta(days=1)
+    bank_details = Bank.objects.filter(employee=employee_id).first()
+    absent_days = Attendance.objects.filter(attendee_user=employee_id,
+                                            attendance_status=AttendanceStatusChoice.ABSENT,
+                                            date__month=salary_month.month).count()
+    attend_half_days = Attendance.objects.filter(attendee_user=employee_id,
+                                                 attendance_status=AttendanceStatusChoice.HALF_DAY,
+                                                 date__month=salary_month.month).count()
+    leave_taken = Leave.objects.filter(leave_user=employee_id, leave_status=LeaveStatusChoice.APPROVED,
+                                       leave_from__month=salary_month.month).count()
+    total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if calendar.weekday(salary_month.year, salary_month.month, day) < 5)
+    number_of_working_day_attend = total_weekdays - leave_taken - absent_days - (0.5 * attend_half_days)
+
+    context = {
+        'salary_slip_details': salary_slip_details,
+        'dearness_allowance': dearness_allowance,
+        'professional_tax': professional_tax,
+        'pf': pf,
+        'bonus': bonus,
+        'tds': tds,
+        'city_compensatory_allowance': city_compensatory_allowance,
+        'medical_allowance': medical_allowance,
+        'paid_leave': paid_leave,
+        'assistant_allowance': assistant_allowance,
+        'total_weekdays': total_weekdays,
+        'bank_details': bank_details,
+        'current_date': current_date,
+        'salary_month': salary_month,
+        'number_of_working_day_attend': number_of_working_day_attend,
+        'leave_taken': leave_taken,
+    }
+    return render(request, "employee/salary_slip.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def SalarySlipPDFCreate(request, id):
+    dearness_allowance = Conditions.objects.get(condition_title="Dearness Allowance")
+    professional_tax = Conditions.objects.get(condition_title="Professional Tax")
+    pf = Conditions.objects.get(condition_title="PF")
+    bonus = Conditions.objects.get(condition_title="Bonus")
+    tds = Conditions.objects.get(condition_title="TDS")
+    paid_leave = Conditions.objects.get(condition_title="Paid leave amount")
+    city_compensatory_allowance = Conditions.objects.get(condition_title="City Compensatory Allowance")
+    assistant_allowance = Conditions.objects.get(condition_title="Assistant Allowance")
+    medical_allowance = Conditions.objects.get(condition_title="Medical Allowance")
+    salary_slip_pdf = SalarySlip.objects.get(id=id)
+    employee_id = salary_slip_pdf.user_name.id
+    current_date = datetime.date.today()
+    salary_month = current_date.replace(day=1) - datetime.timedelta(days=1)
+    bank_details = Bank.objects.filter(employee=employee_id).first()
+    leave_taken = Leave.objects.filter(leave_user=employee_id, leave_status=LeaveStatusChoice.APPROVED,
+                                       leave_from__month=salary_month.month).count()
+    total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if
+                         calendar.weekday(salary_month.year, salary_month.month, day) < 5)
+    number_of_working_day_attend = total_weekdays - leave_taken
+    template_path = 'employee/salary_slip_pdf.html'
+    context = {
+        'dearness_allowance': dearness_allowance,
+        'professional_tax': professional_tax,
+        'pf': pf,
+        'bonus': bonus,
+        'tds': tds,
+        'city_compensatory_allowance': city_compensatory_allowance,
+        'medical_allowance': medical_allowance,
+        'assistant_allowance': assistant_allowance,
+        'salary_slip_pdf': salary_slip_pdf,
+        'paid_leave': paid_leave,
+        'total_weekdays': total_weekdays,
+        'bank_details': bank_details,
+        'current_date': current_date,
+        'salary_month': salary_month,
+        'number_of_working_day_attend': number_of_working_day_attend,
+        'leave_taken': leave_taken,
+        'company_logo1': 'static/img/logo_font.png',
+        'company_logo2': 'static/img/font_without_logo.png',
+        'stamp': 'static/img/company_stamp.png',
+    }
+    # Rendered template
+    template = get_template(template_path)
+    html = template.render(context)
+    # Create a PDF
+    response = HttpResponse(content_type='application/pdf')
+    response[
+        'Content-Disposition'] = f'attachment; filename="{salary_slip_pdf.user_name.username}_Salary_Slip_{salary_slip_pdf.generate_date}.pdf"'
+    pisa_status = pisa.CreatePDF(
+        html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
