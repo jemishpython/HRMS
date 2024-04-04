@@ -358,3 +358,21 @@ class EditAttendanceForm(forms.ModelForm):
             'check_in_time': forms.TimeInput(attrs={'type': 'time', 'step': 'any'}),
             'check_out_time': forms.TimeInput(attrs={'type': 'time', 'step': 'any'}),
         }
+
+
+class AddConditionForm(forms.ModelForm):
+    class Meta:
+        model = Conditions
+        fields = ['condition_title', 'conditional_amount', 'conditional_object']
+
+
+class EditConditionForm(forms.ModelForm):
+    class Meta:
+        model = Conditions
+        fields = ['condition_title', 'conditional_amount', 'conditional_object']
+
+
+class EditEmployeeSalarySlipForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['salary']

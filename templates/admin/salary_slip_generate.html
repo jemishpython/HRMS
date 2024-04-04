@@ -1,0 +1,142 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block body %}
+{% block nav %}{% include 'admin/navigationpanel.html' %}{% endblock nav %}
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+				<div class="show_message">
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+					{% endfor %}
+				</div>
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Generate Employee Salary Slip</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Generate Salary Slip</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<!-- Search Filter -->
+<div class="row filter-row">
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group form-focus">
+								<input type="text" class="form-control floating" id="emp_name_search">
+								<label class="focus-label">Employee Name / Designation / Technology</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group form-focus">
+								<input type="text" class="form-control floating" id="department_search">
+								<label class="focus-label">Department</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group form-focus">
+								<input type="number" class="form-control floating" id="salary_search">
+								<label class="focus-label">Salary</label>
+							</div>
+						</div>
+                    </div>
+					<!-- /Search Filter -->
+					
+                    <div class="row">
+                        <div class="col-lg-12">
+							<div class="table-responsive">
+								<table class="table table-striped custom-table" id="salary_list_table">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Email</th>
+											<th>Mobile</th>
+											<th>Department</th>
+											<th>Salary</th>
+											<th class="text-center">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									{% for user in user_list %}
+										<tr>
+											<td>
+												<h2 class="table-avatar">
+													<a href="{% url 'AdminProfileView' user.id %}"><img class="avatar" alt="" src="{{user.avatar.url}}"></a>
+													<a href="{% url 'AdminProfileView' user.id %}">{{user.username}} <span>{{user.designation}} | {{user.technology}}</span></a>
+												</h2>
+											</td>
+											<td>{{user.email}}</td>
+											<td>{{user.phone}}</td>
+											<td>{{user.department}}</td>
+											<td>{{user.salary}}</td>
+											<td class="text-center d-flex justify-content-around">
+												<button class="p-0 ml-4 border-0 text-info" onclick="editSalarySlip({{user.id}})">Edit</button>
+												{% if user.id in users_with_slip_generated %}
+													<a style="color:green" href="#">Slip Generated</a>
+												{% else %}
+													<a style="color:green" href="{% url 'AdminGenerateEmployeeSalarySlip' id=user.id %}">Generate Pay Slip</a>
+												{% endif %}
+											</td>
+										</tr>
+									{% endfor %}
+
+									</tbody>
+								</table>
+							</div>
+                        </div>
+                    </div>
+                </div>
+				<!-- /Page Content -->
+
+				<div id="edit-salary_slip-form"></div>
+				
+            </div>
+			<!-- Page Wrapper -->
+
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+	var table = $('#salary_list_table').DataTable({
+		dom: 'Blrtip',
+	});
+	$('#emp_name_search').on('keyup', function () {
+		table.column(0).search(this.value).draw();
+	});
+	 $('#department_search').on('keyup', function () {
+		table.column(3).search(this.value).draw();
+	});
+	 $('#salary_search').on('keyup', function () {
+		table.column(4).search(this.value).draw();
+	});
+	 $('#generate_slip_search').on('keyup', function () {
+		table.column(5).search(this.value).draw();
+	});
+});
+
+
+
+function editSalarySlip(editSalarySlipUserID) {
+    $.ajax({
+        url: "edit/"+ editSalarySlipUserID,
+        success: function(response) {
+            $("#edit-salary_slip-form").html(response);
+            $("#edit_salary_slip_model").modal('show');
+        }
+    });
+}
+
+window.setTimeout(function() {
+	$(".alert").fadeTo(500, 0).slideUp(500, function(){
+		$(this).remove();
+	});
+}, 1700);
+</script>
+
+{% endblock body %}

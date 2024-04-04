@@ -200,7 +200,7 @@
 											<th>Punch Out</th>
 											<th>Break</th>
 											<th>Production</th>
-											<th>Status</th>
+											<th>Attendance Status</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -213,7 +213,7 @@
 											<td>{{attendance.date|date:'j - M - Y'}}</td>
 											<td>{{attendance.check_in_time|date:'h:i:s A'}}</td>
 											<td>{{attendance.check_out_time|date:'h:i:s A'}}</td>
-											<td>1 hrs</td>
+											<td>{{attendance.break_time.conditional_amount}} hour</td>
 											<td>{{attendance.production_hour|date:'H:i:s A'}}</td>
 											<td><p><i class="fa fa-dot-circle-o mr-1 {% if attendance.attendance_status == 'Present' %}text-success{% elif attendance.attendance_status == 'Half Day' %}text-warning{% else %}text-danger{% endif %}"></i> {{attendance.attendance_status}}</p></td>
 										</tr>

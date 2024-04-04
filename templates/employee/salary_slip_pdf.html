@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salary Slip</title>
+</head>
+<body style="font-family: Tahoma, Verdana, sans-serif;">
+    <div class="container">
+        <table class="company-logo-table"  style="margin-bottom:10pt;">
+            <tr style="margin:10pt 0;">
+                <td><img src="{{company_logo1}}" alt="Company Logo" class="logo" height="80pt"></td>
+            </tr>
+        </table>
+        <p style="text-align:right; margin:3pt 10pt; font-size:large;">Date : {{current_date|date:'d - F - Y'}}</p>
+        <hr  style="margin-bottom:50pt;">
+        <table class="employee-info-table" style="padding: 5pt 0 0 0; background-color:#F6F4F4; margin-bottom:20pt;">
+            <tbody>
+                <tr>
+                    <td style="text-align:center;">
+                        <img src="{{salary_slip_pdf.user_name.avatar.path}}" alt="Employee Image" class="employee-image" height="120pt" width="120pt">
+                    </td>
+                    <td>
+                        <div class="employee-info">
+                            <p style="margin:2pt; padding:2pt;"><strong>Id :</strong> IW{{salary_slip_pdf.user_name.id}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Name :</strong> {{salary_slip_pdf.user_name.username}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Phone :</strong> {{salary_slip_pdf.user_name.phone}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Email :</strong> {{salary_slip_pdf.user_name.email}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Address :</strong> {{salary_slip_pdf.user_name.address}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Department :</strong> {{salary_slip_pdf.user_name.department}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Designation :</strong> {{salary_slip_pdf.user_name.designation}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Technology :</strong> {{salary_slip_pdf.user_name.technology}}</p>
+                        </div>
+                    </td>
+                    <td style="vertical-align: top;">
+                        <div class="company-info">
+                            <p style="margin:2pt; padding:2pt;"><strong>Date of Joining :</strong> {{salary_slip_pdf.user_name.date_joined|date:'d - F - Y'}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Salary Month :</strong> {{salary_month|date:'F - Y'}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Total Working Days :</strong> {{total_weekdays}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Number of Working Days Attend :</strong> {{number_of_working_day_attend}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Leave Taken :</strong> {{leave_taken}}</p>
+                            <p style="margin:2pt; padding:2pt;">&nbsp;</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Bank Name :</strong> {{bank_details.bank_name}}</p>
+                            <p style="margin:2pt; padding:2pt;"><strong>Bank Account Number:</strong> {{bank_details.bank_account_number}}</p>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table style="margin:15pt 0; background-color: #F6F4F4; border-collapse:collapse; border:0.3px solid #4d4d4d">
+            <thead>
+                <tr style="padding:5px 5px 2px 5px; background-color:#ff944d;">
+                    <th colspan="2">Income</th>
+                    <th colspan="2">Deduction</th>
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#ffd1b3;">
+                    <th style="text-align:left;">Particulars</th>
+                    <th>Amount</th>
+                    <th style="text-align:left;">Particulars</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td>Basic Salary</td>
+                    <td style="text-align:center;">{{salary_slip_pdf.user_name.salary}}</td>
+                    <td>PF</td>
+                    {% if professional_tax.conditional_amount == None %}
+                        <td style="text-align:center;">-</td>
+                    {% else %}
+                        <td style="text-align:center;">{{professional_tax.conditional_amount}}</td>
+                    {% endif %}
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td>Dearness Allowance</td>
+                    {% if dearness_allowance.conditional_amount == None %}
+                        <td style="text-align:center;">-</td>
+                    {% else %}
+                    <td style="text-align:center;">{{dearness_allowance.conditional_amount}}</td>
+                    {% endif %}
+                    <td>Professional Tax</td>
+                    {% if pf.conditional_amount == None %}
+                        <td style="text-align:center;">-</td>
+                    {% else %}
+                        <td style="text-align:center;">{{pf.conditional_amount}}</td>
+                    {% endif %}
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td>Paid leave amount</td>
+                    {% if paid_leave.conditional_amount == None %}
+                        <td style="text-align:center;">-</td>
+                    {% else %}
+                        <td style="text-align:center;">{{paid_leave.conditional_amount}}</td>
+                    {% endif %}
+                    <td>TDS</td>
+                    {% if tds.conditional_amount == None %}
+                        <td style="text-align:center;">-</td>
+                    {% else %}
+                        <td style="text-align:center;">{{tds.conditional_amount}}</td>
+                    {% endif %}
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td>Bonus</td>
+                    {% if bonus.conditional_amount == None %}
+                        <td style="text-align:center;">-</td>
+                    {% else %}
+                        <td style="text-align:center;">{{bonus.conditional_amount}}</td>
+                    {% endif %}
+                    <td>&nbsp;</td>
+                    <td style="text-align:center;">&nbsp;</td>
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td>City Compensatory Allowance</td>
+                    {% if city_compensatory_allowance.conditional_amount == None %}
+                        <td style="text-align:center;">-</td>
+                    {% else %}
+                        <td style="text-align:center;">{{city_compensatory_allowance.conditional_amount}}</td>
+                    {% endif %}
+                    <td>&nbsp;</td>
+                    <td style="text-align:center;">&nbsp;</td>
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td>Assistant Allowance</td>
+                    {% if assistant_allowance.conditional_amount == None %}
+                        <td style="text-align:center;">-</td>
+                    {% else %}
+                        <td style="text-align:center;">{{assistant_allowance.conditional_amount}}</td>
+                    {% endif %}
+                    <td>&nbsp;</td>
+                    <td style="text-align:center;">&nbsp;</td>
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td>Medical Allowance</td>
+                    {% if medical_allowance.conditional_amount == None %}
+                        <td style="text-align:center;">-</td>
+                    {% else %}
+                        <td style="text-align:center;">{{medical_allowance.conditional_amount}}</td>
+                    {% endif %}
+                    <td>&nbsp;</td>
+                    <td style="text-align:center;">&nbsp;</td>
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td>Total</td>
+                    <td style="text-align:center;">{{salary_slip_pdf.final_salary_amount}}</td>
+                    <td>Total</td>
+                    <td style="text-align:center;">{{salary_slip_pdf.final_salary_amount}}</td>
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td colspan="4"></td>
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td colspan="3" style="background-color:#ffd1b3;">Net Salary</td>
+                    <td>{{salary_slip_pdf.final_salary_amount}}</td>
+                </tr>
+                <tr style="padding:4px 4px 1px 4px; background-color:#F6F4F4;">
+                    <td colspan="2" style="padding:40pt 0 0 0; text-align:center; vertical-align: bottom;"><p style="margin:0; padding:0;">Employee Signature</p></td>
+                    <td colspan="2" style="padding:10pt 0 0 0; text-align:center; vertical-align: bottom;">
+                        <img src="{{stamp}}" alt="Company Stamp" width="100pt" class="my-4">
+                        <p style="margin:0; padding:0;">Employer Signature</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <p style="text-align:center; padding:30pt 0 0 0;">403, Tapi Arcade, B/H Police Station, Abrama Rd, Mota Varachha, Surat,Gujarat-394105</p>
+        <p style="text-align:center;"><a href="info@webmigrates.com" style="color:#e65c00; text-decoration:none;">info@webmigrates.com</a> | <a href="www.webmigrates.com" style="color:#e65c00; text-decoration:none;">www.webmigrates.com</a> | +91 9033575195</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!-- Add Policy Modal -->
+<div aria-hidden="true" aria-labelledby="addModalToggleLabel" class="modal fade" id="add_condition_model" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add Policy</h3>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'AdminAddCondition' %}" enctype="multipart/form-data" id="form" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.condition_title|as_crispy_field }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.conditional_amount|as_crispy_field }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.conditional_object|as_crispy_field }}
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Add Policy Modal -->
+
+
+
+

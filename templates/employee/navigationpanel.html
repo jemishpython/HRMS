@@ -88,24 +88,30 @@
     <div class="sidebar-inner slimscroll">
         <div class="sidebar-menu" id="sidebar-menu">
             <ul>
-                <li><a href="{% url 'EmployeeIndex' %}"><i class="las la-home"></i><span>Employees Dashboard</span></a></li>
-                <li class="menu-title"><span>Employee</span></li>
-                <li><a href="{% url 'EmployeeListView' %}"><i class="las la-user-tie"></i><span>Employee</span></a></li>
-                <li><a href="{% url 'EmpAttendanceView' user.id %}"><i class="las la-check-circle"></i><span>Attendance </span></a></li>
-                <li><a href="{% url 'EmpLeaves' user.id %}"><i class="las la-calendar-minus"></i><span>Leaves</span></a></li>
-                <li><a href="{% url 'EmpHolidays' %}"><i class="las la-calendar-day"></i><span>Holidays</span></a></li>
-                <li><a href="{% url 'EmpDepartmentView' %}"><i class="las la-building"></i><span>Departments</span></a></li>
-                <li><a href="{% url 'EmpDesignationView' %}"><i class="lab la-buffer"></i><span>Designation</span></a></li>
-                <li><a href="{% url 'EmpTechnologyView' %}"><i class="las la-code"></i><span>Technology</span></a></li>
-                <li><a href="{% url 'EmpTickets' user.id %}"><i class="la la-ticket"></i> <span>Tickets</span></a></li>
-                <li><a href="{% url 'EmpChatView' user.id %}"><i class="las la-comments"></i><span>Chat</span></a></li>
-                <li class="menu-title"><span>Project</span></li>
-                <li><a href="{% url 'EmpProjectsView' user.id %}"><i class="las la-project-diagram"></i><span>Projects</span></a></li>
-                <li><a href="{% url 'EmpProjectTask' user.id %}"><i class="las la-tasks"></i><span>Tasks</span></a></li>
-                <li class="menu-title"><span>Company</span></li>
-                <li><a href="{% url 'EmpPoliciesView' %}"><i class="las la-file-pdf"></i><span>Policies</span></a></li>
-                <li class="menu-title"><span>Account</span></li>
-                <li><a href="{% url 'EmpProfileView' user.id %}"><i class="las la-user"></i><span>Profile</span></a></li>
+                {% with request.resolver_match.url_name as url_name %}
+                <li><a href="{% url 'EmployeeIndex' %}" class="{% if url_name == 'EmployeeIndex' %}text-white{% endif %}"><i class="las la-home"></i><span>Employees Dashboard</span></a></li>
+                <li><a href="{% url 'EmployeeListView' %}" class="{% if url_name == 'EmployeeListView' %}text-white{% endif %}"><i class="las la-user-tie"></i><span>Employee</span></a></li>
+                <li><a href="{% url 'EmpAttendanceView' user.id %}" class="{% if url_name == 'EmpAttendanceView' %}text-white{% endif %}"><i class="las la-check-circle"></i><span>Attendance </span></a></li>
+                <li><a href="{% url 'EmpLeaves' user.id %}" class="{% if url_name == 'EmpLeaves' %}text-white{% endif %}"><i class="las la-calendar-minus"></i><span>Leaves</span></a></li>
+                <li><a href="{% url 'EmpHolidays' %}" class="{% if url_name == 'EmpHolidays' %}text-white{% endif %}"><i class="las la-calendar-day"></i><span>Holidays</span></a></li>
+                <li class="submenu"><a href="#" class="{% if url_name == 'EmpDepartmentView' %}text-white{% elif url_name == 'EmpDesignationView' %}text-white{% elif url_name == 'EmpTechnologyView' %}text-white{% endif %}"><i class="lab la-product-hunt"></i><span>Company Role</span><span class="menu-arrow"></span></a>
+                    <ul style="display:none;">
+                        <li><a href="{% url 'EmpDepartmentView' %}" class="{% if url_name == 'EmpDepartmentView' %}text-white{% endif %}"><span>Departments</span></a></li>
+                        <li><a href="{% url 'EmpDesignationView' %}" class="{% if url_name == 'EmpDesignationView' %}text-white{% endif %}"><span>Designation</span></a></li>
+                        <li><a href="{% url 'EmpTechnologyView' %}" class="{% if url_name == 'EmpTechnologyView' %}text-white{% endif %}"><span>Technology</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'EmpSalarySlipList' user.id %}" class="{% if url_name == 'EmpSalarySlip' %}text-white{% endif %}"><i class="las la-money-bill-alt"></i><span>Salary Slip</span></a></li>
+                <li><a href="{% url 'EmpTickets' user.id %}" class="{% if url_name == 'EmpTickets' %}text-white{% endif %}"><i class="la la-ticket"></i> <span>Tickets</span></a></li>
+                <li><a href="{% url 'EmpChatView' user.id %}" class="{% if url_name == 'EmpChatView' %}text-white{% endif %}"><i class="las la-comments"></i><span>Chat</span></a></li>
+                <li class="submenu"><a href="#" class="{% if url_name == 'EmpProjectsView' %}text-white{% elif url_name == 'EmpProjectTask' %}text-white{% endif %}"><i class="lab la-product-hunt"></i><span>Project</span><span class="menu-arrow"></span></a>
+                    <ul style="display:none;">
+                        <li><a href="{% url 'EmpProjectsView' user.id %}" class="{% if url_name == 'EmpProjectsView' %}text-white{% endif %}"><span>Projects List</span></a></li>
+                        <li><a href="{% url 'EmpProjectTask' user.id %}" class="{% if url_name == 'EmpProjectTask' %}text-white{% endif %}"><span>Tasks List</span></a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'EmpPoliciesView' %}" class="{% if url_name == 'EmpPoliciesView' %}text-white{% endif %}"><i class="las la-file-pdf"></i><span>Policies</span></a></li>
+                <li><a href="{% url 'EmpProfileView' user.id %}" class="{% if url_name == 'EmpProfileView' %}text-white{% endif %}"><i class="las la-user"></i><span>Profile</span></a></li>
 <!--                <li><a href="clients"><span>Clients</span></a></li>-->
 <!--                <li><a href="leads.html"><span>Leads</span></a></li>-->
 <!--                <li><a href="trainers.html"><span>Trainers</span></a></li>-->
@@ -142,6 +148,7 @@
                 <!--							</li>-->
 <!--                <li><a href="users.html"><span>Users</span></a></li>-->
 <!--                <li><a href="settings.html"><span>Settings</span></a></li>-->
+                {% endwith %}
             </ul>
         </div>
     </div>

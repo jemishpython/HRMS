@@ -1,0 +1,145 @@
+{% extends 'employee/base.html' %}
+{% load static %}
+{% block body %}
+{% block nav %}{% include 'employee/navigationpanel.html' %}{% endblock nav %}
+			<!-- Page Wrapper -->
+            <div class="page-wrapper">
+				<div class="show_message">
+					{% for message in messages %}
+					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+					{% endfor %}
+				</div>
+                <div class="content container-fluid">
+				
+					<!-- Page Header -->
+					<div class="page-header">
+						<div class="row">
+							<div class="col-sm-12">
+								<h3 class="page-title">Salary Slip</h3>
+								<ul class="breadcrumb">
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item active">Salary Slip List</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /Page Header -->
+					
+					<!-- Search Filter -->
+					<div class="row filter-row">
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group form-focus">
+								<input type="number" class="form-control floating" id="salary_search">
+								<label class="focus-label">Salary</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control floating" id="month_search">
+									<option value="">---</option>
+									<option value="Jan">January</option>
+									<option value="Feb">February</option>
+									<option value="Mar">March</option>
+									<option value="Apr">April</option>
+									<option value="May">May</option>
+									<option value="Jun">June</option>
+									<option value="Jul">July</option>
+									<option value="Aug">Auguste</option>
+									<option value="Sep">September</option>
+									<option value="Oct">October</option>
+									<option value="Nov">November</option>
+									<option value="Dec">December</option>
+								</select>
+								<label class="focus-label">Select Month</label>
+							</div>
+						</div>
+						<div class="col-sm-6 col-md-4">
+							<div class="form-group form-focus select-focus">
+								<select class="form-control floating" id="year_search">
+									<option value="">---</option>
+									{% for i in year_range %}
+									<option>{{i}}</option>
+									{% endfor %}
+								</select>
+								<label class="focus-label">Select Year</label>
+							</div>
+						</div>
+                    </div>
+					<!-- /Search Filter -->
+					
+                    <div class="row">
+                        <div class="col-lg-12">
+							<div class="table-responsive">
+								<table class="table table-striped custom-table" id="salary_list_table">
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Email</th>
+											<th>Mobile</th>
+											<th>Department</th>
+											<th>Generate Date</th>
+											<th hidden>Generate Month</th>
+											<th hidden>Generate Date</th>
+											<th class="text-center">Final Salary Amount</th>
+											<th class="text-center">Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									{% for salary_slip in salary_slip_list %}
+										<tr>
+											<td>
+												<h2 class="table-avatar">
+													<a href="{% url 'AdminProfileView' salary_slip.user_name.id %}"><img class="avatar" alt="" src="{{salary_slip.user_name.avatar.url}}"></a>
+													<a href="{% url 'AdminProfileView' salary_slip.user_name.id %}">{{salary_slip.user_name.username}} <span>{{salary_slip.user_name.designation}} | {{salary_slip.user_name.technology}}</span></a>
+												</h2>
+											</td>
+											<td>{{salary_slip.user_name.email}}</td>
+											<td>{{salary_slip.user_name.phone}}</td>
+											<td>{{salary_slip.user_name.department}}</td>
+											<td>{{salary_slip.generate_date|date:'d - F - Y'}}</td>
+											<td hidden>{{salary_slip.generate_date|date:'M'}}</td>
+											<td hidden>{{salary_slip.generate_date|date:'Y'}}</td>
+											<td class="text-center">{{salary_slip.final_salary_amount}}</td>
+											<td class="text-center">
+												<a href="{% url 'EmpSalarySlipView' salary_slip.id %}" class="border-0 text-info">View Salary Slip</a>
+											</td>
+										</tr>
+									{% endfor %}
+									</tbody>
+								</table>
+							</div>
+                        </div>
+                    </div>
+                </div>
+				<!-- /Page Content -->
+
+            </div>
+			<!-- Page Wrapper -->
+
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+	var table = $('#salary_list_table').DataTable({
+		dom: 'Blrtip',
+	});
+	$('#salary_search').on('keyup', function () {
+		table.column(7).search(this.value).draw();
+	});
+	 $('#month_search').on('change', function () {
+		table.column(5).search(this.value).draw();
+	});
+	 $('#year_search').on('change', function () {
+		table.column(6).search(this.value).draw();
+	});
+
+});
+
+window.setTimeout(function() {
+	$(".alert").fadeTo(500, 0).slideUp(500, function(){
+		$(this).remove();
+	});
+}, 1700);
+</script>
+
+{% endblock body %}
