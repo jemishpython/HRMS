@@ -1,7 +1,7 @@
-{% extends 'admin/base.html' %}
+{% extends 'employee/base.html' %}
 {% load static %}
 {% block body %}
-{% block nav %}{% include 'admin/navigationpanel.html' %}{% endblock nav %}
+{% block nav %}{% include 'employee/navigationpanel.html' %}{% endblock nav %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
 				<div class="show_message">
@@ -15,7 +15,7 @@
 					<div class="page-header">
 						<div class="row">
 							<div class="col-sm-12">
-								<h3 class="page-title">Employee Salary Slip</h3>
+								<h3 class="page-title">Salary Slip</h3>
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
 									<li class="breadcrumb-item active">Salary Slip List</li>
@@ -29,23 +29,11 @@
 					<div class="row filter-row">
 						<div class="col-sm-6 col-md-4">
 							<div class="form-group form-focus">
-								<input type="text" class="form-control floating" id="emp_name_search">
-								<label class="focus-label">Employee Name / Designation / Technology</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus">
-								<input type="text" class="form-control floating" id="department_search">
-								<label class="focus-label">Department</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus">
 								<input type="number" class="form-control floating" id="salary_search">
 								<label class="focus-label">Salary</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-2">
+						<div class="col-sm-6 col-md-4">
 							<div class="form-group form-focus select-focus">
 								<select class="form-control floating" id="month_search">
 									<option value="">---</option>
@@ -65,7 +53,7 @@
 								<label class="focus-label">Select Month</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-2">
+						<div class="col-sm-6 col-md-4">
 							<div class="form-group form-focus select-focus">
 								<select class="form-control floating" id="year_search">
 									<option value="">---</option>
@@ -91,8 +79,8 @@
 											<th>Department</th>
 											<th>Generate Date</th>
 											<th hidden>Generate Month</th>
-											<th hidden>Generate Year</th>
-											<th>Final Salary Amount</th>
+											<th hidden>Generate Date</th>
+											<th class="text-center">Final Salary Amount</th>
 											<th class="text-center">Action</th>
 										</tr>
 									</thead>
@@ -109,12 +97,11 @@
 											<td>{{salary_slip.user_name.phone}}</td>
 											<td>{{salary_slip.user_name.department}}</td>
 											<td>{{salary_slip.generate_date|date:'d - F - Y'}}</td>
-											<td hidden>{{salary_slip.generate_date|date:'F'}}</td>
+											<td hidden>{{salary_slip.generate_date|date:'M'}}</td>
 											<td hidden>{{salary_slip.generate_date|date:'Y'}}</td>
-											<td>{{salary_slip.final_salary_amount}}</td>
-											<td class="text-center d-flex justify-content-around">
-												<a href="{% url 'AdminEmployeeSalarySlipView' salary_slip.id %}" class="p-0 ml-4 border-0 text-info">View Salary Slip</a>
-												<button class="p-0 ml-4 border-0 text-danger" onclick="deleteSalarySlip({{salary_slip.id}})">Delete</button>
+											<td class="text-center">{{salary_slip.final_salary_amount}}</td>
+											<td class="text-center">
+												<a href="{% url 'EmpSalarySlipView' salary_slip.id %}" class="border-0 text-info">View Salary Slip</a>
 											</td>
 										</tr>
 									{% endfor %}
@@ -124,34 +111,8 @@
                         </div>
                     </div>
                 </div>
-				<!-- /Page Content -->	
-				
-				
-				<!-- Delete Salary Slip Modal -->
-				<div class="modal custom-modal fade" id="delete_salary_slip_model" role="dialog">
-					<div class="modal-dialog modal-dialog-centered">
-						<div class="modal-content">
-							<div class="modal-body">
-								<div class="form-header">
-									<h3>Delete Salary Slip</h3>
-									<p>Are you sure want to delete?</p>
-								</div>
-								<div class="modal-btn delete-action">
-									<div class="row">
-										<div class="col-6">
-											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
-										</div>
-										<div class="col-6">
-											<a href="javascript:void(0);" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<!-- /Delete Salary Slip Modal -->
-				
+				<!-- /Page Content -->
+
             </div>
 			<!-- Page Wrapper -->
 
@@ -162,31 +123,17 @@ $(document).ready(function () {
 	var table = $('#salary_list_table').DataTable({
 		dom: 'Blrtip',
 	});
-	$('#emp_name_search').on('keyup', function () {
-		table.column(0).search(this.value).draw();
-	});
-	 $('#department_search').on('keyup', function () {
-		table.column(3).search(this.value).draw();
-	});
-	$('#year_search').on('change', function () {
-		table.column(6).search(this.value).draw();
+	$('#salary_search').on('keyup', function () {
+		table.column(7).search(this.value).draw();
 	});
 	 $('#month_search').on('change', function () {
 		table.column(5).search(this.value).draw();
 	});
-	 $('#salary_search').on('keyup', function () {
-		table.column(7).search(this.value).draw();
+	 $('#year_search').on('change', function () {
+		table.column(6).search(this.value).draw();
 	});
+
 });
-
-function deleteSalarySlip(deleteSalarySlipId) {
-    $("#delete_salary_slip_model").modal('show');
-    if (deleteSalarySlipId) {
-        var deleteUrl = "{% url 'AdminDeleteSalarySlip' id=0 %}".replace(0, deleteSalarySlipId);
-        $("#confirmDeleteBtn").attr("href", deleteUrl);
-    }
-}
-
 
 window.setTimeout(function() {
 	$(".alert").fadeTo(500, 0).slideUp(500, function(){

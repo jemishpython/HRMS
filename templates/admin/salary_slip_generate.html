@@ -26,28 +26,25 @@
 					<!-- /Page Header -->
 					
 					<!-- Search Filter -->
-					<div class="row filter-row">
-						<div class="col-sm-6 col-md-3">
+<div class="row filter-row">
+						<div class="col-sm-6 col-md-4">
 							<div class="form-group form-focus">
 								<input type="text" class="form-control floating" id="emp_name_search">
 								<label class="focus-label">Employee Name / Designation / Technology</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-2">
+						<div class="col-sm-6 col-md-4">
 							<div class="form-group form-focus">
 								<input type="text" class="form-control floating" id="department_search">
 								<label class="focus-label">Department</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-2">
+						<div class="col-sm-6 col-md-4">
 							<div class="form-group form-focus">
 								<input type="number" class="form-control floating" id="salary_search">
 								<label class="focus-label">Salary</label>
 							</div>
 						</div>
-
-
-
                     </div>
 					<!-- /Search Filter -->
 					
@@ -112,22 +109,15 @@ $(document).ready(function () {
 	$('#emp_name_search').on('keyup', function () {
 		table.column(0).search(this.value).draw();
 	});
-	 $('#designation_search').on('keyup', function () {
-		table.column(0).search(this.value).draw();
-	});
 	 $('#department_search').on('keyup', function () {
-		table.column(6).search(this.value).draw();
-	});
-	$('#year_search').on('change', function () {
 		table.column(3).search(this.value).draw();
 	});
-	 $('#month_search').on('change', function () {
-		table.column(2).search(this.value).draw();
+	 $('#salary_search').on('keyup', function () {
+		table.column(4).search(this.value).draw();
 	});
-	 $('#day_search').on('change', function () {
-		table.column(1).search(this.value).draw();
+	 $('#generate_slip_search').on('keyup', function () {
+		table.column(5).search(this.value).draw();
 	});
-
 });
 
 

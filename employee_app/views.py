@@ -1,5 +1,6 @@
 import datetime
 import time
+import calendar
 from datetime import date
 
 from django.contrib.auth import login, logout
@@ -7,10 +8,13 @@ from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.http import HttpResponse
 from django.template import loader
 from django import forms
 from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
+from django.template.loader import get_template
+from xhtml2pdf import pisa
 
 from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm, EditPersonalInfoForm, \
     AddEducationInfoForm, EditEducationInfoForm, AddExperienceInfoForm, EditExperienceInfoForm, \
@@ -19,7 +23,7 @@ from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStat
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign, ProjectImages, ProjectFile, Policies, \
-    Attendance, Conditions
+    Attendance, Conditions, SalarySlip
 
 
 def landing(request):
@@ -654,5 +658,115 @@ def PoliciesView(request):
 
 
 @login_required(login_url="EmployeeLogin")
-def SalarySlip(request):
-    return render(request, "employee/salary_slip.html")
+def SalarySlipList(request, id):
+    salary_slip_list = SalarySlip.objects.filter(user_name=id)
+    context = {
+        'salary_slip_list':salary_slip_list,
+        'year_range': range(2020, 2031),
+    }
+    return render(request, "employee/salary_slip_list.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def SalarySlipView(request, id):
+    dearness_allowance = Conditions.objects.get(condition_title="Dearness Allowance")
+    professional_tax = Conditions.objects.get(condition_title="Professional Tax")
+    pf = Conditions.objects.get(condition_title="PF")
+    bonus = Conditions.objects.get(condition_title="Bonus")
+    tds = Conditions.objects.get(condition_title="TDS")
+    city_compensatory_allowance = Conditions.objects.get(condition_title="City Compensatory Allowance")
+    assistant_allowance = Conditions.objects.get(condition_title="Assistant Allowance")
+    medical_allowance = Conditions.objects.get(condition_title="Medical Allowance")
+    paid_leave = Conditions.objects.get(condition_title="Paid leave amount")
+    salary_slip_details = SalarySlip.objects.get(id=id)
+    employee_id = salary_slip_details.user_name.id
+    current_date = datetime.date.today()
+    salary_month = current_date.replace(day=1) - datetime.timedelta(days=1)
+    bank_details = Bank.objects.filter(employee=employee_id).first()
+    absent_days = Attendance.objects.filter(attendee_user=employee_id,
+                                            attendance_status=AttendanceStatusChoice.ABSENT,
+                                            date__month=salary_month.month).count()
+    attend_half_days = Attendance.objects.filter(attendee_user=employee_id,
+                                                 attendance_status=AttendanceStatusChoice.HALF_DAY,
+                                                 date__month=salary_month.month).count()
+    leave_taken = Leave.objects.filter(leave_user=employee_id, leave_status=LeaveStatusChoice.APPROVED,
+                                       leave_from__month=salary_month.month).count()
+    total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if calendar.weekday(salary_month.year, salary_month.month, day) < 5)
+    number_of_working_day_attend = total_weekdays - leave_taken - absent_days - (0.5 * attend_half_days)
+
+    context = {
+        'salary_slip_details': salary_slip_details,
+        'dearness_allowance': dearness_allowance,
+        'professional_tax': professional_tax,
+        'pf': pf,
+        'bonus': bonus,
+        'tds': tds,
+        'city_compensatory_allowance': city_compensatory_allowance,
+        'medical_allowance': medical_allowance,
+        'paid_leave': paid_leave,
+        'assistant_allowance': assistant_allowance,
+        'total_weekdays': total_weekdays,
+        'bank_details': bank_details,
+        'current_date': current_date,
+        'salary_month': salary_month,
+        'number_of_working_day_attend': number_of_working_day_attend,
+        'leave_taken': leave_taken,
+    }
+    return render(request, "employee/salary_slip.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def SalarySlipPDFCreate(request, id):
+    dearness_allowance = Conditions.objects.get(condition_title="Dearness Allowance")
+    professional_tax = Conditions.objects.get(condition_title="Professional Tax")
+    pf = Conditions.objects.get(condition_title="PF")
+    bonus = Conditions.objects.get(condition_title="Bonus")
+    tds = Conditions.objects.get(condition_title="TDS")
+    paid_leave = Conditions.objects.get(condition_title="Paid leave amount")
+    city_compensatory_allowance = Conditions.objects.get(condition_title="City Compensatory Allowance")
+    assistant_allowance = Conditions.objects.get(condition_title="Assistant Allowance")
+    medical_allowance = Conditions.objects.get(condition_title="Medical Allowance")
+    salary_slip_pdf = SalarySlip.objects.get(id=id)
+    employee_id = salary_slip_pdf.user_name.id
+    current_date = datetime.date.today()
+    salary_month = current_date.replace(day=1) - datetime.timedelta(days=1)
+    bank_details = Bank.objects.filter(employee=employee_id).first()
+    leave_taken = Leave.objects.filter(leave_user=employee_id, leave_status=LeaveStatusChoice.APPROVED,
+                                       leave_from__month=salary_month.month).count()
+    total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if
+                         calendar.weekday(salary_month.year, salary_month.month, day) < 5)
+    number_of_working_day_attend = total_weekdays - leave_taken
+    template_path = 'employee/salary_slip_pdf.html'
+    context = {
+        'dearness_allowance': dearness_allowance,
+        'professional_tax': professional_tax,
+        'pf': pf,
+        'bonus': bonus,
+        'tds': tds,
+        'city_compensatory_allowance': city_compensatory_allowance,
+        'medical_allowance': medical_allowance,
+        'assistant_allowance': assistant_allowance,
+        'salary_slip_pdf': salary_slip_pdf,
+        'paid_leave': paid_leave,
+        'total_weekdays': total_weekdays,
+        'bank_details': bank_details,
+        'current_date': current_date,
+        'salary_month': salary_month,
+        'number_of_working_day_attend': number_of_working_day_attend,
+        'leave_taken': leave_taken,
+        'company_logo1': 'static/img/logo_font.png',
+        'company_logo2': 'static/img/font_without_logo.png',
+        'stamp': 'static/img/company_stamp.png',
+    }
+    # Rendered template
+    template = get_template(template_path)
+    html = template.render(context)
+    # Create a PDF
+    response = HttpResponse(content_type='application/pdf')
+    response[
+        'Content-Disposition'] = f'attachment; filename="{salary_slip_pdf.user_name.username}_Salary_Slip_{salary_slip_pdf.generate_date}.pdf"'
+    pisa_status = pisa.CreatePDF(
+        html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response

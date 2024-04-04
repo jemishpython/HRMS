@@ -1429,8 +1429,9 @@ def SalarySlipDashboard(request):
         'user_list': user_list,
         'current_date': current_date,
         'users_with_slip_generated': users_with_slip_generated,
+        'year_range': range(2020, 2031),
     }
-    return render(request, "admin/generate_employee_salary_slip.html", context)
+    return render(request, "admin/salary_slip_generate.html", context)
 
 
 @login_required(login_url="Login")
@@ -1464,9 +1465,6 @@ def GenerateEmployeeSalarySlip(request, id):
     approved_leaves_count = Leave.objects.filter(leave_user=id, leave_status=LeaveStatusChoice.APPROVED, leave_from__month=salary_month.month).count()
     absent_count = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT, date__month=salary_month.month).count()
     half_day_count = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.HALF_DAY, date__month=salary_month.month).count()
-    check_out_time_start = datetime.time(16, 20)
-    around_430_count = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.PRESENT, date__month=salary_month.month, check_out_time__gte=check_out_time_start, production_hour__lte=production_hour).count()
-    print(around_430_count,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 
     if approved_leaves_count == 0:
         total_salary_amount = user_details.salary + (absent_count * absent_condition.conditional_amount) + (half_day_count * absent_condition.conditional_amount * 0.5) + paid_leave_condition.conditional_amount
@@ -1488,6 +1486,7 @@ def EmployeeSalarySlipList(request):
 
     context = {
         'salary_slip_list': salary_slip_list,
+        'year_range': range(2020, 2031),
     }
     return render(request, "admin/salary_slip_list.html", context)
 
@@ -1578,10 +1577,8 @@ def SalarySlipPDFCreate(request, id):
         'company_logo2': 'static/img/font_without_logo.png',
         'stamp': 'static/img/company_stamp.png',
     }
-    # Rendered template
     template = get_template(template_path)
     html = template.render(context)
-    # Create a PDF
     response = HttpResponse(content_type='application/pdf')
     response[
         'Content-Disposition'] = f'attachment; filename="{salary_slip_pdf.user_name.username}_Salary_Slip_{salary_slip_pdf.generate_date}.pdf"'

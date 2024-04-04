@@ -15,7 +15,7 @@
                 <li><a href="{% url 'AdminDesignationView' %}" class="{% if url_name == 'AdminDesignationView' %}text-white{% endif %}"><i class="lab la-buffer"></i><span>Designation</span></a></li>
                 <li><a href="{% url 'AdminTechnologyView' %}" class="{% if url_name == 'AdminTechnologyView' %}text-white{% endif %}"><i class="las la-code"></i><span>Technology</span></a></li>
 
-                <li class="submenu"><a href="#" class="{% if url_name == 'AdminSalarySlipDashboard' %}text-white{% endif %}"><i class="las la-money-bill-alt"></i><span>Employee Salary</span><span class="menu-arrow"></span></a>
+                <li class="submenu"><a href="#" class="{% if url_name == 'AdminSalarySlipDashboard' %}text-white{% elif url_name == 'AdminEmployeeSalarySlipList' %}text-white{% endif %}"><i class="las la-money-bill-alt"></i><span>Employee Salary</span><span class="menu-arrow"></span></a>
                     <ul style="display:none;">
                         <li><a href="{% url 'AdminSalarySlipDashboard' %}" class="{% if url_name == 'AdminSalarySlipDashboard' %}text-white{% endif %}">Generate Salary Slip</a></li>
                         <li><a href="{% url 'AdminEmployeeSalarySlipList' %}" class="{% if url_name == 'AdminEmployeeSalarySlipList' %}text-white{% endif %}">View Salary Slip</a></li>
