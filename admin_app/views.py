@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.core.serializers import serialize
-from django.http import JsonResponse, response, HttpResponse
+from django.http import JsonResponse, response, HttpResponse, Http404
 from django.template import loader
 from datetime import date
 
@@ -32,7 +32,7 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies, \
-    Interviewers, InterviewQuestions, InterviewerResult, Attendance, Conditions, SalarySlip
+    Interviewers, InterviewQuestions, InterviewerResult, Attendance, Conditions, SalarySlip, TaskAssign
 
 
 def AdminRegister(request):
@@ -837,8 +837,10 @@ def AddProjectAssignee(request, id):
 
 @login_required(login_url="Login")
 def DeleteAssignEmployee(request, id, project_id):
-    delete_assign_employee = ProjectAssign.objects.filter(employees=id)
-    delete_assign_employee.delete()
+    project = Project.objects.get(id=project_id)
+    employee = User.objects.get(id=id)
+    delete_assign_employee = ProjectAssign.objects.get(employees=employee, project_name=project)
+    delete_assign_employee.employees.remove(employee)
     messages.error(request, 'Assign Employee Delete successfully')
     return redirect('AdminProjectDetailsView', id=project_id)
 
@@ -878,7 +880,6 @@ def ProjectDetailsView(request, id):
     project_team_member_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Team Member')
     project_images = ProjectImages.objects.filter(project_name=id)
     project_files = ProjectFile.objects.filter(project_name=id)
-
     context = {
         'projectdetailview': projectdetailview,
         'task_list': task_list,
@@ -908,6 +909,7 @@ def ProjectTaskList(request, id):
     projectlist = Project.objects.all()
     project_id = id
     tasklist = Task.objects.filter(task_project=id)
+    task_assignee = TaskAssign.objects.filter(task_project_name=project_id)
     user_list = User.objects.all()
 
     context = {
@@ -915,6 +917,7 @@ def ProjectTaskList(request, id):
         'project_id': project_id,
         'projectlist': projectlist,
         'user_list': user_list,
+        'task_assignee': task_assignee,
 
     }
     return render(request, "admin/tasks.html", context)
@@ -992,6 +995,18 @@ def AddTaskAssign(request, id):
             messages.error(request, f"ERROR : {e}")
     context = {'form': form, 'users_list': users_list, 'task_id': task_id, 'project_id': project_id}
     return render(request, "admin/add_task_assignee.html", context)
+
+
+@login_required(login_url="Login")
+def DeleteTaskAssignee(request, id, task_id):
+    task = Task.objects.get(id=task_id)
+    project_id = task.task_project.id
+    employee = User.objects.get(id=id)
+    assignee_delete = TaskAssign.objects.get(employees=employee, task_name=task)
+    assignee_delete.employees.remove(employee)
+    messages.error(request, "Assignee Delete")
+    return redirect("AdminProjectTaskList", id=project_id)
+
 
 
 @login_required(login_url="Login")

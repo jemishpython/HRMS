@@ -103,7 +103,7 @@
                 </li>
                 <li><a href="{% url 'EmpSalarySlipList' user.id %}" class="{% if url_name == 'EmpSalarySlip' %}text-white{% endif %}"><i class="las la-money-bill-alt"></i><span>Salary Slip</span></a></li>
                 <li><a href="{% url 'EmpTickets' user.id %}" class="{% if url_name == 'EmpTickets' %}text-white{% endif %}"><i class="la la-ticket"></i> <span>Tickets</span></a></li>
-                <li><a href="{% url 'EmpChatView' user.id %}" class="{% if url_name == 'EmpChatView' %}text-white{% endif %}"><i class="las la-comments"></i><span>Chat</span></a></li>
+                <li><a href="{% url 'EmpChatView' %}" class="{% if url_name == 'EmpChatView' %}text-white{% endif %}"><i class="las la-comments"></i><span>Chat</span></a></li>
                 <li class="submenu"><a href="#" class="{% if url_name == 'EmpProjectsView' %}text-white{% elif url_name == 'EmpProjectTask' %}text-white{% endif %}"><i class="lab la-product-hunt"></i><span>Project</span><span class="menu-arrow"></span></a>
                     <ul style="display:none;">
                         <li><a href="{% url 'EmpProjectsView' user.id %}" class="{% if url_name == 'EmpProjectsView' %}text-white{% endif %}"><span>Projects List</span></a></li>
@@ -148,6 +148,7 @@
                 <!--							</li>-->
 <!--                <li><a href="users.html"><span>Users</span></a></li>-->
 <!--                <li><a href="settings.html"><span>Settings</span></a></li>-->
+                {% endwith %}
             </ul>
         </div>
     </div>

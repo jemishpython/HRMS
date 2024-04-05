@@ -83,6 +83,7 @@ urlpatterns = [
     path("project/<int:projectid>/task-edit/<int:id>", views.EditProjectTask, name="AdminEditProjectTask"),
 
     path("project-task-assign/<int:id>", views.AddTaskAssign, name='AdminAddTaskAssign'),
+    path("project-task-assign/<int:task_id>/remove/<int:id>", views.DeleteTaskAssignee, name='AdminDeleteTaskAssignee'),
 
     path("leaves", views.LeaveList, name='AdminLeaveList'),
     path("leaves/status-update/<int:id>", views.UpdateLeaveStatus, name='AdminLeaveStatusUpdate'),
