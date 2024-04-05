@@ -687,14 +687,14 @@ def ProjectTaskList(request, id, user_id):
 def TaskStatusUpdate(request, id):
     user = request.user
     task = Task.objects.get(id=id)
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", task)
+    project_id = task.task_project
     form = TaskStatusUpdateForm(request.POST or None, instance=task)
     if request.method == 'POST':
         try:
             if form.is_valid():
                 form.save()
                 messages.success(request, "Task status update successfully")
-                return redirect('EmpProjectTaskList', id=task.id, user_id=user)
+                return redirect('EmpProjectTaskList', id=project_id.id, user_id=user.id)
             else:
                 messages.error(request, f"Form is not valid : {form.errors}")
         except Exception as e:

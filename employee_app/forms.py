@@ -149,3 +149,6 @@ class TaskStatusUpdateForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = ['task_status', 'task_time']
+        widgets = {
+            'task_time': forms.TimeInput(attrs={'type': 'time'})
+        }
