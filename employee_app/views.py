@@ -18,7 +18,8 @@ from xhtml2pdf import pisa
 
 from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm, EditPersonalInfoForm, \
     AddEducationInfoForm, EditEducationInfoForm, AddExperienceInfoForm, EditExperienceInfoForm, \
-    EditEmergencyContactForm, AddEmergencyContactForm, AddTicketsForm, EditTicketsForm, PunchInForm, PunchOutForm
+    EditEmergencyContactForm, AddEmergencyContactForm, AddTicketsForm, EditTicketsForm, PunchInForm, PunchOutForm, \
+    TaskStatusUpdateForm
 from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
@@ -105,14 +106,24 @@ def update_password(request, pk):
 
 @login_required(login_url="EmployeeLogin")
 def EmployeeIndex(request):
+    current_date = date.today()
     user = request.user
     user_task = TaskAssign.objects.filter(employees=user)
     user_projects = ProjectAssign.objects.filter(employees=user)
+    holiday = Holiday.objects.filter(holiday_date__gte=current_date).order_by('holiday_date').first()
+    total_leave = Conditions.objects.get(condition_title='Total paid leave')
+    leave_taken = Leave.objects.filter(leave_user=user, leave_status=LeaveStatusChoice.APPROVED).count()
+    remaing_leave = total_leave.conditional_amount - leave_taken
 
     context = {
         'user': user,
         'user_task': user_task,
         'user_projects': user_projects,
+        'holiday': holiday,
+        'current_date': current_date,
+        'total_leave': total_leave,
+        'leave_taken': leave_taken,
+        'remaing_leave': remaing_leave,
     }
 
     return render(request, "employee/employee-dashboard.html", context)
@@ -670,6 +681,26 @@ def ProjectTaskList(request, id, user_id):
 
     }
     return render(request, "employee/tasks.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def TaskStatusUpdate(request, id):
+    user = request.user
+    task = Task.objects.get(id=id)
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", task)
+    form = TaskStatusUpdateForm(request.POST or None, instance=task)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Task status update successfully")
+                return redirect('EmpProjectTaskList', id=task.id, user_id=user)
+            else:
+                messages.error(request, f"Form is not valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    context = {'form': form, 'task': task}
+    return render(request, "employee/edit_task_status.html", context)
 
 
 @login_required(login_url="EmployeeLogin")

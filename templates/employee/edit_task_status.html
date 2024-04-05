@@ -1,0 +1,31 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!-- Edit Task Status Modal -->
+<div id="task_status_update_model" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Task Status</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'EmpEditProjectTaskStatus' id=task.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.task_status|as_crispy_field }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.task_time|as_crispy_field }}
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Edit Task Status Modal -->

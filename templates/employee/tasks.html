@@ -52,15 +52,19 @@
                                                     <ul id="task-list">
                                                         {% for task_list in project_task_list %}
                                                             {% if task_list.task_project_name.id == project_id %}
-                                                            <li class="task">
-                                                                <div class="task-container">
-                                                                <span class="task-action-btn task-check">
-                                                                    <span class="action-circle large complete-btn"
-                                                                          title="Mark Complete">
-                                                                        <i class="material-icons">check</i>
-                                                                    </span>
-                                                                </span>
-                                                                     <span class="task-label">{{task_list.task_name.task_title}}</span>
+                                                            <li class="task mb-2 border">
+                                                                <div class="task-container d-flex justify-content-between">
+                                                                    <div class="d-flex">
+                                                                        <div class="align-self-center mr-3 ">
+                                                                            <span class="la-lg">&#x2022;</span>
+                                                                        </div>
+                                                                        <div>
+                                                                            <span class="task-label">{{task_list.task_name.task_title}} </span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div>
+                                                                        <button class="btn mr-2 ml-5 p-0 text-primary text-nowrap" onclick="editTaskStatus({{task_list.id}})">Update</button>
+                                                                    </div>
                                                                 </div>
                                                             </li>
                                                             {% endif %}
@@ -84,9 +88,22 @@
             </div>
         </div>
     </div>
+
+    <div id="task-status-update-model"></div>
 <!-- /Page Wrapper -->
 
 <script>
+    function editTaskStatus(TaskId) {
+        $.ajax({
+            url: "{% url 'EmpEditProjectTaskStatus' id=0 %}".replace(0, TaskId),
+            success: function(response) {
+                $("#task-status-update-model").html(response);
+                $("#task_status_update_model").modal('show');
+            }
+        });
+    }
+
+
     window.setTimeout(function() {
         $(".alert").fadeTo(500, 0).slideUp(500, function(){
             $(this).remove();

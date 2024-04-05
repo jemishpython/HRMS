@@ -34,7 +34,7 @@ class ProjectStatusChoice(models.TextChoices):
 
 class TaskStatusChoice(models.TextChoices):
     WORKING = ("Working", _("WORKING"))
-    COMPLETE = ("Complate", _("COMPLETE"))
+    COMPLETE = ("Complete", _("COMPLETE"))
     PENDING = ("Pending", _("PENDING"))
 
 

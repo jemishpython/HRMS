@@ -225,8 +225,8 @@
                                 <tr>
                                     <td>
                                         <h2 class="table-avatar">
-                                            <a href="{% url 'AdminClientDetailView' ticket.ticket_user.id %}"><img class="avatar" alt="Client Profile Photo" src="{{ticket.ticket_user.avatar.url}}"></a>
-                                            <a href="{% url 'AdminClientDetailView' ticket.ticket_user.id %}">{{ticket.ticket_user.username}} <span>{{ticket.ticket_user.designation}} | {{ticket.ticket_user.technology}}</span></a>
+                                            <a href="{% url 'AdminProfileView' ticket.ticket_user.id %}"><img class="avatar" alt="Client Profile Photo" src="{{ticket.ticket_user.avatar.url}}"></a>
+                                            <a href="{% url 'AdminProfileView' ticket.ticket_user.id %}">{{ticket.ticket_user.username}} <span>{{ticket.ticket_user.designation}} | {{ticket.ticket_user.technology}}</span></a>
                                         </h2>
                                     </td>
                                     <td>

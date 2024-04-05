@@ -143,3 +143,9 @@ class PunchOutForm(forms.ModelForm):
     class Meta:
         model = Attendance
         fields = ['check_out_time', 'production_hour']
+
+
+class TaskStatusUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['task_status', 'task_time']

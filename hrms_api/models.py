@@ -207,6 +207,9 @@ class ProjectFile(models.Model):
 class Task(models.Model):
     task_title = models.CharField(verbose_name='Task Title', max_length=100, null=True)
     task_status = models.CharField(verbose_name='Task Status', choices=TaskStatusChoice.choices, default=TaskStatusChoice.WORKING, max_length=255, null=True, blank=True)
+    task_time = models.DurationField(verbose_name="Task Time", null=True, blank=True)
+    task_start_time = models.TimeField(verbose_name='Task Start Time', null=True, blank=True)
+    task_complete_time = models.TimeField(verbose_name='Task Complete Time', null=True, blank=True)
     task_project = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):

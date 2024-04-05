@@ -6,6 +6,7 @@ import uuid
 import pytz
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.handlers import exception
 from django.core.mail import send_mail
 from django.core.serializers import serialize
 from django.http import JsonResponse, response, HttpResponse, Http404
@@ -121,12 +122,13 @@ def update_password(request, pk):
 
 @login_required(login_url="Login")
 def AdminIndex(request):
+    current_date = date.today()
     users = User.objects.all()
     project_list = Project.objects.all()[:5]
     task_list = Task.objects.all()
     client_list = Client.objects.all()[:5]
     new_ticket_list = Ticket.objects.filter(ticket_status=TicketStatusChoice.NEW)[:5]
-    new_leaves_list = Leave.objects.filter(leave_status=LeaveStatusChoice.NEW)[:5]
+    new_leaves_list = Leave.objects.filter(leave_from__gte=current_date, leave_status=LeaveStatusChoice.NEW)[:5]
     interviewer_list = Interviewers.objects.all()
 
     context = {
@@ -521,11 +523,12 @@ def DeleteBank(request, id, emg_id):
 
 @login_required(login_url="Login")
 def Holidays(request):
-    year = date.today()
+    current_date = date.today()
+    # Holiday.objects.filter(holiday_date__lt=current_date).delete()
     holidaylist = Holiday.objects.all().order_by('holiday_date')
     context = {
         'holidaylist': holidaylist,
-        'year': year,
+        'year': current_date,
     }
     return render(request, "admin/holidays_list.html", context)
 

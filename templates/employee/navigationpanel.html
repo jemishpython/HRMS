@@ -89,7 +89,7 @@
         <div class="sidebar-menu" id="sidebar-menu">
             <ul>
                 {% with request.resolver_match.url_name as url_name %}
-                <li><a href="{% url 'EmployeeIndex' %}" class="{% if url_name == 'EmployeeIndex' %}text-white{% endif %}"><i class="las la-home"></i><span>Employees Dashboard</span></a></li>
+                <li class="border-bottom"><a href="{% url 'EmployeeIndex' %}" class="{% if url_name == 'EmployeeIndex' %}text-white{% endif %}"><i class="las la-home"></i><span>Employees Dashboard</span></a></li>
                 <li><a href="{% url 'EmployeeListView' %}" class="{% if url_name == 'EmployeeListView' %}text-white{% endif %}"><i class="las la-user-tie"></i><span>Employee</span></a></li>
                 <li><a href="{% url 'EmpAttendanceView' user.id %}" class="{% if url_name == 'EmpAttendanceView' %}text-white{% endif %}"><i class="las la-check-circle"></i><span>Attendance </span></a></li>
                 <li><a href="{% url 'EmpLeaves' user.id %}" class="{% if url_name == 'EmpLeaves' %}text-white{% endif %}"><i class="las la-calendar-minus"></i><span>Leaves</span></a></li>
