@@ -135,6 +135,7 @@ def AdminIndex(request):
         'project_list': project_list,
         'task_list': task_list,
         'users': users,
+        'current_date': current_date,
         'client_list': client_list,
         'new_ticket_list': new_ticket_list,
         'new_leaves_list': new_leaves_list,

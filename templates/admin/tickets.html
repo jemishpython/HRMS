@@ -168,7 +168,7 @@
 													<a class="border rounded-pill p-1 text-dark"><i class="fa fa-dot-circle-o {% if ticket.ticket_priority == 'High' %}text-danger{% elif ticket.ticket_priority == 'Medium' %}text-warning{% else %}text-info{% endif %}"></i> {{ticket.ticket_priority}}</a>
 												</div>
 											</td>
-											<td class="w-25 text-center"><button class="border rounded-pill px-2 py-1 text-dark" onclick="updateTicketStatus({{ticket.id}})"><i class="fa fa-dot-circle-o {% if ticket.ticket_status == 'Declined' %}text-danger{% elif ticket.ticket_status == 'Approved' %}text-success{% else %}text-info{% endif %}"></i> {{ticket.ticket_status}}</button></td>
+											<td class="w-25 text-center"><button class="border rounded-pill px-3 py-2" style="{% if ticket.ticket_status == 'Declined' %}background-color:#e8e3e3; color:#3E3939;{% elif ticket.ticket_status == 'Approved' %}background-color:#e8e3e3; color:#3E3939;{% else %}background-color:#F47920; color:#F6F4F4;{%endif%}" onclick="updateTicketStatus({{ticket.id}})"><i class="fa fa-dot-circle-o {% if ticket.ticket_status == 'Declined' %}text-danger{% elif ticket.ticket_status == 'Approved' %}text-success{% else %}text-info{% endif %} mr-1"></i> {{ticket.ticket_status}}</button></td>
 											<td>{{ticket.ticket_status_update_date|date:"j - M - Y"}}</td>
 										</tr>
 										{% endfor %}

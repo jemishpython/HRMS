@@ -11,9 +11,14 @@
                 <li><a href="{% url 'AdminAttendanceView' %}" class="{% if url_name == 'AdminAttendanceView' %}text-white{% endif %}"><i class="las la-check-circle"></i><span>Employee Attendance </span></a></li>
                 <li><a href="{% url 'AdminLeaveList' %}" class="{% if url_name == 'AdminLeaveList' %}text-white{% endif %}"><i class="las la-calendar-minus"></i><span>Leave List</span></a></li>
                 <li><a href="{% url 'AdminHolidays' %}" class="{% if url_name == 'AdminHolidays' %}text-white{% endif %}"><i class="las la-calendar-day"></i><span>Holiday</span></a></li>
-                <li><a href="{% url 'AdminDepartmentView' %}" class="{% if url_name == 'AdminDepartmentView' %}text-white{% endif %}"><i class="las la-building"></i><span>Department</span></a></li>
-                <li><a href="{% url 'AdminDesignationView' %}" class="{% if url_name == 'AdminDesignationView' %}text-white{% endif %}"><i class="lab la-buffer"></i><span>Designation</span></a></li>
-                <li><a href="{% url 'AdminTechnologyView' %}" class="{% if url_name == 'AdminTechnologyView' %}text-white{% endif %}"><i class="las la-code"></i><span>Technology</span></a></li>
+
+                <li class="submenu"><a href="#" class="{% if url_name == 'AdminDepartmentView' %}text-white{% elif url_name == 'AdminDesignationView' %}text-white{% elif url_name == 'AdminTechnologyView' %}text-white{% endif %}"><i class="las la-building"></i><span>Company Role</span><span class="menu-arrow"></span></a>
+                    <ul style="display:none;">
+                        <li><a href="{% url 'AdminDepartmentView' %}" class="{% if url_name == 'AdminDepartmentView' %}text-white{% endif %}"><span>Departments</span></a></li>
+                        <li><a href="{% url 'AdminDesignationView' %}" class="{% if url_name == 'AdminDesignationView' %}text-white{% endif %}"><span>Designation</span></a></li>
+                        <li><a href="{% url 'AdminTechnologyView' %}" class="{% if url_name == 'AdminTechnologyView' %}text-white{% endif %}"><span>Technology</span></a></li>
+                    </ul>
+                </li>
 
                 <li class="submenu"><a href="#" class="{% if url_name == 'AdminSalarySlipDashboard' %}text-white{% elif url_name == 'AdminEmployeeSalarySlipList' %}text-white{% endif %}"><i class="las la-money-bill-alt"></i><span>Employee Salary</span><span class="menu-arrow"></span></a>
                     <ul style="display:none;">

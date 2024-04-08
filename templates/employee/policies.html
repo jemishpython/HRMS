@@ -1,6 +1,7 @@
 {% extends 'employee/base.html' %}
 {% load static %}
 {% block body %}
+{% block nav %}{% include 'employee/navigationpanel.html' %}{% endblock nav %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
 				<div class="show_message">
@@ -18,7 +19,7 @@
 							<div class="col">
 								<h3 class="page-title">Policies</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'EmployeeIndex' %}">Dashboard</a></li>
 									<li class="breadcrumb-item active">Policies</li>
 								</ul>
 							</div>

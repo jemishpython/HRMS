@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "admin_app",
     "hrms_api",
     "employee_app",
+    "durationwidget",
 ]
 
 

@@ -34,7 +34,7 @@
                 <div class="col-sm-12">
                     <h3 class="page-title">Welcome, {{user.username}}</h3>
                     <ul class="breadcrumb">
-                        <li class="breadcrumb-item active">Dashboard</li>
+                        <li class="breadcrumb-item active"><h4>{{current_date|date:'l, d - F - Y'}}</h4></li>
                     </ul>
                 </div>
             </div>
@@ -42,7 +42,7 @@
         <!-- /Page Header -->
 
         <div class="row">
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-2">
                 <div class="card dash-widget">
                     <div class="card-body">
                         <div class="dash-widget-info">
@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-2">
                 <div class="card dash-widget">
                     <div class="card-body">
                         <div class="dash-widget-info">
@@ -62,7 +62,27 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-2">
+                <div class="card dash-widget">
+                    <div class="card-body">
+                        <div class="dash-widget-info">
+                            <h3>{{new_ticket_list.count}}</h3>
+                            <span>New Tickets</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-2">
+                <div class="card dash-widget">
+                    <div class="card-body">
+                        <div class="dash-widget-info">
+                            <h3>{{new_leaves_list.count}}</h3>
+                            <span>Request Leaves</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-2">
                 <div class="card dash-widget">
                     <div class="card-body">
                         <div class="dash-widget-info">
@@ -72,7 +92,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+            <div class="col-md-6 col-sm-6 col-lg-6 col-xl-2">
                 <div class="card dash-widget">
                     <div class="card-body">
                         <div class="dash-widget-info">
@@ -87,9 +107,8 @@
         <div class="row">
             <div class="col-md-6 d-flex">
                 <div class="card card-table flex-fill">
-                    <div class="card-header d-flex justify-content-between">
+                    <div class="card-header">
                         <a class="card-title mb-0" href="{% url 'AdminClientsView' %}">Clients</a>
-                        <h3 class="card-title mb-0">{{client_list.count}}</h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -124,9 +143,8 @@
             </div>
             <div class="col-md-6 d-flex">
                 <div class="card card-table flex-fill">
-                    <div class="card-header d-flex justify-content-between">
+                    <div class="card-header">
                         <a class="card-title mb-0" href="{% url 'AdminProjectsView' %}">Recent Projects</a>
-                        <h3 class="card-title mb-0">{{project_list.count}}</h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -168,11 +186,10 @@
         </div>
 
         <div class="row">
-            <div class="col-md-4 d-flex">
+            <div class="col-md-6 d-flex">
                 <div class="card card-table flex-fill">
-                    <div class="card-header d-flex justify-content-between">
+                    <div class="card-header">
                         <a class="card-title mb-0" href="{% url 'AdminLeaveList' %}">Leaves</a>
-                        <h3 class="card-title mb-0">{{new_leaves_list.count}}</h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -180,6 +197,8 @@
                                 <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>From</th>
+                                    <th>To</th>
                                     <th class="text-right">Status</th>
                                 </tr>
                                 </thead>
@@ -192,9 +211,9 @@
                                             <a href="{% url 'AdminClientDetailView' leaves.leave_user.id %}">{{leaves.leave_user.username}} <span>{{leaves.leave_user.designation}} | {{leaves.leave_user.technology}}</span></a>
                                         </h2>
                                     </td>
-                                    <td class="text-right">
-                                        <i class="fa fa-dot-circle-o text-info"></i> {{leaves.leave_status}}
-                                    </td>
+                                    <td>{{leaves.leave_from|date:'d - F - Y'}}</td>
+                                    <td>{{leaves.leave_to|date:'d - F - Y'}}</td>
+                                    <td class="text-right"><i class="fa fa-dot-circle-o text-info"></i> {{leaves.leave_status}}</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
@@ -203,11 +222,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-8 d-flex">
+            <div class="col-md-6 d-flex">
                 <div class="card card-table flex-fill">
-                    <div class="card-header d-flex justify-content-between">
+                    <div class="card-header">
                         <a class="card-title mb-0" href="{% url 'AdminTicketList' %}">Tickets</a>
-                        <h3 class="card-title mb-0">{{new_ticket_list.count}}</h3>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">

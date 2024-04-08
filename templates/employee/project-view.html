@@ -1,7 +1,7 @@
 {% extends 'employee/base.html' %}
 {% load static %}
 {% block body %}
-			
+{% block nav %}{% include 'employee/navigationpanel.html' %}{% endblock nav %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
 				<div class="show_message">
@@ -18,7 +18,7 @@
 							<div class="col">
 								<h3 class="page-title">{{projectdetailview.project_name}}</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'EmployeeIndex' %}">Dashboard</a></li>
 									<li class="breadcrumb-item active">Project</li>
 								</ul>
 							</div>
@@ -75,6 +75,7 @@
 							<div class="project-task">
 								<ul class="nav nav-tabs nav-tabs-top nav-justified mb-0">
 									<li class="nav-item"><a class="nav-link active" href="#all_tasks" data-toggle="tab" aria-expanded="true">All Tasks</a></li>
+									<li class="nav-item"><a class="nav-link active" href="#working_tasks" data-toggle="tab" aria-expanded="true">All Tasks</a></li>
 									<li class="nav-item"><a class="nav-link" href="#pending_tasks" data-toggle="tab" aria-expanded="false">Pending Tasks</a></li>
 									<li class="nav-item"><a class="nav-link" href="#completed_tasks" data-toggle="tab" aria-expanded="false">Completed Tasks</a></li>
 								</ul>
@@ -83,22 +84,32 @@
 										<div class="task-wrapper">
 											<div class="task-list-container">
 												<div class="task-list-body">
-													<ul id="task-list">
-														{% for task_list in project_task_list %}
+													<table class="mb-0 w-100" id="task_table">
+                                                        <thead hidden>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for task_list in project_task_list %}
                                                             {% if task_list.task_project_name.id == projectdetailview.id %}
-															<li class="task">
-																<div class="task-container">
-																	<span class="task-action-btn task-check">
-																		<span class="action-circle large complete-btn" title="Mark Complete">
-																			<i class="material-icons">check</i>
-																		</span>
-																	</span>
-																	<span class="task-label">{{task_list.task_name.task_title}}</span>
-																</div>
-															</li>
-															{% endif %}
+                                                            <tr class="border">
+                                                                <td hidden>
+                                                                    {{task_list.task_name.task_status}}
+                                                                </td>
+                                                                <td>
+                                                                    <span class="la-lg">&#x2022;</span><span class="text-muted mx-3">( {{task_list.task_name.task_status}} )</span><span>{{task_list.task_name.task_title}}</span>
+                                                                </td>
+                                                                <td class="text-right">
+                                                                    <button class="btn mr-2 ml-5 p-0 text-primary text-nowrap" onclick="editTaskStatus({{task_list.task_name.id}})">Update</button>
+                                                                </td>
+                                                            </tr>
+                                                            {% endif %}
                                                         {% endfor %}
-													</ul>
+                                                        </tbody>
+                                                    </table>
 												</div>
 											</div>
 										</div>
@@ -140,10 +151,6 @@
 											</tr>
 										</tbody>
 									</table>
-<!--									<p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>-->
-<!--									<div class="progress progress-xs mb-0">-->
-<!--										<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="40%" style="width: 40%"></div>-->
-<!--									</div>-->
 								</div>
 							</div>
 							<div class="card project-user">

@@ -97,7 +97,7 @@
                             <td>{{leave.leave_to|date:"d - m - Y"}}</td>
                             <td>{{leave.leave_days}} days</td>
                             <td class="w-75 text-wrap">{{leave.leave_reason}}</td>
-                            <td class="w-25 text-center"><button class="border rounded-pill px-2 py-1 text-dark" onclick="updateLeaveStatus({{leave.id}})"><i class="fa fa-dot-circle-o {% if leave.leave_status == 'Declined' %}text-danger{% elif leave.leave_status == 'Approved' %}text-success{% else %}text-info{% endif %}"></i> {{leave.leave_status}}</button></td>
+                            <td class="w-25 text-center"><button class="border rounded-pill px-3 py-2" onclick="updateLeaveStatus({{leave.id}})" style="{% if leave.leave_status == 'Declined' %}background-color:#e8e3e3; color:#3E3939;{% elif leave.leave_status == 'Approved' %}background-color:#e8e3e3; color:#3E3939;{% else %}background-color:#F47920; color:#F6F4F4;{%endif%}"><i class="fa fa-dot-circle-o {% if leave.leave_status == 'Declined' %}text-danger{% elif leave.leave_status == 'Approved' %}text-success{% else %}text-info{% endif %}"></i> {{leave.leave_status}}</button></td>
                         </tr>
                         {% endfor %}
                         </tbody>
