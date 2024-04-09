@@ -109,7 +109,7 @@ def update_password(request, pk):
 def EmployeeIndex(request):
     current_date = date.today()
     user = request.user
-    user_task = TaskAssign.objects.filter(employees=user)
+    user_task = TaskAssign.objects.filter(employees=user).exclude(task_name__task_status=TaskStatusChoice.COMPLETE)
     pending_task = TaskAssign.objects.filter(employees=user, task_name__task_status=TaskStatusChoice.PENDING).count()
     complete_task = TaskAssign.objects.filter(employees=user, task_name__task_status=TaskStatusChoice.COMPLETE).count()
     new_task = TaskAssign.objects.filter(employees=user, task_name__task_status=TaskStatusChoice.NEW).count()
@@ -770,6 +770,7 @@ def SalarySlipView(request, id):
     employee_id = salary_slip_details.user_name.id
     current_date = datetime.date.today()
     salary_month = current_date.replace(day=1) - datetime.timedelta(days=1)
+    holidays_salary_month = Holiday.objects.filter(holiday_date__month=salary_month.month).count()
     bank_details = Bank.objects.filter(employee=employee_id).first()
     absent_days = Attendance.objects.filter(attendee_user=employee_id,
                                             attendance_status=AttendanceStatusChoice.ABSENT,
@@ -780,7 +781,7 @@ def SalarySlipView(request, id):
     leave_taken = Leave.objects.filter(leave_user=employee_id, leave_status=LeaveStatusChoice.APPROVED,
                                        leave_from__month=salary_month.month).count()
     total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if
-                         calendar.weekday(salary_month.year, salary_month.month, day) < 5)
+                         calendar.weekday(salary_month.year, salary_month.month, day) < 5) - holidays_salary_month
     number_of_working_day_attend = total_weekdays - leave_taken - absent_days - (0.5 * attend_half_days)
 
     context = {

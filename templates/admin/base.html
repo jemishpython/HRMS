@@ -84,22 +84,8 @@
 				<!-- Header Menu -->
 				<ul class="nav user-menu">
 
-					<!-- Search -->
-<!--					<li class="nav-item">-->
-<!--						<div class="top-nav-search">-->
-<!--							<a class="responsive-search" href="javascript:void(0);">-->
-<!--								<i class="fa fa-search"></i>-->
-<!--							</a>-->
-<!--							<form action="search.html">-->
-<!--								<input class="form-control" placeholder="Search here" type="text">-->
-<!--								<button class="btn" type="submit"><i class="fa fa-search"></i></button>-->
-<!--							</form>-->
-<!--						</div>-->
-<!--					</li>-->
-					<!-- /Search -->
-
 					<li class="nav-item dropdown has-arrow main-drop">
-						<a class="dropdown-toggle nav-link" data-toggle="dropdown" href="#"><span><img class="avatar mr-3" alt="Profile image" src="{{user.avatar.url}}"></span><span class="mr-2">{{user.username}}</span></a>
+						<a class="dropdown-toggle nav-link" data-toggle="dropdown" href=""><span><img class="avatar mr-3" alt="Profile image" src="{{user.avatar.url}}"></span><span class="mr-2">{{user.username}}</span></a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="{% url 'AdminProfileView' id=user.id %}"><i class="las la-user"></i>  My Profile</a>
 <!--							<a class="dropdown-item" href="settings.html"><i class="las la-user-cog"></i>  Settings</a>-->

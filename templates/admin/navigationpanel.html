@@ -31,7 +31,7 @@
                 <li><a href="{% url 'AdminChatView' %}" class="{% if url_name == 'AdminChatView' %}text-white{% endif %}"><i class="las la-comments"></i><span>Chat</span></a></li>
                 <li><a href="{% url 'AdminClientsView' %}" class="{% if url_name == 'AdminClientsView' %}text-white{% endif %}"><i class="las la-handshake"></i><span>Clients</span></a></li>
 <!--                <li class="menu-title"><span>Project</span></li>-->
-                <li><a href="{% url 'AdminProjectsView' %}" class="{% if url_name == 'AdminProjectsView' %}text-white{% endif %}"><i class="lab la-product-hunt"></i><span>Projects</span></a></li>
+                <li><a href="{% url 'AdminProjectsView' %}" class="{% if url_name == 'AdminProjectsView' %}text-white{% elif url_name == 'AdminProjectDetailsView' %}text-white{% endif %}"><i class="lab la-product-hunt"></i><span>Projects</span></a></li>
                 <li><a href="{% url 'AdminProjectTask' %}" class="{% if url_name == 'AdminProjectTask' %}text-white{% endif %}"><i class="las la-tasks"></i><span>Tasks</span></a></li>
 <!--                <li class="menu-title"><span>Company</span></li>-->
 

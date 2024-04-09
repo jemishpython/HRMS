@@ -35,85 +35,108 @@
                 <div class="col">
                     <h3 class="page-title">Projects</h3>
                     <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{% url 'AdminIndex' %}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Projects</li>
+                        <li class="breadcrumb-item"><a href="{% url 'AdminIndex' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Projects</li>
                     </ul>
                 </div>
                 <div class="col-auto float-right ml-auto">
                     <button class="btn add-btn" onclick="addProject()"><i class="fa fa-plus"></i> Add Project</button>
-                    <div class="view-icons">
-                        <a class="grid-view btn btn-link active" href="projects.html"><i class="fa fa-th"></i></a>
-                        <a class="list-view btn btn-link" href="project-list.html"><i class="fa fa-bars"></i></a>
-                    </div>
                 </div>
             </div>
         </div>
         <!-- /Page Header -->
 
         <!-- Search Filter -->
-        <div class="row filter-row">
+        <div class="row filter-row d-flex justify-content-end">
             <div class="col-sm-6 col-md-3">
-                <div class="form-group form-focus">
-                    <input class="form-control floating" type="text">
+                <div class="form-group form-focus ">
+                    <input type="text" class="form-control floating" id="project_name_search">
                     <label class="focus-label">Project Name</label>
                 </div>
             </div>
             <div class="col-sm-6 col-md-3">
-                <div class="form-group form-focus">
-                    <input class="form-control floating" type="text">
-                    <label class="focus-label">Employee Name</label>
+                <div class="form-group form-focus ">
+                    <input type="text" class="form-control floating" id="client_name_search">
+                    <label class="focus-label">Client Name</label>
                 </div>
             </div>
             <div class="col-sm-6 col-md-3">
                 <div class="form-group form-focus select-focus">
-                    <select class="select floating">
-                        <option>Select Roll</option>
-                        <option>Web Developer</option>
-                        <option>Web Designer</option>
-                        <option>Android Developer</option>
-                        <option>Ios Developer</option>
+                    <select class="form-control floating" id="project_priority_search">
+                        <option value="">------</option>
+                        <option>Low</option>
+                        <option>Medium</option>
+                        <option>High</option>
                     </select>
-                    <label class="focus-label">Designation</label>
+                    <label class="focus-label">Project Priority</label>
                 </div>
             </div>
             <div class="col-sm-6 col-md-3">
-                <a class="btn btn-success btn-block" href="#"> Search </a>
+                <div class="form-group form-focus select-focus">
+                    <select class="form-control floating" id="project_status_search">
+                        <option value="">-------</option>
+                        <option>On Track</option>
+                        <option>Postponed</option>
+                        <option>Finished</option>
+                        <option>Not Started</option>
+                    </select>
+                    <label class="focus-label">Project Status</label>
+                </div>
             </div>
         </div>
-        <!-- Search Filter -->
+        <!-- /Search Filter -->
 
         <!-- /Page Content -->
         <div class="row">
-            {% for project in projectlist %}
-            <div class="col-lg-4 col-sm-6 col-md-4 col-xl-3">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="dropdown profile-action">
-                            <button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger" onclick="deleteProject({{project.id}})"><i class="las la-lg la-trash"></i></button>
-                        </div>
-                        <h4 class="project-title"><a href="{% url 'AdminProjectDetailsView' project.id %}">{{project.project_name}}</a>
-                        </h4>
-                        <small class="block text-ellipsis m-b-15">
-                            <span class="text-xs">1</span> <span class="text-muted">open tasks, </span>
-                            <span class="text-xs">9</span> <span class="text-muted">tasks completed</span>
-                        </small>
-                        <p class="text-muted summary-wrap">{{project.project_summary}}</p>
-                        <div class="pro-deadline m-b-15 mt-4">
-                            <div class="sub-title">
-                                Deadline:
-                            </div>
-                            <div class="text-muted">
-                                {{project.project_end_date|date:'j - F - Y'}}
-                            </div>
-                        </div>
-                        <!--									<p class="m-b-5">Progress <span class="text-success float-right">40%</span></p>-->
-                        <!--									<div class="progress progress-xs mb-0">-->
-                        <!--										<div class="progress-bar bg-success" role="progressbar" data-toggle="tooltip" title="40%" style="width: 40%"></div>-->
-                        <!--									</div>-->
-                    </div>
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table" id="project_list_table">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Client Name</th>
+                                <th>Project Assignee</th>
+                                <th>Deadline</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for project in projectlist %}
+                        <tr>
+                            <td><h2><a href="{% url 'AdminProjectDetailsView' project.id %}">{{project.project_name}}</a></h2></td>
+                            <td>
+                                <h2 class="table-avatar">
+                                    <a href="{% url 'AdminClientDetailView' project.project_client_name.id %}"><img class="avatar" alt="" src="{{project.project_client_name.client_avatar.url}}"></a>
+                                    <a href="{% url 'AdminClientDetailView' project.project_client_name.id %}">{{project.project_client_name}} <span>{{project.project_client_name.company_name}} | {{project.project_client_name.position}}</span></a>
+                                </h2>
+                            </td>
+                            <td>
+                                {% for project_leader in project_assignee_list %}
+                                    {% if project_leader.project_name == project %}
+                                        {% for employee in project_leader.employees.all %}
+                                            <div class="avatar-group">
+                                                <div class="avatar">
+                                                    <img class="avatar-img rounded-circle border border-white" alt="User Image" src="{{employee.avatar.url}}" data-toggle="tooltip" title="{{employee.username}}">
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{project.project_end_date|date:'d - M - Y'}}</td>
+                            <td><i class="fa fa-dot-circle-o {% if project.project_priority == 'High' %}text-danger{% elif project.project_priority == 'Low' %}text-success{% else %}text-warning{% endif %} mr-1"></i> {{project.project_priority}}</td>
+                            <td><i class="fa fa-dot-circle-o {% if project.project_status == 'Not Started' %}text-danger{% elif project.project_status == 'Finished' %}text-success{% elif project.project_status == 'Postponed' %}text-warning{% else %}text-info{% endif %} mr-1"></i> {{project.project_status}}</td>
+                            <td class="text-right">
+                                <button class="btn text-danger" onclick="deleteProject({{project.id}})">Delete</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            {% endfor %}
         </div>
     </div>
     <!-- /Page Content -->
@@ -167,7 +190,28 @@
     }
 
 </script>
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
 <script>
+    $(document).ready(function () {
+        var table = $('#project_list_table').DataTable({
+            dom: 'Blrtip',
+        });
+         $('#project_name_search').on('keyup', function () {
+            table.column(0).search(this.value).draw();
+        });
+         $('#client_name_search').on('keyup', function () {
+            table.column(1).search(this.value).draw();
+        });
+         $('#project_priority_search').on('change', function () {
+            table.column(4).search(this.value).draw();
+        });
+         $('#project_status_search').on('change', function () {
+            table.column(5).search(this.value).draw();
+        });
+    });
+
+
     window.setTimeout(function() {
         $(".alert").fadeTo(500, 0).slideUp(500, function(){
             $(this).remove();

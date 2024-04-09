@@ -114,40 +114,37 @@
 							</div>
 							<div class="project-task">
 								<ul class="nav nav-tabs nav-tabs-top nav-justified mb-0">
-									<li class="nav-item"><a class="nav-link active" href="#all_tasks" data-toggle="tab" aria-expanded="true">All Tasks</a></li>
-									<li class="nav-item"><a class="nav-link" href="#pending_tasks" data-toggle="tab" aria-expanded="false">Pending Tasks</a></li>
-									<li class="nav-item"><a class="nav-link" href="#completed_tasks" data-toggle="tab" aria-expanded="false">Completed Tasks</a></li>
+									<li class="nav-item"><a class="nav-link active" href="#all_tasks_search" id="all_tasks_search" data-toggle="tab" aria-expanded="true">All Tasks</a></li>
+									<li class="nav-item"><a class="nav-link" href="#new_tasks_search" id="new_tasks_search" data-toggle="tab" aria-expanded="false">New Tasks</a></li>
+									<li class="nav-item"><a class="nav-link" href="#working_tasks_search" id="working_tasks_search" data-toggle="tab" aria-expanded="false">Working Tasks</a></li>
+									<li class="nav-item"><a class="nav-link" href="#pending_tasks_search" id="pending_tasks_search" data-toggle="tab" aria-expanded="false">Pending Tasks</a></li>
+									<li class="nav-item"><a class="nav-link" href="#completed_tasks_search" id="completed_tasks_search" data-toggle="tab" aria-expanded="false">Completed Tasks</a></li>
 								</ul>
 								<div class="tab-content">
 									<div class="tab-pane show active" id="all_tasks">
 										<div class="task-wrapper">
 											<div class="task-list-container">
 												<div class="task-list-body">
-													<ul id="task-list">
+													<table class="table mb-0 w-100" id="task_table">
+                                                        <thead hidden>
+                                                            <tr>
+                                                                <td>Task Status</td>
+                                                                <td>Task Title</td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
 														{% for task in task_list %}
-														<li class="task">
-															<div class="task-container">
-																<span class="task-action-btn task-check">
-																	<span class="action-circle large complete-btn" title="Mark Complete">
-																		<i class="material-icons">check</i>
-																	</span>
-																</span>
-																<span class="task-label">{{task.task_title}}</span>
-																<span class="task-action-btn task-btn-right">
-																	<span class="action-circle large" title="Assign">
-																		<form action="" method="post">
-																		{% csrf_token %}
-																			<a href="#" data-toggle="modal" data-target="#assignee" title="fake"><i class="material-icons">person_add</i></a>
-																		</form>
-																	</span>
-																	<span class="action-circle large delete-btn" title="Delete Task">
-																		<i class="material-icons">delete</i>
-																	</span>
-																</span>
-															</div>
-														</li>
+															<tr style="background-color:#F6F4F4;">
+                                                                <td hidden>
+                                                                    {{task.task_status}}
+                                                                </td>
+                                                                <td style="padding:0.3rem 0 0.3rem 0.5rem">
+                                                                    <span class="la-lg">&#x2022;</span><span class="text-muted mx-3">( {{task.task_status}} )</span><span>{{task.task_title}}</span>
+                                                                </td>
+                                                            </tr>
 														{% endfor %}
-													</ul>
+														</tbody>
+                                                    </table>
 												</div>
 												<div class="task-list-footer">
 													<div class="new-task-wrapper">
@@ -247,7 +244,7 @@
 																<img class="avatar" alt="" src="{{employee.avatar.url}}">
 															</div>
 															<div class="list-body">
-																<span class="message-author">{{employee}} -- {{project_team_member}}</span>
+																<span class="message-author">{{employee}}</span>
 																<div class="clearfix"></div>
 																<span class="message-content text-secondary">{{employee.department}} | {{employee.designation}} | {{employee.technology}}</span>
 															</div>
@@ -302,6 +299,31 @@
 				
             </div>
 			<!-- /Page Wrapper -->
+
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+$(document).ready(function () {
+    var table = $('#task_table').DataTable({
+        dom: 'Brt',
+    });
+    $('#all_tasks_search').on('click', function () {
+        table.columns(0).search('', false, true).draw();
+    });
+    $('#new_tasks_search').on('click', function () {
+        table.columns(0).search('New', false, true).draw();
+    });
+    $('#working_tasks_search').on('click', function () {
+        table.columns(0).search('Working', false, true).draw();
+    });
+    $('#pending_tasks_search').on('click', function () {
+        table.columns(0).search('Pending', false, true).draw();
+    });
+    $('#completed_tasks_search').on('click', function () {
+        table.columns(0).search('Completed', false, true).draw();
+    });
+});
+</script>
 
 <script>
 

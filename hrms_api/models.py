@@ -171,7 +171,7 @@ class Project(models.Model):
     project_start_date = models.DateField(verbose_name='Project Start Date', null=True, blank=True)
     project_end_date = models.DateField(verbose_name='Project End Date', null=True, blank=True)
     project_cost = models.CharField(verbose_name='Project Cost', max_length=50, null=True, blank=True)
-    project_priority = models.CharField(verbose_name='Project Priority', choices=ProjectPriorityChoice.choices, default=ProjectPriorityChoice.HIGH, max_length=255, null=True, blank=True)
+    project_priority = models.CharField(verbose_name='Project Priority', choices=ProjectPriorityChoice.choices, default=ProjectPriorityChoice.LOW, max_length=255, null=True, blank=True)
     project_summary = models.TextField(verbose_name='Project Summary', max_length=1000, null=True, blank=True)
     project_status = models.CharField(verbose_name='Project Status', choices=ProjectStatusChoice.choices, default=ProjectStatusChoice.NOT_STARTED, max_length=255, null=True, blank=True)
 

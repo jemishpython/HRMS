@@ -2,148 +2,185 @@
 {% load static %}
 {% block body %}
 {% block nav %}{% include 'admin/navigationpanel.html' %}{% endblock nav %}
-			<!-- Page Wrapper -->
-            <div class="page-wrapper">
-				<div class="show_message">
-					{% for message in messages %}
-					<div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-					{% endfor %}
-				</div>
-			
-				<!-- Page Content -->
-                <div class="content container-fluid">
-				
-					<!-- Page Header -->
-					<div class="page-header">
-						<div class="row align-items-center">
-							<div class="col">
-								<h3 class="page-title">Clients</h3>
-								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="{% url 'AdminIndex' %}">Dashboard</a></li>
-									<li class="breadcrumb-item active">Clients</li>
-								</ul>
-							</div>
-							<div class="col-auto float-right ml-auto">
-								<button class="btn add-btn" onclick="addClient()"><i class="fa fa-plus"></i> Add Client</button>
-								<div class="view-icons">
-									<a href="" class="grid-view btn btn-link active"><i class="fa fa-th"></i></a>
-									<a href="" class="list-view btn btn-link"><i class="fa fa-bars"></i></a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- /Page Header -->
-					
-					<!-- Search Filter -->
-					<div class="row filter-row">
-						<div class="col-sm-6 col-md-3">  
-							<div class="form-group form-focus">
-								<input type="text" class="form-control floating">
-								<label class="focus-label">Client ID</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">  
-							<div class="form-group form-focus">
-								<input type="text" class="form-control floating">
-								<label class="focus-label">Client Name</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3"> 
-							<div class="form-group form-focus select-focus">
-								<select class="select floating"> 
-									<option>Select Company</option>
-									<option>Global Technologies</option>
-									<option>Delta Infotech</option>
-								</select>
-								<label class="focus-label">Company</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">  
-							<a href="#" class="btn btn-success btn-block"> Search </a>  
-						</div>     
-                    </div>
-					<!-- Search Filter -->
+<!-- Page Wrapper -->
+<div class="page-wrapper">
+    <div class="show_message">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
+        {% endfor %}
+    </div>
 
-					<!-- /Page Content -->
-					<div class="row staff-grid-row">
-						{% for client in client_list %}
-						<div class="col-md-4 col-sm-6 col-12 col-lg-4 col-xl-3">
-							<div class="profile-widget">
-								<div class="profile-img">
-									<a href="{% url 'AdminClientDetailView' client.id %}"><img class="avatar" alt="Client Profile Image" src="{{client.client_avatar.url}}"></a>
-									{% if client.active_status == True %}
-									<span style="position: absolute; bottom: 0; right:5%; border:3px solid white; width: 20px; height: 20px; background-color: green; border-radius: 50%;"></span>
-									{% else %}
-									<span style="position: absolute; bottom: 0; right:5%; border:3px solid white; width: 20px; height: 20px; background-color: red; border-radius: 50%;"></span>
-									{% endif %}
-								</div>
-								<div class="dropdown profile-action">
-                                    <button class="dropdown-item px-1 py-0 rounded d-sm-block text-center text-danger" onclick="deleteClient({{client.id}})"><i class="las la-lg la-trash"></i></button>
-								</div>
-								<h4 class="user-name m-t-10 mb-0 text-ellipsis"><a href="{% url 'AdminClientDetailView' client.id %}">{{client.company_name}}</a></h4>
-								<h5 class="user-name m-t-10 mb-0 text-ellipsis"><a href="{% url 'AdminClientDetailView' client.id %}">{{client.username}}</a></h5>
-								<div class="small text-muted">{{client.position}}</div>
-							</div>
-						</div>
-						{% endfor %}
-					</div>
+    <!-- Page Content -->
+    <div class="content container-fluid">
+
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h3 class="page-title">Clients</h3>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'AdminIndex' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Clients</li>
+                    </ul>
                 </div>
-				<!-- /Page Content -->
+                <div class="col-auto float-right ml-auto">
+                    <button class="btn add-btn" onclick="addClient()"><i class="fa fa-plus"></i> Add Client</button>
+                </div>
+            </div>
+        </div>
+        <!-- /Page Header -->
 
-				<div id="add-client-form"></div>
-				
-				<!-- Delete Employee Modal -->
-				<div class="modal custom-modal fade" id="delete_client_model" role="dialog">
-					<div class="modal-dialog modal-dialog-centered">
-						<div class="modal-content">
-							<div class="modal-body">
-								<div class="form-header">
-									<h3>Delete Client</h3>
-									<p>Are you sure want to delete?</p>
+        <!-- Search Filter -->
+        <div class="row filter-row">
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus">
+                    <input class="form-control floating" type="text" id="client_name_search">
+                    <label class="focus-label">Client Name</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus">
+                    <input class="form-control floating" type="text" id="company_name_search">
+                    <label class="focus-label">Company Name</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus">
+                    <input class="form-control floating" type="text" id="client_nationality_search">
+                    <label class="focus-label">Client Nationality</label>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <div class="form-group form-focus select-focus">
+                    <select class="form-control floating" id="client_status_search">
+                        <option value="">-------</option>
+                        <option value="False">Not Active</option>
+                        <option value="True">Active</option>
+                    </select>
+                    <label class="focus-label">Client Status</label>
+                </div>
+            </div>
+        </div>
+        <!-- Search Filter -->
+
+        <!-- /Page Content -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table class="table table-striped custom-table" id="client_list_table">
+                        <thead>
+                        <tr>
+                            <th>Client Name</th>
+                            <th>Company Name</th>
+                            <th>Nationality</th>
+                            <th>Status</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for client in client_list %}
+                        <tr>
+                            <td>
+                                <h2 class="table-avatar">
+                                    <a href="{% url 'AdminClientDetailView' client.id %}"><img alt="" class="avatar"
+                                                                                               src="{{client.client_avatar.url}}"></a>
+                                    <a href="{% url 'AdminClientDetailView' client.id %}">{{client}} <span>{{client.position}}</span></a>
+                                </h2>
+                            </td>
+                            <td>{{client.company_name}}</td>
+                            <td>{{client.nationality}}</td>
+                            <td>
+                                <i class="fa fa-dot-circle-o {% if client.active_status == False %}text-danger{% else %}text-success{% endif %} mr-1"></i>
+                                {% if client.active_status == False %} <span hidden>{{client.active_status}}</span> Not Active{% elif client.active_status == True %} <span hidden>{{client.active_status}}</span>Active{% endif %}
+                            </td>
+                            <td class="text-right">
+                                <button class="btn text-danger" onclick="deleteProject({{project.id}})">Delete</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+		</div>
+		<!-- /Page Content -->
+
+		<div id="add-client-form"></div>
+
+		<!-- Delete Employee Modal -->
+		<div class="modal custom-modal fade" id="delete_client_model" role="dialog">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-body">
+						<div class="form-header">
+							<h3>Delete Client</h3>
+							<p>Are you sure want to delete?</p>
+						</div>
+						<div class="modal-btn delete-action">
+							<div class="row">
+								<div class="col-6">
+									<a class="btn btn-primary continue-btn" href="#" id="confirmDeleteBtn">Delete</a>
 								</div>
-								<div class="modal-btn delete-action">
-									<div class="row">
-										<div class="col-6">
-											<a id="confirmDeleteBtn" href="#" class="btn btn-primary continue-btn">Delete</a>
-										</div>
-										<div class="col-6">
-											<a href="#" data-dismiss="modal" class="btn btn-primary cancel-btn">Cancel</a>
-										</div>
-									</div>
+								<div class="col-6">
+									<a class="btn btn-primary cancel-btn" data-dismiss="modal" href="#">Cancel</a>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<!-- /Delete Employee Modal -->
-				
-            </div>
-			<!-- /Page Wrapper -->
-<script>
-function addClient() {
-    $.ajax({
-        url: "{% url 'AdminAddClient' %}",
-        success: function(response) {
-            $("#add-client-form").html(response);
-            $("#add_client_model").modal('show');
-        }
-    });
-}
+			</div>
+		</div>
+		<!-- /Delete Employee Modal -->
+	</div>
+</div>
+<!-- /Page Wrapper -->
 
-function deleteClient(deleteClientId) {
-    $("#delete_client_model").modal('show');
-    if (deleteClientId) {
-        var deleteUrl = "{% url 'AdminDeleteClient' id=0 %}".replace(0, deleteClientId);
-        $("#confirmDeleteBtn").attr("href", deleteUrl);
-    }
-}
-</script>
+
 <script>
-    window.setTimeout(function() {
-        $(".alert").fadeTo(500, 0).slideUp(500, function(){
-            $(this).remove();
+	function addClient() {
+		$.ajax({
+			url: "{% url 'AdminAddClient' %}",
+			success: function(response) {
+				$("#add-client-form").html(response);
+				$("#add_client_model").modal('show');
+			}
+		});
+	}
+
+	function deleteClient(deleteClientId) {
+		$("#delete_client_model").modal('show');
+		if (deleteClientId) {
+			var deleteUrl = "{% url 'AdminDeleteClient' id=0 %}".replace(0, deleteClientId);
+			$("#confirmDeleteBtn").attr("href", deleteUrl);
+		}
+	}
+</script>
+
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        var table = $('#client_list_table').DataTable({
+            dom: 'Blrtip',
         });
-    }, 1700);
+         $('#client_name_search').on('keyup', function () {
+            table.column(0).search(this.value).draw();
+        });
+         $('#company_name_search').on('keyup', function () {
+            table.column(1).search(this.value).draw();
+        });
+         $('#client_nationality_search').on('keyup', function () {
+            table.column(2).search(this.value).draw();
+        });
+         $('#client_status_search').on('change', function () {
+            table.column(3).search(this.value).draw();
+        });
+    });
+	window.setTimeout(function() {
+		$(".alert").fadeTo(500, 0).slideUp(500, function(){
+			$(this).remove();
+		});
+	}, 1700);
 </script>
 
 {% endblock body %}
