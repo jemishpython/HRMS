@@ -16,12 +16,17 @@
         <!-- Page Header -->
         <div class="page-header">
             <div class="row">
-                <div class="col-sm-12">
-                    <h3 class="page-title">Profile</h3>
-                    <ul class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{% url 'AdminIndex' %}">Dashboard</a> / <a href="{% url 'AdminEmployeeView' %}">Employee</a></li>
-                        <li class="breadcrumb-item active">Profile</li>
-                    </ul>
+                <div class="col-sm-12 d-flex justify-content-between">
+                    <div>
+                        <h3 class="page-title">Profile</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'AdminIndex' %}">Dashboard</a> / <a href="{% url 'AdminEmployeeView' %}">Employee</a></li>
+                            <li class="breadcrumb-item active">Profile</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <a href="{% url 'AdminEmployeeView' %}" class="btn btn-outline-secondary" style="font-size:1rem;"><i class="las la-long-arrow-alt-left"></i> BACK</a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,7 +1,7 @@
 {% extends 'employee/base.html' %}
 {% load static %}
 {% block body %}
-			
+{% block nav %}{% include 'employee/navigationpanel.html' %}{% endblock nav %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
 			
@@ -19,7 +19,7 @@
 													</div>
 													<div class="welcome-det">
 														<h3>Welcome, {{user.username}}</h3>
-														<p>Monday, 20 May 2019</p>
+														<p>{{current_date|date:'l , d F Y'}}</p>
 													</div>
 											</div>
 										</div>
@@ -30,27 +30,30 @@
 								<h2 class="dash-title m-0 "><span class="text-dark"><i class="las la-check-double"></i> </span> Task</h2>
 								<div class="task-wrapper">
 									<div class="task-list-container">
-										<div class="task-list-body">
+										 <div class="task-list-body">
 											{% for project in user_projects %}
-												<ul id="task-list" class="mb-3">
-													<h3><span class="text-secondary"><i class="las la-angle-right"></i> </span> {{project}}</h3>
-														<li class="task">
-															{% for task in user_task %}
-																{% if task.task_project_name == project.project_name %}
-																	<div class="task-container">
-																		<span class="task-action-btn task-check">
-																			<span class="action-circle large complete-btn" title="Mark Complete">
-																				<i class="material-icons">check</i>
-																			</span>
-																		</span>
-																		<span class="task-label">{{task.task_name}}</span>
-																	</div>
-																{% endif %}
-															{% endfor %}
-														</li>
-                                                	</ul>
-												{% endfor %}
-                                            </div>
+											<div class="accordion" id="accordionExample">
+												<div class="card-header" id="heading{{ project.id }}">
+													<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse{{ project.id }}" aria-expanded="true" aria-controls="collapse{{ project.id }}">
+													  <span class="text-secondary"><h3><i class="las la-angle-right"></i>{{ project }}</h3></span>
+													</button>
+												</div>
+												<div id="collapse{{ project.id }}" class="collapse" aria-labelledby="heading{{ project.id }}" data-parent="#accordionExample">
+													<ul id="task-list" class="mb-3">
+													  {% for task in user_task %}
+														  {% if task.task_project_name == project.project_name %}
+															  <li class="task">
+																<div class="task-container">
+																	<span class="task-label">{{ task.task_name }}</span>
+																</div>
+															  </li>
+														  {% endif %}
+													  {% endfor %}
+													</ul>
+												</div>
+											</div>
+											{% endfor %}
+										  </div>
                                         </div>
                                     </div>
 							</section>
@@ -62,20 +65,28 @@
 									<h5 class="dash-title">Projects</h5>
 									<div class="card">
 										<div class="card-body">
-											<div class="time-list">
+											<div class="time-list mb-5">
 												<div class="dash-stats-list">
 													<h4>{{user_task.count}}</h4>
 													<p>Total Tasks</p>
 												</div>
 												<div class="dash-stats-list">
-													<h4>------</h4>
-													<p>Pending Tasks</p>
-												</div>
-											</div>
-											<div class="request-btn">
-												<div class="dash-stats-list">
 													<h4>{{user_projects.count}}</h4>
 													<p>Total Projects</p>
+												</div>
+											</div>
+											<div class="time-list">
+												<div class="dash-stats-list">
+													<h4>{{new_task}}</h4>
+													<p>New Tasks</p>
+												</div>
+												<div class="dash-stats-list">
+													<h4>{{pending_task}}</h4>
+													<p>Pending Tasks</p>
+												</div>
+												<div class="dash-stats-list">
+													<h4>{{complete_task}}</h4>
+													<p>Complete Tasks</p>
 												</div>
 											</div>
 										</div>
@@ -87,28 +98,15 @@
 										<div class="card-body">
 											<div class="time-list">
 												<div class="dash-stats-list">
-													<h4>4.5</h4>
+													<h4>{{total_leave.conditional_amount}}</h4>
+													<p>Total Leave</p>
+												</div>
+												<div class="dash-stats-list">
+													<h4>{{leave_taken}}</h4>
 													<p>Leave Taken</p>
 												</div>
 												<div class="dash-stats-list">
-													<h4>12</h4>
-													<p>Remaining</p>
-												</div>
-											</div>
-										</div>
-									</div>
-								</section>
-								<section>
-									<h5 class="dash-title">Your time off allowance</h5>
-									<div class="card">
-										<div class="card-body">
-											<div class="time-list">
-												<div class="dash-stats-list">
-													<h4>5.0 Hours</h4>
-													<p>Approved</p>
-												</div>
-												<div class="dash-stats-list">
-													<h4>15 Hours</h4>
+													<h4>{{remaing_leave}}</h4>
 													<p>Remaining</p>
 												</div>
 											</div>
@@ -119,7 +117,11 @@
 									<h5 class="dash-title">Upcoming Holiday</h5>
 									<div class="card">
 										<div class="card-body text-center">
-											<h4 class="holiday-title mb-0">Mon 20 May 2019 - Ramnavmi</h4>
+											{% if holiday %}
+												<h4 class="holiday-title mb-0">{{holiday.holiday_date|date:'D ,d - F - Y'}} - {{holiday}}</h4>
+											{% else %}
+												<h4 class="holiday-title mb-0 text-muted">Wait until the list is updated.</h4>
+											{% endif %}
 										</div>
 									</div>
 								</section>

@@ -18,8 +18,10 @@ from xhtml2pdf import pisa
 
 from employee_app.forms import AddLeaveForm, EditLeaveForm, EditProfileInfoForm, EditPersonalInfoForm, \
     AddEducationInfoForm, EditEducationInfoForm, AddExperienceInfoForm, EditExperienceInfoForm, \
-    EditEmergencyContactForm, AddEmergencyContactForm, AddTicketsForm, EditTicketsForm, PunchInForm, PunchOutForm
-from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice
+    EditEmergencyContactForm, AddEmergencyContactForm, AddTicketsForm, EditTicketsForm, PunchInForm, PunchOutForm, \
+    TaskStatusUpdateForm
+from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice, \
+    TaskStatusChoice
 # Create your views here.
 from hrms_api.models import User, Holiday, Designation, Department, Leave, Task, Project, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, TaskAssign, ProjectImages, ProjectFile, Policies, \
@@ -59,7 +61,7 @@ def forget_password_mail(request):
     context = {
         'username': user.username,
         'user_id': user.id,
-        'request_url': request.get_host(), #For Liveproject
+        'request_url': request.get_host(),  # For Liveproject
     }
 
     from_email = settings.EMAIL_HOST_USER
@@ -105,14 +107,30 @@ def update_password(request, pk):
 
 @login_required(login_url="EmployeeLogin")
 def EmployeeIndex(request):
+    current_date = date.today()
     user = request.user
-    user_task = TaskAssign.objects.filter(employees=user)
+    user_task = TaskAssign.objects.filter(employees=user).exclude(task_name__task_status=TaskStatusChoice.COMPLETE)
+    pending_task = TaskAssign.objects.filter(employees=user, task_name__task_status=TaskStatusChoice.PENDING).count()
+    complete_task = TaskAssign.objects.filter(employees=user, task_name__task_status=TaskStatusChoice.COMPLETE).count()
+    new_task = TaskAssign.objects.filter(employees=user, task_name__task_status=TaskStatusChoice.NEW).count()
     user_projects = ProjectAssign.objects.filter(employees=user)
+    holiday = Holiday.objects.filter(holiday_date__gte=current_date).order_by('holiday_date').first()
+    total_leave = Conditions.objects.get(condition_title='Total paid leave')
+    leave_taken = Leave.objects.filter(leave_user=user, leave_status=LeaveStatusChoice.APPROVED).count()
+    remaing_leave = total_leave.conditional_amount - leave_taken
 
     context = {
         'user': user,
         'user_task': user_task,
         'user_projects': user_projects,
+        'holiday': holiday,
+        'current_date': current_date,
+        'total_leave': total_leave,
+        'leave_taken': leave_taken,
+        'pending_task': pending_task,
+        'new_task': new_task,
+        'complete_task': complete_task,
+        'remaing_leave': remaing_leave,
     }
 
     return render(request, "employee/employee-dashboard.html", context)
@@ -524,10 +542,15 @@ def Chat(request, id):
 def AttendanceView(request, id):
     current_datetime = datetime.datetime.now()
     attendee = Attendance.objects.filter(attendee_user=id)
-    present_count_monthly = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.PRESENT, date__month=datetime.datetime.now().month)
-    absent_count_monthly = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT, date__month=datetime.datetime.now().month)
-    present_count_year = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.PRESENT, date__year=datetime.datetime.now().year)
-    absent_count_year = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT, date__year=datetime.datetime.now().year)
+    present_count_monthly = Attendance.objects.filter(attendee_user=id,
+                                                      attendance_status=AttendanceStatusChoice.PRESENT,
+                                                      date__month=datetime.datetime.now().month)
+    absent_count_monthly = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT,
+                                                     date__month=datetime.datetime.now().month)
+    present_count_year = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.PRESENT,
+                                                   date__year=datetime.datetime.now().year)
+    absent_count_year = Attendance.objects.filter(attendee_user=id, attendance_status=AttendanceStatusChoice.ABSENT,
+                                                  date__year=datetime.datetime.now().year)
     last_punchIn_id = Attendance.objects.filter(attendee_user=id).last()
     lunch_break_time = Conditions.objects.get(condition_title="Lunch break time")
     context = {
@@ -582,7 +605,9 @@ def PunchOut(request, id, userid):
             if form.is_valid():
                 punchOut = form.save(commit=False)
                 punchOut.check_out_time = datetime.datetime.now().time()
-                production_time = datetime.datetime.combine(datetime.date.today(), punchOut.check_out_time) - datetime.datetime.combine(datetime.date.today(), punchOut.check_in_time)
+                production_time = datetime.datetime.combine(datetime.date.today(),
+                                                            punchOut.check_out_time) - datetime.datetime.combine(
+                    datetime.date.today(), punchOut.check_in_time)
                 if production_time >= datetime.timedelta(hours=5, minutes=55):
                     if lunch_break_time:
                         production_time -= datetime.timedelta(hours=lunch_break_time.conditional_amount)
@@ -590,13 +615,21 @@ def PunchOut(request, id, userid):
                         production_time -= datetime.timedelta(hours=1)
                 punchOut.production_hour = str(production_time)
 
-                if punchOut.check_in_time >= datetime.time(7, 50) and punchOut.check_out_time >= datetime.time(18, 25) and production_time >= datetime.timedelta(hours=8, minutes=30):
+                if punchOut.check_in_time >= datetime.time(7, 50) and punchOut.check_out_time >= datetime.time(18,
+                                                                                                               25) and production_time >= datetime.timedelta(
+                        hours=8, minutes=30):
                     punchOut.attendance_status = AttendanceStatusChoice.PRESENT
-                elif punchOut.check_in_time >= datetime.time(7, 50) and punchOut.check_out_time >= datetime.time(15, 55) and production_time >= datetime.timedelta(hours=5, minutes=55):
+                elif punchOut.check_in_time >= datetime.time(7, 50) and punchOut.check_out_time >= datetime.time(15,
+                                                                                                                 55) and production_time >= datetime.timedelta(
+                        hours=5, minutes=55):
                     punchOut.attendance_status = AttendanceStatusChoice.PRESENT
-                elif punchOut.check_in_time >= datetime.time(7, 50) and punchOut.check_out_time <= datetime.time(13, 00) and datetime.timedelta(hours=3, minutes=55) <= production_time <= datetime.timedelta(hours=5, minutes=5):
+                elif punchOut.check_in_time >= datetime.time(7, 50) and punchOut.check_out_time <= datetime.time(13,
+                                                                                                                 00) and datetime.timedelta(
+                        hours=3, minutes=55) <= production_time <= datetime.timedelta(hours=5, minutes=5):
                     punchOut.attendance_status = AttendanceStatusChoice.HALF_DAY
-                elif punchOut.check_in_time >= datetime.time(13,50) and punchOut.check_out_time >= datetime.time(18, 25) and production_time >= datetime.timedelta(hours=4, minutes=30):
+                elif punchOut.check_in_time >= datetime.time(13, 50) and punchOut.check_out_time >= datetime.time(18,
+                                                                                                                  25) and production_time >= datetime.timedelta(
+                        hours=4, minutes=30):
                     punchOut.attendance_status = AttendanceStatusChoice.HALF_DAY
                 else:
                     punchOut.attendance_status = AttendanceStatusChoice.ABSENT
@@ -652,24 +685,54 @@ def ProjectTaskView(request, id):
     projectlist = ProjectAssign.objects.filter(employees=id)
 
     context = {
-        'projectlist': projectlist,
+        'project_list': projectlist,
     }
-    return render(request, "employee/task-nav.html", context)
+    return render(request, "employee/tasks.html", context)
 
 
 @login_required(login_url="EmployeeLogin")
 def ProjectTaskList(request, id, user_id):
-    project_id = id
+    project_id = Project.objects.get(id=id)
     project_list = ProjectAssign.objects.filter(employees=user_id)
-    project_task_list = TaskAssign.objects.filter(employees=user_id)
+    new_task_list = TaskAssign.objects.filter(employees=user_id)
 
     context = {
-        'project_task_list': project_task_list,
+        'new_task_list': new_task_list,
         'project_list': project_list,
         'project_id': project_id,
 
     }
     return render(request, "employee/tasks.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def TaskStatusUpdate(request, id):
+    user = request.user
+    task = Task.objects.get(id=id)
+    project_id = task.task_project
+    total_hours = 0
+    total_minutes = 0
+    if task.task_time is not None:
+        total_hours = int((task.task_time.total_seconds() // 3600) % 24)
+        total_minutes = int((task.task_time.total_seconds() // 60) % 60)
+    form = TaskStatusUpdateForm(request.POST or None, instance=task)
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                task_status_update = form.save(commit=False)
+                if task_status_update.task_status == TaskStatusChoice.WORKING:
+                    task_status_update.task_start_time = datetime.datetime.now().time()
+                if task_status_update.task_status == TaskStatusChoice.COMPLETE:
+                    task_status_update.task_complete_time = datetime.datetime.now().time()
+                task_status_update.save()
+                messages.success(request, "Task status update successfully")
+                return redirect('EmpProjectTaskList', id=project_id.id, user_id=user.id)
+            else:
+                messages.error(request, f"Form is not valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+    context = {'form': form, 'task': task, 'total_hours': total_hours, 'total_minutes': total_minutes}
+    return render(request, "employee/edit_task_status.html", context)
 
 
 @login_required(login_url="EmployeeLogin")
@@ -686,7 +749,7 @@ def PoliciesView(request):
 def SalarySlipList(request, id):
     salary_slip_list = SalarySlip.objects.filter(user_name=id)
     context = {
-        'salary_slip_list':salary_slip_list,
+        'salary_slip_list': salary_slip_list,
         'year_range': range(2020, 2031),
     }
     return render(request, "employee/salary_slip_list.html", context)
@@ -707,6 +770,7 @@ def SalarySlipView(request, id):
     employee_id = salary_slip_details.user_name.id
     current_date = datetime.date.today()
     salary_month = current_date.replace(day=1) - datetime.timedelta(days=1)
+    holidays_salary_month = Holiday.objects.filter(holiday_date__month=salary_month.month).count()
     bank_details = Bank.objects.filter(employee=employee_id).first()
     absent_days = Attendance.objects.filter(attendee_user=employee_id,
                                             attendance_status=AttendanceStatusChoice.ABSENT,
@@ -716,7 +780,8 @@ def SalarySlipView(request, id):
                                                  date__month=salary_month.month).count()
     leave_taken = Leave.objects.filter(leave_user=employee_id, leave_status=LeaveStatusChoice.APPROVED,
                                        leave_from__month=salary_month.month).count()
-    total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if calendar.weekday(salary_month.year, salary_month.month, day) < 5)
+    total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if
+                         calendar.weekday(salary_month.year, salary_month.month, day) < 5) - holidays_salary_month
     number_of_working_day_attend = total_weekdays - leave_taken - absent_days - (0.5 * attend_half_days)
 
     context = {

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'employee/base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
 {% block body %}
@@ -7,10 +7,14 @@
     <div class="sidebar-inner slimscroll">
         <div class="sidebar-menu">
             <ul>
-                <li><a href="{% url 'EmpProjectTask' user.id %}"><span>Project List</span></a></li>
+                <li><a href="{% url 'EmployeeIndex'%}"><i class="las la-home"></i><span>Back to Home</span></a></li>
                 <li class="menu-title">Projects</li>
                 {% for project in project_list %}
-                <li><a href="{% url 'EmpProjectTaskList' id=project.project_name.id user_id=user.id %}"><span>{{project.project_name}}</span></a></li>
+                    {% if project.project_name.id == project_id.id %}
+                        <li><a href="{% url 'EmpProjectTaskList' id=project.project_name.id user_id=user.id %}" class="text-white"><span>{{project.project_name}}</span></a></li>
+                    {% else %}
+                        <li><a href="{% url 'EmpProjectTaskList' id=project.project_name.id user_id=user.id %}"><span>{{project.project_name}}</span></a></li>
+                    {% endif %}
                 {% endfor %}
             </ul>
         </div>
@@ -21,59 +25,76 @@
 <!-- Page Wrapper -->
 
     <div class="page-wrapper">
-        <div class="show_message">
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
-            {% endfor %}
-        </div>
+
+        {% if new_task_list %}
         <div class="chat-main-row">
             <div class="chat-main-wrapper">
                 <div class="col-lg-7 message-view task-view task-left-sidebar">
                     <div class="chat-window">
-                        <div class="fixed-header">
-                            <ul class="nav nav-tabs nav-tabs-top">
-                                <li class="nav-item"><a class="nav-link active" href="#all_tasks" data-toggle="tab" aria-expanded="true">All Tasks</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#pending_tasks" data-toggle="tab" aria-expanded="false">Pending Tasks</a></li>
-                                <li class="nav-item"><a class="nav-link" href="#completed_tasks" data-toggle="tab" aria-expanded="false">Completed Tasks</a></li>
-                            </ul>
+
+                        <!-- Search Filter -->
+                        <div class="row filter-row mt-2 mr-3 d-flex justify-content-between">
+                            <div class="col-sm-6 col-md-2">
+                                <div class="form-group form-focus select-focus">
+                                    <h3 class="ml-3 mt-2">Task List</h3>
+                                    <p class="ml-3 text-muted">{{project_id}}</p>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-md-2">
+                                <div class="form-group form-focus select-focus">
+                                    <select class="form-control floating" id="task_status_search">
+                                        <option value="">----</option>
+                                        <option value="New">New</option>
+                                        <option value="Working">Working</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Complete">Complete</option>
+                                    </select>
+                                    <label class="focus-label">Task Status</label>
+                                </div>
+                            </div>
                         </div>
+                        <!-- /Search Filter -->
                         <div class="show_message">
                             {% for message in messages %}
                                 <div class="alert alert-{{ message.tags }}" role="alert">{{ message }}</div>
                             {% endfor %}
                         </div>
+
                         <div class="chat-contents">
                             <div class="chat-content-wrap">
                                 <div class="chat-wrap-inner">
                                     <div class="chat-box">
                                         <div class="task-wrapper">
-                                            <div class="task-list-container">
-                                                <div class="task-list-body">
-                                                    <ul id="task-list">
-                                                        {% for task_list in project_task_list %}
-                                                            {% if task_list.task_project_name.id == project_id %}
-                                                            <li class="task">
-                                                                <div class="task-container">
-                                                                <span class="task-action-btn task-check">
-                                                                    <span class="action-circle large complete-btn"
-                                                                          title="Mark Complete">
-                                                                        <i class="material-icons">check</i>
-                                                                    </span>
-                                                                </span>
-                                                                     <span class="task-label">{{task_list.task_name.task_title}}</span>
-                                                                </div>
-                                                            </li>
+                                            <div class="task-list-container tab-content">
+                                                <div class="table-responsive">
+                                                    <table class="table mb-0 w-100" id="task_table">
+                                                        <thead hidden>
+                                                            <tr>
+                                                                <td></td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        {% for task_list in new_task_list %}
+                                                            {% if task_list.task_project_name.id == project_id.id %}
+                                                            <tr>
+                                                                <td hidden>
+                                                                    {{task_list.task_name.task_status}}
+                                                                </td>
+                                                                <td>
+                                                                    <span class="la-lg">&#x2022;</span><span class="text-muted mx-3">( {{task_list.task_name.task_status}} )</span><span>{{task_list.task_name.task_title}}</span>
+                                                                </td>
+                                                                <td class="text-right">
+                                                                    <button class="btn mr-2 ml-5 p-0 text-primary text-nowrap" onclick="editTaskStatus({{task_list.task_name.id}})">Update</button>
+                                                                </td>
+                                                            </tr>
                                                             {% endif %}
                                                         {% endfor %}
-                                                    </ul>
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="notification-popup hide">
-                                            <p>
-                                                <span class="task"></span>
-                                                <span class="notification-text"></span>
-                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -83,10 +104,38 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
+
+    <div id="task-status-update-model"></div>
 <!-- /Page Wrapper -->
 
+
+<script type="text/javascript" src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
 <script>
+$(document).ready(function () {
+	var table = $('#task_table').DataTable({
+		dom: 'Brt',
+	});
+	$('#task_status_search').on('change', function () {
+		table.column(0).search(this.value).draw();
+	});
+});
+</script>
+
+<script>
+    function editTaskStatus(TaskId) {
+        $.ajax({
+            url: "{% url 'EmpEditProjectTaskStatus' id=0 %}".replace(0, TaskId),
+            success: function(response) {
+                $("#task-status-update-model").html(response);
+                $("#task_status_update_model").modal('show');
+            }
+        });
+    }
+
+
     window.setTimeout(function() {
         $(".alert").fadeTo(500, 0).slideUp(500, function(){
             $(this).remove();

@@ -1,0 +1,52 @@
+{% load crispy_forms_tags %}
+{% load static %}
+
+<!-- Edit Task Status Modal -->
+<div id="task_status_update_model" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit Task Status</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'EmpEditProjectTaskStatus' id=task.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.task_status|as_crispy_field }}
+                    </div>
+                    <div class="form-group">
+                        <label>Task time</label>
+                        <div class="row ">
+                            <div class="col-md-4">
+                                <div class="form-group form-focus select-focus">
+                                    <input type="number" name="task_time_0" class="form-control floating" required id="id_task_time_0" value="{{task.task_time.days}}">
+                                    <label class="focus-label">Day</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group form-focus select-focus">
+                                    <input type="number" name="task_time_1" class="form-control" id="id_task_time_1" {% if total_hours %}value="{{total_hours}}"{% endif %}>
+                                    <label class="focus-label">Hours</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group form-focus select-focus">
+                                    <input type="number" name="task_time_2" class="form-control" id="id_task_time_2" {% if total_minutes %}value="{{total_minutes}}"{% endif %}>
+                                    <label class="focus-label">Minutes</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="submit-section">
+                        <button class="btn btn-primary submit-btn" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Edit Task Status Modal -->
+

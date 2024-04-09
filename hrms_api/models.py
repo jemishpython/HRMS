@@ -171,7 +171,7 @@ class Project(models.Model):
     project_start_date = models.DateField(verbose_name='Project Start Date', null=True, blank=True)
     project_end_date = models.DateField(verbose_name='Project End Date', null=True, blank=True)
     project_cost = models.CharField(verbose_name='Project Cost', max_length=50, null=True, blank=True)
-    project_priority = models.CharField(verbose_name='Project Priority', choices=ProjectPriorityChoice.choices, default=ProjectPriorityChoice.HIGH, max_length=255, null=True, blank=True)
+    project_priority = models.CharField(verbose_name='Project Priority', choices=ProjectPriorityChoice.choices, default=ProjectPriorityChoice.LOW, max_length=255, null=True, blank=True)
     project_summary = models.TextField(verbose_name='Project Summary', max_length=1000, null=True, blank=True)
     project_status = models.CharField(verbose_name='Project Status', choices=ProjectStatusChoice.choices, default=ProjectStatusChoice.NOT_STARTED, max_length=255, null=True, blank=True)
 
@@ -182,7 +182,7 @@ class Project(models.Model):
 class ProjectAssign(models.Model):
     project_name = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.CASCADE, null=True)
     assignee_type = models.CharField(verbose_name='Assignee Type', max_length=50, blank=True, null=True, choices=ProjectAssigneeTypeChoice.choices, default=ProjectAssigneeTypeChoice.TEAM_MEMBER)
-    employees = models.ManyToManyField(User, verbose_name='Employee Name', related_name='ProjectName')
+    employees = models.ManyToManyField(User, verbose_name='Employee Name')
 
     def __str__(self):
         return self.project_name.project_name
@@ -205,8 +205,11 @@ class ProjectFile(models.Model):
 
 
 class Task(models.Model):
-    task_title = models.CharField(verbose_name='Task Title', max_length=100, null=True)
-    task_status = models.CharField(verbose_name='Task Status', choices=TaskStatusChoice.choices, default=TaskStatusChoice.WORKING, max_length=255, null=True, blank=True)
+    task_title = models.CharField(verbose_name='Task Title', max_length=100, null=True, blank=True)
+    task_status = models.CharField(verbose_name='Task Status', choices=TaskStatusChoice.choices, default=TaskStatusChoice.NEW, max_length=255, null=True, blank=True)
+    task_time = models.DurationField(verbose_name="Task Time", null=True, blank=True)
+    task_start_time = models.TimeField(verbose_name='Task Start Time', null=True, blank=True)
+    task_complete_time = models.TimeField(verbose_name='Task Complete Time', null=True, blank=True)
     task_project = models.ForeignKey(Project, verbose_name='Project Name', on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
@@ -219,12 +222,11 @@ class TaskAssign(models.Model):
     employees = models.ManyToManyField(User, verbose_name='Employee Name', related_name='TaskName')
 
     def __str__(self):
-        return self.task_name.task_name
+        return self.task_name.task_title
 
 
 class Leave(models.Model):
-    leave_type = models.CharField(verbose_name='Leave Type', max_length=50, choices=LeaveTypeChoice.choices,
-                                  default=LeaveTypeChoice.CASUAL, null=True, blank=True)
+    leave_type = models.CharField(verbose_name='Leave Type', max_length=50, choices=LeaveTypeChoice.choices, default=LeaveTypeChoice.CASUAL, null=True, blank=True)
     leave_from = models.DateField(verbose_name='Leave From', null=True, blank=True)
     leave_to = models.DateField(verbose_name='Leave To', null=True, blank=True)
     leave_days = models.IntegerField(verbose_name='Leave Days', null=True, blank=True)

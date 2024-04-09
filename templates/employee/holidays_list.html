@@ -1,8 +1,7 @@
 {% extends 'employee/base.html' %}
 {% load static %}
 {% block body %}
-
-			<!-- Page Wrapper -->
+{% block nav %}{% include 'employee/navigationpanel.html' %}{% endblock nav %}				<!-- Page Wrapper -->
             <div class="page-wrapper">
 
 				<!-- Page Content -->
@@ -14,7 +13,7 @@
 							<div class="col">
 								<h3 class="page-title">Holidays in year {{year|date:'Y'}}</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'EmployeeIndex' %}">Dashboard</a></li>
 									<li class="breadcrumb-item active">Holidays</li>
 								</ul>
 							</div>
@@ -30,18 +29,16 @@
 									<thead>
 										<tr>
 											<th>Sr NO</th>
-											<th>Title </th>
-											<th>Holiday Date</th>
-											<th class="text-right">Day</th>
+											<th class="text-center">Title </th>
+											<th class="text-right">Holiday Date</th>
 										</tr>
 									</thead>
 									<tbody>
 										{% for holiday in holidaylist %}
 										<tr class="holiday-upcoming">
 											<td>{{forloop.counter}}</td>
-											<td>{{holiday.holiday_title}}</td>
-											<td>{{holiday.holiday_date|date:"j - F - Y"}}</td>
-											<td class="text-right">{{holiday.holiday_date|date:"l"}}</td>
+											<td class="text-center">{{holiday.holiday_title}}</td>
+											<td class="text-right">{{holiday.holiday_date|date:"l, j - F - Y"}}</td>
 										</tr>
 										{% endfor %}
 									</tbody>

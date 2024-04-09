@@ -1,6 +1,7 @@
 from datetime import date
 
 from django import forms
+from durationwidget.widgets import TimeDurationWidget
 
 from hrms_api.models import *
 
@@ -143,3 +144,11 @@ class PunchOutForm(forms.ModelForm):
     class Meta:
         model = Attendance
         fields = ['check_out_time', 'production_hour']
+
+
+class TaskStatusUpdateForm(forms.ModelForm):
+    task_time = forms.DurationField(widget=TimeDurationWidget(show_days=True, show_hours=True, show_minutes=True, show_seconds=False))
+
+    class Meta:
+        model = Task
+        fields = ['task_status', 'task_time']

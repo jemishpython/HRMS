@@ -1,7 +1,7 @@
 {% extends 'employee/base.html' %}
 {% load static %}
 {% block body %}
-			
+{% block nav %}{% include 'employee/navigationpanel.html' %}{% endblock nav %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
 				<div class="show_message">
@@ -19,7 +19,7 @@
 							<div class="col">
 								<h3 class="page-title">Tickets</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'EmployeeIndex' %}">Dashboard</a></li>
 									<li class="breadcrumb-item active">Tickets</li>
 								</ul>
 							</div>
@@ -78,25 +78,13 @@
 					
 					<!-- Search Filter -->
 					<div class="row filter-row">
-						<div class="col-sm-6 col-md-2">
+						<div class="col-sm-6 col-md-4">
 							<div class="form-group form-focus ">
 								<input type="text" class="form-control floating" id="name-search">
 								<label class="focus-label">Ticket Title</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus select-focus">
-								<input type="date" class="form-control floating" id="ticket_from_date">
-								<label class="focus-label">Ticket Generate - From Date</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus select-focus">
-								<input type="date" class="form-control floating" id="ticket_to_date">
-								<label class="focus-label">Ticket Generate - To Date</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-1">
+						<div class="col-sm-6 col-md-4">
 							<div class="form-group form-focus select-focus">
 								<select class="form-control floating" id="ticket_priority_status">
 									<option value="">Select</option>
@@ -107,7 +95,7 @@
 								<label class="focus-label">Ticket Status</label>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-1">
+						<div class="col-sm-6 col-md-4">
 							<div class="form-group form-focus select-focus">
 								<select class="form-control floating" id="ticket_status_check">
 									<option value="">Select</option>
@@ -116,18 +104,6 @@
 									{% endfor %}
 								</select>
 								<label class="focus-label">Priority Status</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus select-focus">
-								<input type="date" class="form-control floating" id="status_from_date">
-								<label class="focus-label">Ticket Status - From Date</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-2">
-							<div class="form-group form-focus select-focus">
-								<input type="date" class="form-control floating" id="status_to_date">
-								<label class="focus-label">Ticket Status - To Date</label>
 							</div>
 						</div>
 					</div>
