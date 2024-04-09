@@ -15,7 +15,8 @@
                 <form action="{% url 'AdminEditCondition' id=edit_condition.id %}" enctype="multipart/form-data" id="form" method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        {{ form.condition_title|as_crispy_field }}
+                        <label for="condition_title">Condition Title</label>
+                        <input type="text" name="condition_title" id="condition_title" value="{{edit_condition.condition_title}}" class="form-control" readonly>
                     </div>
                     <div class="form-group">
                         {{ form.conditional_amount|as_crispy_field }}

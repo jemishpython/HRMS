@@ -89,20 +89,8 @@
 						</div>
 						<div class="col-sm-6 col-md-3">
 							<div class="form-group form-focus select-focus">
-								<input type="date" class="form-control floating" id="ticket_from_date">
-								<label class="focus-label">Ticket Generate - From Date</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">
-							<div class="form-group form-focus select-focus">
-								<input type="date" class="form-control floating" id="ticket_to_date">
-								<label class="focus-label">Ticket Generate - To Date</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">
-							<div class="form-group form-focus select-focus">
 								<select class="form-control floating" id="ticket_priority_status">
-									<option value="">Select</option>
+									<option value="">------</option>
 									{% for priority in ticket_priority  %}
 										<option value="{{ priority.0 }}">{{ priority.1 }}</option>
 									{% endfor %}
@@ -113,24 +101,12 @@
 						<div class="col-sm-6 col-md-3">
 							<div class="form-group form-focus select-focus">
 								<select class="form-control floating" id="ticket_status_check">
-									<option value="">Select</option>
+									<option value="">-------</option>
 									{% for status in ticket_status %}
 										<option value="{{ status.0 }}">{{ status.1 }}</option>
 									{% endfor %}
 								</select>
 								<label class="focus-label">Ticket Status</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">
-							<div class="form-group form-focus select-focus">
-								<input type="date" class="form-control floating" id="status_from_date">
-								<label class="focus-label">Ticket Status - From Date</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">
-							<div class="form-group form-focus select-focus">
-								<input type="date" class="form-control floating" id="status_to_date">
-								<label class="focus-label">Ticket Status - To Date</label>
 							</div>
 						</div>
 					</div>
@@ -168,7 +144,7 @@
 													<a class="border rounded-pill p-1 text-dark"><i class="fa fa-dot-circle-o {% if ticket.ticket_priority == 'High' %}text-danger{% elif ticket.ticket_priority == 'Medium' %}text-warning{% else %}text-info{% endif %}"></i> {{ticket.ticket_priority}}</a>
 												</div>
 											</td>
-											<td class="w-25 text-center"><button class="border rounded-pill px-2 py-1 text-dark" onclick="updateTicketStatus({{ticket.id}})"><i class="fa fa-dot-circle-o {% if ticket.ticket_status == 'Declined' %}text-danger{% elif ticket.ticket_status == 'Approved' %}text-success{% else %}text-info{% endif %}"></i> {{ticket.ticket_status}}</button></td>
+											<td class="w-25 text-center"><button class="border rounded-pill px-3 py-2" style="{% if ticket.ticket_status == 'Declined' %}background-color:#e8e3e3; color:#3E3939;{% elif ticket.ticket_status == 'Approved' %}background-color:#e8e3e3; color:#3E3939;{% else %}background-color:#F47920; color:#F6F4F4;{%endif%}" onclick="updateTicketStatus({{ticket.id}})"><i class="fa fa-dot-circle-o {% if ticket.ticket_status == 'Declined' %}text-danger{% elif ticket.ticket_status == 'Approved' %}text-success{% else %}text-info{% endif %} mr-1"></i> {{ticket.ticket_status}}</button></td>
 											<td>{{ticket.ticket_status_update_date|date:"j - M - Y"}}</td>
 										</tr>
 										{% endfor %}

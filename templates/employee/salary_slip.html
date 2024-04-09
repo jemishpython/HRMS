@@ -22,8 +22,8 @@
                             </div>
                         </div>
                         <hr class="mb-5">
-                        <div class="d-flex justify-content-between mx-4 my-2" style="background-color:#efeaea;">
-                            <div class="my-3 d-flex" style="width:100%;">
+                        <div class="mx-4 my-2" style="background-color:#efeaea;">
+                            <div class="my-3 d-flex justify-content-between">
                                 <div class="mx-5 align-self-center">
                                     <img src="{{salary_slip_details.user_name.avatar.url}}" alt="profile-img" width="200rem;">
                                 </div>
@@ -75,114 +75,114 @@
                         </div>
                         <hr>
                         <div class="my-3 mx-5 border">
-                            <table class="w-100 table-bordered" style="background-color: #F6F4F4;">
+                            <table class="table table-bordered" style="background-color: #F6F4F4;">
                                 <thead>
                                     <tr style="background-color:#ff944d;">
-                                        <th class="w-25 py-2 px-3 text-center" colspan="2">Income</th>
-                                        <th class="w-25 py-2 px-3 text-center" colspan="2">Deduction</th>
+                                        <th class="py-2 px-3 text-center" colspan="2">Income</th>
+                                        <th class="py-2 px-3 text-center" colspan="2">Deduction</th>
                                     </tr>
                                     <tr style="background-color:#ffd1b3;">
-                                        <th class="w-25 py-2 px-3">Particulars</th>
-                                        <th class="w-25 py-2 px-3 text-center">Amount</th>
-                                        <th class="w-25 py-2 px-3">Particulars</th>
-                                        <th class="w-25 py-2 px-3 text-center">Amount</th>
+                                        <th class="py-2 px-3">Particulars</th>
+                                        <th class="py-2 px-3 text-center">Amount</th>
+                                        <th class="py-2 px-3">Particulars</th>
+                                        <th class="py-2 px-3 text-center">Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 py-2 px-3">Basic Salary</td>
-                                        <td class="w-25 py-2 px-3 text-center">{{salary_slip_details.user_name.salary}}</td>
-                                        <td class="w-25 py-2 px-3">PF</td>
+                                        <td class="py-2 px-3">Basic Salary</td>
+                                        <td class="py-2 px-3 text-center">{{salary_slip_details.user_name.salary}}</td>
+                                        <td class="py-2 px-3">PF</td>
                                         {% if professional_tax.conditional_amount == None %}
-                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                            <td class="py-2 px-3 text-center">-</td>
                                         {% else %}
-                                            <td class="w-25 py-2 px-3 text-center">{{professional_tax.conditional_amount}}</td>
+                                            <td class="py-2 px-3 text-center">{{professional_tax.conditional_amount}}</td>
                                         {% endif %}
                                     </tr>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 py-2 px-3">Dearness Allowance</td>
+                                        <td class="py-2 px-3">Dearness Allowance</td>
                                         {% if dearness_allowance.conditional_amount == None %}
-                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                            <td class="py-2 px-3 text-center">-</td>
                                         {% else %}
-                                        <td class="w-25 py-2 px-3 text-center">{{dearness_allowance.conditional_amount}}</td>
+                                        <td class="py-2 px-3 text-center">{{dearness_allowance.conditional_amount}}</td>
                                         {% endif %}
-                                        <td class="w-25 py-2 px-3">Professional Tax</td>
+                                        <td class="py-2 px-3">Professional Tax</td>
                                         {% if pf.conditional_amount == None %}
-                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                            <td class="py-2 px-3 text-center">-</td>
                                         {% else %}
-                                            <td class="w-25 py-2 px-3 text-center">{{pf.conditional_amount}}</td>
+                                            <td class="py-2 px-3 text-center">{{pf.conditional_amount}}</td>
                                         {% endif %}
                                     </tr>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 py-2 px-3">Paid leave amount</td>
+                                        <td class="py-2 px-3">Paid leave amount</td>
                                         {% if paid_leave.conditional_amount == None %}
-                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                            <td class="py-2 px-3 text-center">-</td>
                                         {% else %}
-                                            <td class="w-25 py-2 px-3 text-center">{{paid_leave.conditional_amount}}</td>
+                                            <td class="py-2 px-3 text-center">{{paid_leave.conditional_amount}}</td>
                                         {% endif %}
-                                        <td class="w-25 py-2 px-3">TDS</td>
+                                        <td class="py-2 px-3">TDS</td>
                                         {% if tds.conditional_amount == None %}
-                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                            <td class="py-2 px-3 text-center">-</td>
                                         {% else %}
-                                            <td class="w-25 py-2 px-3 text-center">{{tds.conditional_amount}}</td>
+                                            <td class="py-2 px-3 text-center">{{tds.conditional_amount}}</td>
                                         {% endif %}
                                     </tr>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 py-2 px-3">Bonus</td>
+                                        <td class="py-2 px-3">Bonus</td>
                                         {% if bonus.conditional_amount == None %}
-                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                            <td class="py-2 px-3 text-center">-</td>
                                         {% else %}
-                                            <td class="w-25 py-2 px-3 text-center">{{bonus.conditional_amount}}</td>
+                                            <td class="py-2 px-3 text-center">{{bonus.conditional_amount}}</td>
                                         {% endif %}
-                                        <td class="w-25 py-2 px-3">&nbsp;</td>
-                                        <td class="w-25 py-2 px-3 text-center">&nbsp;</td>
+                                        <td class="py-2 px-3">&nbsp;</td>
+                                        <td class="py-2 px-3 text-center">&nbsp;</td>
                                     </tr>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 py-2 px-3">City Compensatory Allowance</td>
+                                        <td class="py-2 px-3">City Compensatory Allowance</td>
                                         {% if city_compensatory_allowance.conditional_amount == None %}
-                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                            <td class="py-2 px-3 text-center">-</td>
                                         {% else %}
-                                            <td class="w-25 py-2 px-3 text-center">{{city_compensatory_allowance.conditional_amount}}</td>
+                                            <td class="py-2 px-3 text-center">{{city_compensatory_allowance.conditional_amount}}</td>
                                         {% endif %}
-                                        <td class="w-25 py-2 px-3">&nbsp;</td>
-                                        <td class="w-25 py-2 px-3 text-center">&nbsp;</td>
+                                        <td class="py-2 px-3">&nbsp;</td>
+                                        <td class="py-2 px-3 text-center">&nbsp;</td>
                                     </tr>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 py-2 px-3">Assistant Allowance</td>
+                                        <td class="py-2 px-3">Assistant Allowance</td>
                                         {% if assistant_allowance.conditional_amount == None %}
-                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                            <td class="py-2 px-3 text-center">-</td>
                                         {% else %}
-                                            <td class="w-25 py-2 px-3 text-center">{{assistant_allowance.conditional_amount}}</td>
+                                            <td class="py-2 px-3 text-center">{{assistant_allowance.conditional_amount}}</td>
                                         {% endif %}
-                                        <td class="w-25 py-2 px-3">&nbsp;</td>
-                                        <td class="w-25 py-2 px-3 text-center">&nbsp;</td>
+                                        <td class="py-2 px-3">&nbsp;</td>
+                                        <td class="py-2 px-3 text-center">&nbsp;</td>
                                     </tr>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 py-2 px-3">Medical Allowance</td>
+                                        <td class="py-2 px-3">Medical Allowance</td>
                                         {% if medical_allowance.conditional_amount == None %}
-                                            <td class="w-25 py-2 px-3 text-center">-</td>
+                                            <td class="py-2 px-3 text-center">-</td>
                                         {% else %}
-                                            <td class="w-25 py-2 px-3 text-center">{{medical_allowance.conditional_amount}}</td>
+                                            <td class="py-2 px-3 text-center">{{medical_allowance.conditional_amount}}</td>
                                         {% endif %}
-                                        <td class="w-25 py-2 px-3">&nbsp;</td>
-                                        <td class="w-25 py-2 px-3 text-center">&nbsp;</td>
+                                        <td class="py-2 px-3">&nbsp;</td>
+                                        <td class="py-2 px-3 text-center">&nbsp;</td>
                                     </tr>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 py-2 px-3">Total</td>
-                                        <td class="w-25 py-2 px-3 text-center">{{salary_slip_details.final_salary_amount}}</td>
-                                        <td class="w-25 py-2 px-3">Total</td>
-                                        <td class="w-25 py-2 px-3 text-center">{{salary_slip_details.final_salary_amount}}</td>
+                                        <td class="py-2 px-3">Total</td>
+                                        <td class="py-2 px-3 text-center">{{salary_slip_details.final_salary_amount}}</td>
+                                        <td class="py-2 px-3">Total</td>
+                                        <td class="py-2 px-3 text-center">{{salary_slip_details.final_salary_amount}}</td>
                                     </tr>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 py-2 px-3" colspan="4"></td>
+                                        <td class="py-2 px-3" colspan="4"></td>
                                     </tr>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 py-2 px-3" colspan="3" style="background-color:#ffd1b3;">Net Salary</td>
-                                        <td class="w-25 py-2 px-3 text-center">{{salary_slip_details.final_salary_amount}}</td>
+                                        <td class="py-2 px-3" colspan="3" style="background-color:#ffd1b3;">Net Salary</td>
+                                        <td class="py-2 px-3 text-center">{{salary_slip_details.final_salary_amount}}</td>
                                     </tr>
                                     <tr style="background-color:#F6F4F4;">
-                                        <td class="w-25 text-center" colspan="2" style="vertical-align: bottom; padding:1rem 10rem 0 10rem;"><p class="">Employee Signature</p></td>
-                                        <td class="w-25 text-center float-bottom" colspan="2" style="vertical-align: bottom; padding:1rem 10rem 0 10rem;">
+                                        <td class="text-center" colspan="2" style="vertical-align: bottom; padding:1rem 10rem 0 10rem;"><p class="">Employee Signature</p></td>
+                                        <td class="text-center float-bottom" colspan="2" style="vertical-align: bottom; padding:1rem 10rem 0 10rem;">
                                             <img src="{% static 'img/company_stamp.png' %}" alt="Company Stamp" width="150rem" class="my-4">
                                             <p>Employer Signature</p>
                                         </td>
@@ -197,7 +197,7 @@
                     </div>
                 </div>
 				<!-- /Page Content -->
-				
+
             </div>
 			<!-- Page Wrapper -->
 

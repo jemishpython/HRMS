@@ -6,9 +6,10 @@ import uuid
 import pytz
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.handlers import exception
 from django.core.mail import send_mail
 from django.core.serializers import serialize
-from django.http import JsonResponse, response, HttpResponse
+from django.http import JsonResponse, response, HttpResponse, Http404
 from django.template import loader
 from datetime import date
 
@@ -29,10 +30,11 @@ from admin_app.forms import AddHolidaysForm, EditHolidaysForm, AddEmployeeForm, 
     AddClientForm, EditClientForm, AddProjectImages, AddProjectFiles, AddPoliciesForm, InterviewerForm, \
     AddInterviewQuestionForm, EditInterviewQuestionForm, EditAttendanceForm, AddConditionForm, EditConditionForm, \
     EditEmployeeSalarySlipForm
-from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice
+from hrms_api.choices import LeaveStatusChoice, TicketPriorityChoice, TicketStatusChoice, AttendanceStatusChoice, \
+    TaskStatusChoice
 from hrms_api.models import User, Department, Designation, Holiday, Project, Task, Leave, ProjectAssign, Technology, \
     Education_Info, Experience_Info, Emergency_Contact, Ticket, Bank, Client, ProjectImages, ProjectFile, Policies, \
-    Interviewers, InterviewQuestions, InterviewerResult, Attendance, Conditions, SalarySlip
+    Interviewers, InterviewQuestions, InterviewerResult, Attendance, Conditions, SalarySlip, TaskAssign
 
 
 def AdminRegister(request):
@@ -121,18 +123,20 @@ def update_password(request, pk):
 
 @login_required(login_url="Login")
 def AdminIndex(request):
+    current_date = date.today()
     users = User.objects.all()
     project_list = Project.objects.all()[:5]
     task_list = Task.objects.all()
     client_list = Client.objects.all()[:5]
     new_ticket_list = Ticket.objects.filter(ticket_status=TicketStatusChoice.NEW)[:5]
-    new_leaves_list = Leave.objects.filter(leave_status=LeaveStatusChoice.NEW)[:5]
+    new_leaves_list = Leave.objects.filter(leave_from__gte=current_date, leave_status=LeaveStatusChoice.NEW)[:5]
     interviewer_list = Interviewers.objects.all()
 
     context = {
         'project_list': project_list,
         'task_list': task_list,
         'users': users,
+        'current_date': current_date,
         'client_list': client_list,
         'new_ticket_list': new_ticket_list,
         'new_leaves_list': new_leaves_list,
@@ -150,7 +154,16 @@ def AdminLogout(request):
 @login_required(login_url="Login")
 def EmployeeView(request):
     employeedetails = User.objects.all()
-    return render(request, "admin/employees.html", {'employeedetails': employeedetails})
+    department = Department.objects.all()
+    technology = Technology.objects.all()
+
+    context = {
+        'employeedetails':employeedetails,
+        'department':department,
+        'technology':technology,
+    }
+
+    return render(request, "admin/employees.html", context)
 
 
 @login_required(login_url="Login")
@@ -521,11 +534,12 @@ def DeleteBank(request, id, emg_id):
 
 @login_required(login_url="Login")
 def Holidays(request):
-    year = date.today()
+    current_date = date.today()
+    # Holiday.objects.filter(holiday_date__lt=current_date).delete()
     holidaylist = Holiday.objects.all().order_by('holiday_date')
     context = {
         'holidaylist': holidaylist,
-        'year': year,
+        'year': current_date,
     }
     return render(request, "admin/holidays_list.html", context)
 
@@ -732,7 +746,12 @@ def DeleteTechnology(request, id):
 @login_required(login_url="Login")
 def ProjectsView(request):
     projectlist = Project.objects.all()
-    return render(request, "admin/projects.html", {'projectlist': projectlist})
+    project_assignee_list = ProjectAssign.objects.all
+    context = {
+        'projectlist': projectlist,
+        'project_assignee_list':project_assignee_list,
+    }
+    return render(request, "admin/projects.html", context)
 
 
 @login_required(login_url="Login")
@@ -815,30 +834,40 @@ def AddProjectAssignee(request, id):
     users_list = User.objects.all()
     project_id = Project.objects.get(id=id)
     form = ProjectAssignForm(request.POST or None)
+
     if request.method == 'POST':
         try:
             if form.is_valid():
                 project_assign = form.save(commit=False)
                 project_assign.project_name = project_id
+
+                existing_assignees = ProjectAssign.objects.filter(project_name=project_id, employees__in=request.POST.getlist('employees'))
+                if existing_assignees.exists():
+                    messages.warning(request, 'Employee already assigned to this project.')
+                    return redirect('AdminProjectDetailsView', id=id)
+
                 project_assign.save()
                 selected_users_ids = request.POST.getlist('employees')
                 for user_id in selected_users_ids:
                     user = User.objects.get(id=user_id)
                     project_assign.employees.add(user)
-                messages.success(request, 'Project Assign successfully')
+                messages.success(request, 'Project assigned successfully')
                 return redirect('AdminProjectDetailsView', id=id)
             else:
                 messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
             messages.error(request, f"ERROR : {e}")
+
     context = {'form': form, 'users_list': users_list, 'project_id': project_id}
     return render(request, "admin/add_project_assignee.html", context)
 
 
 @login_required(login_url="Login")
 def DeleteAssignEmployee(request, id, project_id):
-    delete_assign_employee = ProjectAssign.objects.filter(employees=id)
-    delete_assign_employee.delete()
+    project = Project.objects.get(id=project_id)
+    employee = User.objects.get(id=id)
+    delete_assign_employee = ProjectAssign.objects.get(employees=employee, project_name=project)
+    delete_assign_employee.employees.remove(employee)
     messages.error(request, 'Assign Employee Delete successfully')
     return redirect('AdminProjectDetailsView', id=project_id)
 
@@ -878,7 +907,6 @@ def ProjectDetailsView(request, id):
     project_team_member_list = ProjectAssign.objects.filter(project_name=id, assignee_type='Team Member')
     project_images = ProjectImages.objects.filter(project_name=id)
     project_files = ProjectFile.objects.filter(project_name=id)
-
     context = {
         'projectdetailview': projectdetailview,
         'task_list': task_list,
@@ -908,6 +936,7 @@ def ProjectTaskList(request, id):
     projectlist = Project.objects.all()
     project_id = id
     tasklist = Task.objects.filter(task_project=id)
+    task_assignee = TaskAssign.objects.filter(task_project_name=project_id)
     user_list = User.objects.all()
 
     context = {
@@ -915,6 +944,7 @@ def ProjectTaskList(request, id):
         'project_id': project_id,
         'projectlist': projectlist,
         'user_list': user_list,
+        'task_assignee': task_assignee,
 
     }
     return render(request, "admin/tasks.html", context)
@@ -972,26 +1002,50 @@ def AddTaskAssign(request, id):
     users_list = User.objects.all()
     task_id = Task.objects.get(id=id)
     project_id = Project.objects.get(id=task_id.task_project.id)
+    task_assignee = TaskAssign.objects.filter(task_project_name=project_id)
     form = TaskAssignForm(request.POST or None)
+
     if request.method == 'POST':
         try:
             if form.is_valid():
                 task_assign = form.save(commit=False)
                 task_assign.task_name = task_id
                 task_assign.task_project_name = project_id
-                task_assign.save()
-                selected_users_ids = request.POST.getlist('employees')
-                for user_id in selected_users_ids:
-                    user = User.objects.get(id=user_id)
-                    task_assign.employees.add(user)
-                messages.success(request, 'Task Assign successfully')
-                return redirect('AdminProjectTaskList', id=task_id.task_project.id)
+
+                if TaskAssign.objects.filter(task_name=task_id,employees__in=request.POST.getlist('employees')).exists():
+                    messages.warning(request, 'This employee is already assigned to this task.')
+                    return redirect('AdminProjectTaskList', id=task_id.task_project.id)
+                else:
+                    task_assign.save()
+                    task_id.task_status = TaskStatusChoice.NEW
+                    task_id.save()
+
+                    selected_users_ids = request.POST.getlist('employees')
+                    for user_id in selected_users_ids:
+                        user = User.objects.get(id=user_id)
+                        task_assign.employees.add(user)
+                    messages.success(request, 'Task assigned successfully')
+                    return redirect('AdminProjectTaskList', id=task_id.task_project.id)
             else:
                 messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
             messages.error(request, f"ERROR : {e}")
-    context = {'form': form, 'users_list': users_list, 'task_id': task_id, 'project_id': project_id}
+
+    context = {'form': form, 'users_list': users_list, 'task_id': task_id, 'project_id': project_id,
+               'task_assignee': task_assignee}
     return render(request, "admin/add_task_assignee.html", context)
+
+
+@login_required(login_url="Login")
+def DeleteTaskAssignee(request, id, task_id):
+    task = Task.objects.get(id=task_id)
+    project_id = task.task_project.id
+    employee = User.objects.get(id=id)
+    assignee_delete = TaskAssign.objects.get(employees=employee, task_name=task)
+    assignee_delete.employees.remove(employee)
+    messages.error(request, "Assignee Delete")
+    return redirect("AdminProjectTaskList", id=project_id)
+
 
 
 @login_required(login_url="Login")
@@ -1510,7 +1564,8 @@ def EmployeeSalarySlipView(request, id):
     absent_days = Attendance.objects.filter(attendee_user=employee_id, attendance_status=AttendanceStatusChoice.ABSENT, date__month=salary_month.month).count()
     attend_half_days = Attendance.objects.filter(attendee_user=employee_id, attendance_status=AttendanceStatusChoice.HALF_DAY, date__month=salary_month.month).count()
     leave_taken = Leave.objects.filter(leave_user=employee_id, leave_status=LeaveStatusChoice.APPROVED,leave_from__month=salary_month.month).count()
-    total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if calendar.weekday(salary_month.year, salary_month.month, day) < 5)
+    holidays_salary_month = Holiday.objects.filter(holiday_date__month=salary_month.month).count()
+    total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if calendar.weekday(salary_month.year, salary_month.month, day) < 5) - holidays_salary_month
     number_of_working_day_attend = total_weekdays - leave_taken - absent_days - (0.5 * attend_half_days)
 
     context = {
@@ -1550,10 +1605,11 @@ def SalarySlipPDFCreate(request, id):
     current_date = datetime.date.today()
     salary_month = current_date.replace(day=1) - datetime.timedelta(days=1)
     bank_details = Bank.objects.filter(employee=employee_id).first()
+    holidays_salary_month = Holiday.objects.filter(holiday_date__month=salary_month.month).count()
     leave_taken = Leave.objects.filter(leave_user=employee_id, leave_status=LeaveStatusChoice.APPROVED,
                                        leave_from__month=salary_month.month).count()
     total_weekdays = sum(1 for day in range(1, calendar.monthrange(salary_month.year, salary_month.month)[1] + 1) if
-                         calendar.weekday(salary_month.year, salary_month.month, day) < 5)
+                         calendar.weekday(salary_month.year, salary_month.month, day) < 5) - holidays_salary_month
     number_of_working_day_attend = total_weekdays - leave_taken
     template_path = 'admin/salary_slip_pdf.html'
     context = {

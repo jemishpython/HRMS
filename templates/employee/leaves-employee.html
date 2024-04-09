@@ -1,7 +1,7 @@
 {% extends 'employee/base.html' %}
 {% load static %}
 {% block body %}
-
+{% block nav %}{% include 'employee/navigationpanel.html' %}{% endblock nav %}
 			<!-- Page Wrapper -->
             <div class="page-wrapper">
 				<div class="show_message">
@@ -19,7 +19,7 @@
 							<div class="col">
 								<h3 class="page-title">Leaves</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'EmployeeIndex' %}">Dashboard</a></li>
 									<li class="breadcrumb-item active">Leaves</li>
 								</ul>
 							</div>
@@ -89,23 +89,11 @@
 					<!-- /Leave Statistics -->
 
 					<!-- Search Filter -->
-					<div class="row filter-row">
+					<div class="row filter-row d-flex justify-content-end">
 						<div class="col-sm-6 col-md-3">
 							<div class="form-group form-focus ">
 								<input type="text" class="form-control floating" id="name-search">
 								<label class="focus-label">Leave Type</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">
-							<div class="form-group form-focus select-focus">
-								<input type="date" class="form-control floating" id="from_date">
-								<label class="focus-label">From Date</label>
-							</div>
-						</div>
-						<div class="col-sm-6 col-md-3">
-							<div class="form-group form-focus select-focus">
-								<input type="date" class="form-control floating" id="to_date">
-								<label class="focus-label">To Date</label>
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-3">
@@ -208,13 +196,7 @@ $(document).ready(function () {
 	 $('#name-search').on('keyup', function () {
 		table.column(0).search(this.value).draw();
 	});
-
-
-<!-- lllll -------------------------------------- date functionality pending-->
-
-
-
-	$('#leave_status').on('change', function () {
+		$('#leave_status').on('change', function () {
 		table.column(5).search(this.value).draw();
 	});
 });
