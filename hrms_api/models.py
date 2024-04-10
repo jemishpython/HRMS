@@ -353,3 +353,16 @@ class SalarySlip(models.Model):
 
     def __str__(self):
         return str(self.user_name)
+
+
+# class PersonalConversation(models.Model):
+#     sender = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+#     receiver = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+#
+#     def __str__(self):
+#         return f"{self.sender.username} - {self.receiver.username}"
+#
+#
+# class PersonalConversationMessage(models.Model):
+#     conversation = models.ForeignKey(PersonalConversation, on_delete=models.CASCADE, null=True, blank=True)
+#     sender = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)

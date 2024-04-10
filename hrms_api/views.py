@@ -2,7 +2,7 @@ import datetime
 import pytz
 from django.contrib import messages
 from django.shortcuts import render, redirect
-from hrms_api.models import Interviewers, InterviewQuestions, InterviewerResult
+from hrms_api.models import Interviewers, InterviewQuestions, InterviewerResult, User
 
 
 # Create your views here.
@@ -59,3 +59,21 @@ def ThankYouPage(request):
 def QuizLinkExpire(request, id):
     interviewer_details = Interviewers.objects.get(id=id)
     return render(request, 'admin/quiz_link_expire.html', {'interviewer_details':interviewer_details})
+
+
+def ChatView(request):
+    user_list = User.objects.all()
+    context = {
+        'user_list': user_list,
+    }
+    return render(request, "admin/chat.html", context)
+
+
+def Chat(request, room_name):
+    user_list = User.objects.all()
+    chat_users = User.objects.get(id=room_name)
+    context = {
+        'chat_users': chat_users,
+        'user_list': user_list,
+    }
+    return render(request, "admin/chat.html", context)

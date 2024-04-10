@@ -10,4 +10,7 @@ urlpatterns = [
     path("interviewer/aptitude-test/quiz-link-expire/<int:id>", views.QuizLinkExpire, name='QuizLinkExpire'),
 
     path("thank_you_page", views.ThankYouPage, name="ThankYouPage"),
+
+    path("chat-view", views.ChatView, name='ChatView'),
+    path("chat/<int:room_name>", views.Chat, name='Chat')
 ]
