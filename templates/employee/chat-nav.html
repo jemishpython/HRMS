@@ -41,16 +41,16 @@
                         <span class="chat-user">#warehouse</span>
                     </a>
                 </li>
-                <li class="menu-title">Direct Chats <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
+<!--                <li class="menu-title">Direct Chats <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>-->
                 {% for user in user_list %}
                 <li>
-                    <a href="{% url 'EmpChat' user.id %}">
+                    <button class="btn text-muted" id="room-name-{{user.id}}" onclick="redirectToChatRoom({{user.id}})">
                         <span class="chat-avatar-sm user-img">
                             <img class="rounded-circle" alt="" src="{{ user.avatar.url }}"><span class="status offline"></span>
                         </span>
                         <span class="chat-user">{{user.username}}</span>
 <!--                        <span class="badge badge-pill bg-danger">7</span>-->
-                    </a>
+                    </button>
                 </li>
                 {% endfor %}
             </ul>
@@ -58,4 +58,10 @@
     </div>
 </div>
 
+
+<script>
+	function redirectToChatRoom(userID) {
+		window.location.pathname = '/hrms/employee/chat/' + userID;
+	}
+</script>
 <!-- /Sidebar -->

@@ -25,32 +25,33 @@
 								<div class="float-left user-img">
 									<a href="profile.html" title="Mike Litorus">
 										<img src="{{chat_users.avatar.url}}" alt="" class="avatar">
-										<span class="status online"></span>
+<!--										<span class="status online"></span>-->
 									</a>
 								</div>
 								<div class=" float-left">
-									<a href="profile.html"><span class="text-dark">{{chat_users.username}}</span> <!-- <i class="typing-text">Typing...</i>--></a>
-									<span class="last-seen">Last seen today at 7:50 AM ||| {{ room_name|json_script:"room-name" }}</span>
+									<a href=""><span class="text-dark">{{chat_users.username}}</span> <!-- <i class="typing-text">Typing...</i>--></a>
+									<span class="last-seen">{{chat_users.department}} | {{chat_users.designation}} | {{chat_users.technology}}</span>
+<!--									<span class="last-seen">Last seen today at 7:50 AM ||| {{ room_name|json_script:"room-name" }}</span>-->
 								</div>
 							</div>
-							<div class="search-box">
-								<div class="input-group input-group-sm">
-									<input type="text" placeholder="Search" class="form-control">
-									<span class="input-group-append">
-										<button type="button" class="btn"><i class="fa fa-search"></i></button>
-									</span>
-								</div>
-							</div>
+<!--							<div class="search-box">-->
+<!--								<div class="input-group input-group-sm">-->
+<!--									<input type="text" placeholder="Search" class="form-control">-->
+<!--									<span class="input-group-append">-->
+<!--										<button type="button" class="btn"><i class="fa fa-search"></i></button>-->
+<!--									</span>-->
+<!--								</div>-->
+<!--							</div>-->
 							<ul class="nav custom-menu">
 								<li class="nav-item">
 									<a class="nav-link task-chat profile-rightbar float-right" id="task_chat" href="#task_window"><i class="fa fa-user"></i></a>
 								</li>
-								<li class="nav-item">
-									<a href="voice-call.html" class="nav-link"><i class="fa fa-phone"></i></a>
-								</li>
-								<li class="nav-item">
-									<a href="video-call.html" class="nav-link"><i class="fa fa-video-camera"></i></a>
-								</li>
+<!--								<li class="nav-item">-->
+<!--									<a href="voice-call.html" class="nav-link"><i class="fa fa-phone"></i></a>-->
+<!--								</li>-->
+<!--								<li class="nav-item">-->
+<!--									<a href="video-call.html" class="nav-link"><i class="fa fa-video-camera"></i></a>-->
+<!--								</li>-->
 								<li class="nav-item dropdown dropdown-action">
 									<a aria-expanded="false" data-toggle="dropdown" class="nav-link dropdown-toggle" href=""><i class="fa fa-cog"></i></a>
 									<div class="dropdown-menu dropdown-menu-right">
@@ -127,7 +128,27 @@
 <!--							</div>-->
 <!--						</div>-->
 <!--Chat View Add Manually-->
-					<textarea id="chat-log" class="h-100 w-100 border-0" style="resize: none;" disabled></textarea>
+					<div id="chat-log" class="border overflow-auto px-2 h-100">
+						{% for message in massages %}
+							{% if message.sender.id == chat_users.id %}
+								<div class="my-1 d-flex">
+									<div><img src="{{message.sender.avatar.url}}" class="avatar"></div>
+									<div class="border pr-3 pl-1 pt-1 rounded" style="background-color:#e8e3e3;">
+										<div>{{message.content}}</div>
+										<div class="h6 m-0 text-muted">{{message.timestamp}}</div>
+									</div>
+								</div>
+							{%else%}
+								<div class="text-right my-1 d-flex justify-content-end">
+									<div class="border pl-3 pr-1 pt-1 mr-1 rounded" style="background-color:#F6F4F4;">
+										<div>{{message.content}}</div>
+										<div class="h6 m-0 text-muted">{{message.timestamp}}</div>
+									</div>
+									<div><img class="avatar" src="{{message.sender.avatar.url}}"></div>
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
 					</div>
 					<div class="chat-footer">
 						<div class="message-bar">
@@ -163,109 +184,109 @@
 				<div class="chat-window video-window">
 					<div class="fixed-header">
 						<ul class="nav nav-tabs nav-tabs-bottom">
-							<li class="nav-item"><a class="nav-link" href="#calls_tab" data-toggle="tab">Calls</a></li>
+<!--							<li class="nav-item"><a class="nav-link" href="#calls_tab" data-toggle="tab">Calls</a></li>-->
 							<li class="nav-item"><a class="nav-link active" href="#profile_tab" data-toggle="tab">Profile</a></li>
 						</ul>
 					</div>
 					<div class="tab-content chat-contents">
-						<div class="content-full tab-pane" id="calls_tab">
-							<div class="chat-wrap-inner">
-								<div class="chat-box">
-									<div class="chats">
-										<div class="chat chat-left">
-											<div class="chat-avatar">
-												<a href="profile.html" class="avatar">
-													<img alt="" src="assets/img/profiles/avatar-02.jpg">
-												</a>
-											</div>
-											<div class="chat-body">
-												<div class="chat-bubble">
-													<div class="chat-content">
-														<span class="task-chat-user">You</span> <span class="chat-time">8:35 am</span>
-														<div class="call-details">
-															<i class="material-icons">phone_missed</i>
-															<div class="call-info">
-																<div class="call-user-details">
-																	<span class="call-description">Jeffrey Warden missed the call</span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="chat chat-left">
-											<div class="chat-avatar">
-												<a href="profile.html" class="avatar">
-													<img alt="" src="assets/img/profiles/avatar-02.jpg">
-												</a>
-											</div>
-											<div class="chat-body">
-												<div class="chat-bubble">
-													<div class="chat-content">
-														<span class="task-chat-user">John Doe</span> <span class="chat-time">8:35 am</span>
-														<div class="call-details">
-															<i class="material-icons">call_end</i>
-															<div class="call-info">
-																<div class="call-user-details"><span class="call-description">This call has ended</span></div>
-																<div class="call-timing">Duration: <strong>5 min 57 sec</strong></div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="chat-line">
-											<span class="chat-date">January 29th, 2019</span>
-										</div>
-										<div class="chat chat-left">
-											<div class="chat-avatar">
-												<a href="profile.html" class="avatar">
-													<img alt="" src="assets/img/profiles/avatar-05.jpg">
-												</a>
-											</div>
-											<div class="chat-body">
-												<div class="chat-bubble">
-													<div class="chat-content">
-														<span class="task-chat-user">Richard Miles</span> <span class="chat-time">8:35 am</span>
-														<div class="call-details">
-															<i class="material-icons">phone_missed</i>
-															<div class="call-info">
-																<div class="call-user-details">
-																	<span class="call-description">You missed the call</span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="chat chat-left">
-											<div class="chat-avatar">
-												<a href="profile.html" class="avatar">
-													<img alt="" src="assets/img/profiles/avatar-02.jpg">
-												</a>
-											</div>
-											<div class="chat-body">
-												<div class="chat-bubble">
-													<div class="chat-content">
-														<span class="task-chat-user">You</span> <span class="chat-time">8:35 am</span>
-														<div class="call-details">
-															<i class="material-icons">ring_volume</i>
-															<div class="call-info">
-																<div class="call-user-details">
-																	<a href="#" class="call-description call-description--linked" data-qa="call_attachment_link">Calling John Smith ...</a>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+<!--						<div class="content-full tab-pane" id="calls_tab">-->
+<!--							<div class="chat-wrap-inner">-->
+<!--								<div class="chat-box">-->
+<!--									<div class="chats">-->
+<!--										<div class="chat chat-left">-->
+<!--											<div class="chat-avatar">-->
+<!--												<a href="profile.html" class="avatar">-->
+<!--													<img alt="" src="assets/img/profiles/avatar-02.jpg">-->
+<!--												</a>-->
+<!--											</div>-->
+<!--											<div class="chat-body">-->
+<!--												<div class="chat-bubble">-->
+<!--													<div class="chat-content">-->
+<!--														<span class="task-chat-user">You</span> <span class="chat-time">8:35 am</span>-->
+<!--														<div class="call-details">-->
+<!--															<i class="material-icons">phone_missed</i>-->
+<!--															<div class="call-info">-->
+<!--																<div class="call-user-details">-->
+<!--																	<span class="call-description">Jeffrey Warden missed the call</span>-->
+<!--																</div>-->
+<!--															</div>-->
+<!--														</div>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										<div class="chat chat-left">-->
+<!--											<div class="chat-avatar">-->
+<!--												<a href="profile.html" class="avatar">-->
+<!--													<img alt="" src="assets/img/profiles/avatar-02.jpg">-->
+<!--												</a>-->
+<!--											</div>-->
+<!--											<div class="chat-body">-->
+<!--												<div class="chat-bubble">-->
+<!--													<div class="chat-content">-->
+<!--														<span class="task-chat-user">John Doe</span> <span class="chat-time">8:35 am</span>-->
+<!--														<div class="call-details">-->
+<!--															<i class="material-icons">call_end</i>-->
+<!--															<div class="call-info">-->
+<!--																<div class="call-user-details"><span class="call-description">This call has ended</span></div>-->
+<!--																<div class="call-timing">Duration: <strong>5 min 57 sec</strong></div>-->
+<!--															</div>-->
+<!--														</div>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										<div class="chat-line">-->
+<!--											<span class="chat-date">January 29th, 2019</span>-->
+<!--										</div>-->
+<!--										<div class="chat chat-left">-->
+<!--											<div class="chat-avatar">-->
+<!--												<a href="profile.html" class="avatar">-->
+<!--													<img alt="" src="assets/img/profiles/avatar-05.jpg">-->
+<!--												</a>-->
+<!--											</div>-->
+<!--											<div class="chat-body">-->
+<!--												<div class="chat-bubble">-->
+<!--													<div class="chat-content">-->
+<!--														<span class="task-chat-user">Richard Miles</span> <span class="chat-time">8:35 am</span>-->
+<!--														<div class="call-details">-->
+<!--															<i class="material-icons">phone_missed</i>-->
+<!--															<div class="call-info">-->
+<!--																<div class="call-user-details">-->
+<!--																	<span class="call-description">You missed the call</span>-->
+<!--																</div>-->
+<!--															</div>-->
+<!--														</div>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--										<div class="chat chat-left">-->
+<!--											<div class="chat-avatar">-->
+<!--												<a href="profile.html" class="avatar">-->
+<!--													<img alt="" src="assets/img/profiles/avatar-02.jpg">-->
+<!--												</a>-->
+<!--											</div>-->
+<!--											<div class="chat-body">-->
+<!--												<div class="chat-bubble">-->
+<!--													<div class="chat-content">-->
+<!--														<span class="task-chat-user">You</span> <span class="chat-time">8:35 am</span>-->
+<!--														<div class="call-details">-->
+<!--															<i class="material-icons">ring_volume</i>-->
+<!--															<div class="call-info">-->
+<!--																<div class="call-user-details">-->
+<!--																	<a href="#" class="call-description call-description&#45;&#45;linked" data-qa="call_attachment_link">Calling John Smith ...</a>-->
+<!--																</div>-->
+<!--															</div>-->
+<!--														</div>-->
+<!--													</div>-->
+<!--												</div>-->
+<!--											</div>-->
+<!--										</div>-->
+<!--									</div>-->
+<!--								</div>-->
+<!--							</div>-->
+<!--						</div>-->
 						<div class="content-full tab-pane show active" id="profile_tab">
 							<div class="display-table">
 								<div class="table-row">
@@ -479,85 +500,6 @@
 	</div>
 	<!-- /Add Group Modal -->
 
-	<!-- Add Chat User Modal -->
-	<div id="add_chat_user" class="modal custom-modal fade" role="dialog">
-		<div class="modal-dialog modal-dialog-centered modal-md" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Direct Chat</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="input-group m-b-30">
-						<input placeholder="Search to start a chat" class="form-control search-input" type="text">
-						<span class="input-group-append">
-							<button class="btn btn-primary">Search</button>
-						</span>
-					</div>
-					<div>
-						<h5>Recent Conversations</h5>
-						<ul class="chat-user-list">
-							<li>
-								<a href="#">
-									<div class="media">
-										<span class="avatar align-self-center">
-											<img src="assets/img/profiles/avatar-16.jpg" alt="">
-										</span>
-									<div class="media-body align-self-center text-nowrap">
-										<div class="user-name">Jeffery Lalor</div>
-										<span class="designation">Team Leader</span>
-									</div>
-									<div class="text-nowrap align-self-center">
-										<div class="online-date">1 day ago</div>
-									</div>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<div class="media ">
-										<span class="avatar align-self-center">
-											<img src="assets/img/profiles/avatar-13.jpg" alt="">
-										</span>
-										<div class="media-body align-self-center text-nowrap">
-											<div class="user-name">Bernardo Galaviz</div>
-											<span class="designation">Web Developer</span>
-										</div>
-										<div class="align-self-center text-nowrap">
-											<div class="online-date">3 days ago</div>
-										</div>
-									</div>
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									<div class="media">
-										<span class="avatar align-self-center">
-											<img src="assets/img/profiles/avatar-02.jpg" alt="">
-										</span>
-										<div class="media-body text-nowrap align-self-center">
-											<div class="user-name">John Doe</div>
-											<span class="designation">Web Designer</span>
-										</div>
-										<div class="align-self-center text-nowrap">
-											<div class="online-date">7 months ago</div>
-										</div>
-									</div>
-								</a>
-							</li>
-						</ul>
-					</div>
-					<div class="submit-section">
-						<button class="btn btn-primary submit-btn">Submit</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- /Add Chat User Modal -->
-
 	<!-- Share Files Modal -->
 	<div id="share_files" class="modal custom-modal fade" role="dialog">
 		<div class="modal-dialog modal-dialog-centered modal-md" role="document">
@@ -604,8 +546,16 @@
     };
 
     chatSocket.onmessage = function (e) {
+    	const d = new Date();
+		let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+		let datetime = d.toLocaleString('en-US', options);
+    	const sender_user = "{{sender.id}}";
         const data = JSON.parse(e.data);
-        document.querySelector("#chat-log").value += data.message + "\n";
+        if (sender_user == data.sender){
+        	document.querySelector("#chat-log").innerHTML += "<div class='text-right my-1 d-flex justify-content-end'><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#F6F4F4;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime+"</div></div><div><img class='avatar' src='{{sender.avatar.url}}'></div></div>";
+		}else{
+        	document.querySelector("#chat-log").innerHTML += "<div class='my-1 d-flex'><div><img class='avatar' src='{{chat_users.avatar.url}}'></div><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#e8e3e3;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime+"</div></div></div>";
+		}
     };
 
     chatSocket.onerror = function (event) {
@@ -630,7 +580,11 @@
     document.querySelector("#chat-message-submit").onclick = function (e) {
         const messageInputDom = document.querySelector("#chat-message-input");
         const message = messageInputDom.value;
-        chatSocket.send(JSON.stringify({ message: message }));
+         chatSocket.send(JSON.stringify({
+        	'message': message,
+        	'room_name': room_name,
+			'sender': '{{request.user.id }}'
+		}));
         messageInputDom.value = "";
     };
 </script>

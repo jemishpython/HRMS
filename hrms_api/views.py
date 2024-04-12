@@ -1,8 +1,13 @@
 import datetime
 import pytz
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.shortcuts import render, redirect
-from hrms_api.models import Interviewers, InterviewQuestions, InterviewerResult, User
+
+from hrms_api.forms import GroupChatForm
+from hrms_api.models import Interviewers, InterviewQuestions, InterviewerResult, User, PersonalConversation, \
+    PersonalConversationMessage, GroupConversation
 
 
 # Create your views here.
@@ -61,19 +66,100 @@ def QuizLinkExpire(request, id):
     return render(request, 'admin/quiz_link_expire.html', {'interviewer_details':interviewer_details})
 
 
+@login_required(login_url="Login")
 def ChatView(request):
     user_list = User.objects.all()
+    group_list = GroupConversation.objects.all()
     context = {
         'user_list': user_list,
+        'group_list': group_list,
     }
     return render(request, "admin/chat.html", context)
 
 
-def Chat(request, room_name):
+@login_required(login_url="Login")
+def Chat(request, userID):
+    sender_id = request.user.id
+    sender = User.objects.get(id=sender_id)
     user_list = User.objects.all()
-    chat_users = User.objects.get(id=room_name)
+    chat_users = User.objects.get(id=userID)
+    current_time = datetime.datetime.now()
+
+    PersonalConversation.create_if_not_exists(sender_id, chat_users)
+
+    room_name = PersonalConversation.chat_conversation_exists(sender_id, chat_users)
+
+    old_messages = PersonalConversationMessage.objects.filter(conversation=room_name.id).order_by('timestamp')
+
     context = {
         'chat_users': chat_users,
         'user_list': user_list,
+        'room_name': room_name.id,
+        'massages': old_messages,
+        'sender': sender,
+        'current_time': current_time,
     }
     return render(request, "admin/chat.html", context)
+
+
+@login_required(login_url="Login")
+def GroupChatCreate(request):
+    users_list = User.objects.all()
+    form = GroupChatForm(request.POST or None)
+
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                add_chat_group = form.save(commit=False)
+                add_chat_group.save()
+                selected_users_ids = request.POST.getlist('receiver')
+                print("USER LIST ::::::::::::::::::::::::: ", selected_users_ids)
+                for user_id in selected_users_ids:
+                    user = User.objects.get(id=user_id)
+                    add_chat_group.receiver.add(user)
+                    print("user add in group ------------------------------")
+                messages.success(request, 'Add in group successfully')
+                return redirect('ChatView')
+            else:
+                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FORM ERROR :", form.errors)
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR :", e)
+            messages.error(request, f"ERROR : {e}")
+
+    context = {'form': form, 'users_list': users_list}
+    return render(request, "admin/add_chat_group.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def EmpChatView(request):
+    user_list = User.objects.all()
+    context = {
+        'user_list': user_list,
+    }
+    return render(request, "employee/chat.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def EmpChat(request, userID):
+    sender_id = request.user.id
+    sender = User.objects.get(id=sender_id)
+    user_list = User.objects.all()
+    chat_users = User.objects.get(id=userID)
+    current_time = datetime.datetime.now()
+
+    PersonalConversation.create_if_not_exists(sender_id, chat_users)
+
+    room_name = PersonalConversation.chat_conversation_exists(sender_id, chat_users)
+
+    old_messages = PersonalConversationMessage.objects.filter(conversation=room_name.id).order_by('timestamp')
+
+    context = {
+        'chat_users': chat_users,
+        'user_list': user_list,
+        'room_name': room_name.id,
+        'massages': old_messages,
+        'sender': sender,
+        'current_time': current_time,
+    }
+    return render(request, "employee/chat.html", context)

@@ -7,21 +7,23 @@
                 <li>
                     <a href="{% url 'AdminIndex' %}"><i class="la la-home"></i> <span>Back to Home</span></a>
                 </li>
-                <li class="menu-title"><span>Chat Groups</span> <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
+                <li class="menu-title d-flex justify-content-between"><span>Chat Groups</span> <button class="btn text-primary m-0 p-0 " onclick="addGroupChat()"><i class="fa fa-plus"></i></button></li>
+                {% for group in group_list %}
                 <li>
-                    <a href="chat.html">
+                    <button class="btn text-muted" id="room-name-{{group.id}}" onclick="redirectToGroupChatRoom({{group.id}})">
                         <span class="chat-avatar-sm user-img">
-                            <img class="rounded-circle" alt="" src="{% static 'img/user.jpg' %}">
+<!--                            <img class="rounded-circle" alt="" src="">&lt;!&ndash; <span class="status offline"></span> &ndash;&gt;-->
                         </span>
-                        <span class="chat-user">Group 1</span>
-                    </a>
+                        <span class="chat-user">{{group.name}}</span>
+                    </button>
                 </li>
-                <li class="menu-title">Direct Chats <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
+                {% endfor %}
+                <li class="menu-title">Direct Chats</li>
                 {% for user in user_list %}
                 <li>
                     <button class="btn text-muted" id="room-name-{{user.id}}" onclick="redirectToChatRoom({{user.id}})">
                         <span class="chat-avatar-sm user-img">
-                            <img class="rounded-circle" alt="" src="{{ user.avatar.url }}"><span class="status offline"></span>
+                            <img class="rounded-circle" alt="" src="{{ user.avatar.url }}">  <!-- <span class="status offline"></span> -->
                         </span>
                         <span class="chat-user">{{user.username}}</span>
                     </button>
@@ -32,12 +34,22 @@
     </div>
 </div>
 
-
+<div id="add-group-form"></div>
 
 
 <script>
-	function redirectToChatRoom(room_name) {
-		window.location.pathname = '/hrms/chat/' + room_name;
+    function addGroupChat() {
+        $.ajax({
+            url: "{% url 'AddGroupChat' %}",
+            success: function(response) {
+                $("#add-group-form").html(response);
+                $("#add_group_model").modal('show');
+            }
+        });
+    }
+
+	function redirectToChatRoom(userID) {
+		window.location.pathname = '/hrms/chat/' + userID;
 	}
 </script>
 <!-- /Sidebar -->
