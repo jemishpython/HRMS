@@ -373,12 +373,16 @@ class PersonalConversation(models.Model):
 
     @staticmethod
     def chat_conversation_exists(sender, receiver):
-        return PersonalConversation.objects.filter(Q(sender=sender, receiver=receiver) | Q(sender=receiver, receiver=sender)).first()
+        sender_user = User.objects.get(id=sender)
+        receiver_user = User.objects.get(id=receiver)
+        return PersonalConversation.objects.filter(Q(sender=sender_user, receiver=receiver_user) | Q(sender=receiver_user, receiver=sender_user)).first()
 
     @staticmethod
     def create_if_not_exists(sender, receiver):
         res = PersonalConversation.chat_conversation_exists(sender, receiver)
-        return False if res else PersonalConversation.objects.create(sender=sender, receiver=receiver)
+        sender_user = User.objects.get(id=sender)
+        receiver_user = User.objects.get(id=receiver)
+        return False if res else PersonalConversation.objects.create(sender=sender_user, receiver=receiver_user)
 
 
 class PersonalConversationMessage(models.Model):

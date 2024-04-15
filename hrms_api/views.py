@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect
 
 from hrms_api.forms import GroupChatForm
 from hrms_api.models import Interviewers, InterviewQuestions, InterviewerResult, User, PersonalConversation, \
-    PersonalConversationMessage, GroupConversation
+    PersonalConversationMessage, GroupConversation, GroupConversationMessage
 
 
 # Create your views here.
@@ -79,15 +79,16 @@ def ChatView(request):
 
 @login_required(login_url="Login")
 def Chat(request, userID):
+    group_list = GroupConversation.objects.all()
     sender_id = request.user.id
     sender = User.objects.get(id=sender_id)
     user_list = User.objects.all()
     chat_users = User.objects.get(id=userID)
     current_time = datetime.datetime.now()
 
-    PersonalConversation.create_if_not_exists(sender_id, chat_users)
+    PersonalConversation.create_if_not_exists(sender_id, chat_users.id)
 
-    room_name = PersonalConversation.chat_conversation_exists(sender_id, chat_users)
+    room_name = PersonalConversation.chat_conversation_exists(sender_id, chat_users.id)
 
     old_messages = PersonalConversationMessage.objects.filter(conversation=room_name.id).order_by('timestamp')
 
@@ -98,6 +99,7 @@ def Chat(request, userID):
         'massages': old_messages,
         'sender': sender,
         'current_time': current_time,
+        'group_list': group_list,
     }
     return render(request, "admin/chat.html", context)
 
@@ -105,7 +107,7 @@ def Chat(request, userID):
 @login_required(login_url="Login")
 def GroupChatCreate(request):
     users_list = User.objects.all()
-    form = GroupChatForm(request.POST or None)
+    form = GroupChatForm(request.POST or None, request.FILES or None)
 
     if request.method == 'POST':
         try:
@@ -113,18 +115,14 @@ def GroupChatCreate(request):
                 add_chat_group = form.save(commit=False)
                 add_chat_group.save()
                 selected_users_ids = request.POST.getlist('receiver')
-                print("USER LIST ::::::::::::::::::::::::: ", selected_users_ids)
                 for user_id in selected_users_ids:
                     user = User.objects.get(id=user_id)
                     add_chat_group.receiver.add(user)
-                    print("user add in group ------------------------------")
                 messages.success(request, 'Add in group successfully')
                 return redirect('ChatView')
             else:
-                print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> FORM ERROR :", form.errors)
                 messages.error(request, f"Form Not Valid : {form.errors}")
         except Exception as e:
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ERROR :", e)
             messages.error(request, f"ERROR : {e}")
 
     context = {'form': form, 'users_list': users_list}
@@ -134,23 +132,26 @@ def GroupChatCreate(request):
 @login_required(login_url="EmployeeLogin")
 def EmpChatView(request):
     user_list = User.objects.all()
+    group_list = GroupConversation.objects.all()
     context = {
         'user_list': user_list,
+        'group_list': group_list,
     }
     return render(request, "employee/chat.html", context)
 
 
 @login_required(login_url="EmployeeLogin")
 def EmpChat(request, userID):
+    group_list = GroupConversation.objects.all()
     sender_id = request.user.id
     sender = User.objects.get(id=sender_id)
     user_list = User.objects.all()
     chat_users = User.objects.get(id=userID)
     current_time = datetime.datetime.now()
 
-    PersonalConversation.create_if_not_exists(sender_id, chat_users)
+    PersonalConversation.create_if_not_exists(sender_id, chat_users.id)
 
-    room_name = PersonalConversation.chat_conversation_exists(sender_id, chat_users)
+    room_name = PersonalConversation.chat_conversation_exists(sender_id, chat_users.id)
 
     old_messages = PersonalConversationMessage.objects.filter(conversation=room_name.id).order_by('timestamp')
 
@@ -161,5 +162,77 @@ def EmpChat(request, userID):
         'massages': old_messages,
         'sender': sender,
         'current_time': current_time,
+        'group_list': group_list,
+    }
+    return render(request, "employee/chat.html", context)
+
+
+@login_required(login_url="Login")
+def GroupChat(request, groupID):
+    group_list = GroupConversation.objects.all()
+    sender_id = request.user.id
+    sender = User.objects.get(id=sender_id)
+    user_list = User.objects.all()
+    group_room_id = GroupConversation.objects.get(id=groupID)
+    current_time = datetime.datetime.now()
+
+    old_messages = GroupConversationMessage.objects.filter(conversation=group_room_id.id).order_by('timestamp')
+
+    context = {
+        'user_list': user_list,
+        'group_details': group_room_id,
+        'group_room_name': group_room_id.id,
+        'massages': old_messages,
+        'sender': sender,
+        'current_time': current_time,
+        'group_list': group_list,
+    }
+    return render(request, "admin/chat.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def EmpGroupChatCreate(request):
+    users_list = User.objects.all()
+    form = GroupChatForm(request.POST or None, request.FILES or None)
+
+    if request.method == 'POST':
+        try:
+            if form.is_valid():
+                add_chat_group = form.save(commit=False)
+                add_chat_group.save()
+                selected_users_ids = request.POST.getlist('receiver')
+                for user_id in selected_users_ids:
+                    user = User.objects.get(id=user_id)
+                    add_chat_group.receiver.add(user)
+                messages.success(request, 'Add in group successfully')
+                return redirect('EmpChatView')
+            else:
+                messages.error(request, f"Form Not Valid : {form.errors}")
+        except Exception as e:
+            messages.error(request, f"ERROR : {e}")
+
+    context = {'form': form, 'users_list': users_list}
+    return render(request, "employee/add_chat_group.html", context)
+
+
+@login_required(login_url="EmployeeLogin")
+def EmpGroupChat(request, groupID):
+    group_list = GroupConversation.objects.all()
+    sender_id = request.user.id
+    sender = User.objects.get(id=sender_id)
+    user_list = User.objects.all()
+    group_room_id = GroupConversation.objects.get(id=groupID)
+    current_time = datetime.datetime.now()
+
+    old_messages = GroupConversationMessage.objects.filter(conversation=group_room_id.id).order_by('timestamp')
+
+    context = {
+        'user_list': user_list,
+        'group_details': group_room_id,
+        'group_room_name': group_room_id.id,
+        'massages': old_messages,
+        'sender': sender,
+        'current_time': current_time,
+        'group_list': group_list,
     }
     return render(request, "employee/chat.html", context)
