@@ -441,6 +441,7 @@
 <!--								</div>-->
 <!--							</div>-->
 <!--						</div>-->
+						{% if chat_users %}
 						<div class="content-full tab-pane show active" id="profile_tab">
 							<div class="display-table">
 								<div class="table-row">
@@ -448,30 +449,18 @@
 										<div class="table-content">
 											<div class="chat-profile-img">
 												<div>
-													<img class="" style="width:6rem; height:6rem; border-radius:50%" src="{{user.avatar.url}}" alt="">
+													<img class="" style="width:6rem; height:6rem; border-radius:50%" src="{{chat_users.avatar.url}}" alt="">
 												</div>
 												<div>
-													<h3 class="user-name m-t-10 mb-0">{{user.username}}</h3>
-													<small class="text-muted">{{user.designation}} | {{user.technology}}</small>
+													<h3 class="user-name m-t-10 mb-0">{{chat_users.username}}</h3>
+													<small class="text-muted">{{chat_users.designation}} | {{chat_users.technology}}</small>
 												</div>
 											</div>
 											<div class="chat-profile-info">
 												<ul class="user-det-list">
 													<li>
-														<span>Username:</span>
-														<span class="float-right text-muted">{{user.username}}</span>
-													</li>
-													<li>
-														<span>DOB:</span>
-														<span class="float-right text-muted">{{user.dob|date:"j - M - Y"}}</span>
-													</li>
-													<li>
-														<span>Email:</span>
-														<span class="float-right text-muted">{{user.email}}</span>
-													</li>
-													<li>
 														<span>Phone:</span>
-														<span class="float-right text-muted">{{user.phone}}</span>
+														<span class="float-right text-muted">{{chat_users.phone}}</span>
 													</li>
 												</ul>
 											</div>
@@ -536,6 +525,83 @@
 								</div>
 							</div>
 						</div>
+						{% elif group_details %}
+						<div class="content-full tab-pane show active" id="profile_tab">
+							<div class="display-table">
+								<div class="table-row">
+									<div class="table-body">
+										<div class="table-content">
+											<div class="chat-profile-img">
+												<img class="" style="width:6rem; height:6rem; border-radius:50%" src="{{group_details.group_avatar.url}}" alt="">
+												<div class="position-absolute d-flex flex-column fixed-top mt-2" style="left:auto;">
+													<button class="btn text-info" title="Edit Group" data-toggle="tooltip" data-placement="left"><i class="las la-user-edit la-lg"></i></button>
+													<button class="btn text-info" title="Add Member" data-toggle="tooltip" data-placement="left"><i class="las la-plus la-lg"></i></button>
+												</div>
+												<h3 class="user-name m-t-5">{{group_details.name}}</h3>
+											</div>
+<!--											<div class="chat-profile-info">-->
+<!--												<ul class="user-det-list"></ul>-->
+<!--											</div>-->
+											<div class="transfer-files">
+												<ul class="nav sticky-top nav-tabs nav-tabs-solid nav-justified mb-0">
+													<li class="nav-item"><a class="nav-link" href="#group_files" data-toggle="tab">All Files</a></li>
+													<li class="nav-item"><a class="nav-link active" href="#group_members" data-toggle="tab">Members</a></li>
+												</ul>
+												<div class="tab-content">
+													<div class="tab-pane" id="group_files">
+														<ul class="files-list">
+															<li>
+																<div class="files-cont">
+																	<div class="file-type">
+																		<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+																	</div>
+																	<div class="files-info">
+																		<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
+																		<span class="file-author"><a href="#">Loren Gatlin</a></span> <span class="file-date">May 31st at 6:53 PM</span>
+																	</div>
+																	<ul class="files-action">
+																		<li class="dropdown dropdown-action">
+																			<a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_horiz</i></a>
+																			<div class="dropdown-menu">
+																				<a class="dropdown-item" href="javascript:void(0)">Download</a>
+																				<a class="dropdown-item" href="#" data-toggle="modal" data-target="#share_files">Share</a>
+																			</div>
+																		</li>
+																	</ul>
+																</div>
+															</li>
+														</ul>
+													</div>
+													<div class="tab-pane show active" id="group_members">
+														<div>
+															<ul class="files-list d-flex flex-column">
+																{% for receiver in group_details.receiver.all %}
+																<li>
+																	<div class="d-flex">
+																		<div class="file-type">
+																			<span><img class="avatar w-75 h-75" src="{{receiver.avatar.url}}"></span>
+																		</div>
+																		<div class="files-info">
+																			<span class="file-name text-ellipsis">{{receiver.username}}</span>
+																			<span class="file-date">{{receiver.department}} | {{receiver.designation}} | {{receiver.technology}}</span>
+																		</div>
+	<!--																	<div class="ml-auto">-->
+	<!--																		<a class="text-danger" href="javascript:void(0)"><i class="las la-minus-circle la-lg"></i></a>-->
+	<!--																	</div>-->
+																	</div>
+																</li>
+																{% endfor %}
+															</ul>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endif %}
 					</div>
 				</div>
 			</div>

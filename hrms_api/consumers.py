@@ -77,7 +77,6 @@ class GroupChatConsumer(AsyncWebsocketConsumer):
         room_name = text_data_json.get('room_name')
         sender = text_data_json.get('sender')
         image = text_data_json.get('image')
-        print(image,">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         await self.save_message(room_name, sender, message, current_time)
         await self.channel_layer.group_send(
             self.room_group_name, {
@@ -94,7 +93,6 @@ class GroupChatConsumer(AsyncWebsocketConsumer):
         sender = event['sender']
         room_name = event['room_name']
         image = event['image']
-        print(image, ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
         await self.send(text_data=json.dumps({
             "message": message,
             "sender": sender,
