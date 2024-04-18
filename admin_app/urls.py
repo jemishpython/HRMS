@@ -91,9 +91,6 @@ urlpatterns = [
     path("tickets", views.TicketList, name='AdminTicketList'),
     path("tickets/status-update/<int:id>", views.UpdateTicketstatus, name='AdminTicketStatusUpdate'),
 
-    path("chat-view/", views.ChatView, name='AdminChatView'),
-    path("chat/<int:id>/", views.Chat, name='AdminChat'),
-
     path("attendance/", views.AttendanceView, name='AdminAttendanceView'),
     path("attendance/edit/<int:id>/", views.AttendanceEdit, name='AdminAttendanceEdit'),
 

@@ -66,3 +66,13 @@ class AttendanceStatusChoice(models.TextChoices):
     PRESENT = ("Present", _("PRESENT"))
     ABSENT = ("Absent", _("ABSENT"))
     HALF_DAY = ("Half Day", _("HALF_DAY"))
+
+
+class GroupMembertypeChoice(models.TextChoices):
+    ADMIN = ("Admin", _("ADMIN"))
+    MEMBER = ("Member", _("MEMBER"))
+
+
+class GroupMemberStatusChoice(models.TextChoices):
+    ONLINE = ("Online", _("ONLINE"))
+    OFFLINE = ("Offline", _("OFFLINE"))

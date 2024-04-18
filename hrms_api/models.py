@@ -1,11 +1,12 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models import Q
 
 # Create your models here.
 from hrms_api.choices import GenderTypeChoice, MaritalStatusChoice, ProjectPriorityChoice, TaskStatusChoice, \
     ProjectStatusChoice, LeaveTypeChoice, LeaveStatusChoice, ProjectAssigneeTypeChoice, TicketPriorityChoice, \
-    TicketStatusChoice, AttendanceStatusChoice
+    TicketStatusChoice, AttendanceStatusChoice, GroupMembertypeChoice, GroupMemberStatusChoice
 
 
 class Department(models.Model):
@@ -353,3 +354,71 @@ class SalarySlip(models.Model):
 
     def __str__(self):
         return str(self.user_name)
+
+
+class PersonalConversation(models.Model):
+    sender = models.ForeignKey(User, verbose_name="Sender", on_delete=models.CASCADE, blank=True, null=True, related_name="sender")
+    receiver = models.ForeignKey(User,verbose_name="Receiver", on_delete=models.CASCADE,blank=True, null=True, related_name="receiver")
+
+    class Meta:
+        unique_together = ("sender", "receiver")
+        verbose_name = 'Chat Message'
+
+    def __str__(self):
+        return str(f"{self.sender} to {self.receiver}")
+
+    @property
+    def room_name(self):
+        return f'chat_{self.id}'
+
+    @staticmethod
+    def chat_conversation_exists(sender, receiver):
+        sender_user = User.objects.get(id=sender)
+        receiver_user = User.objects.get(id=receiver)
+        return PersonalConversation.objects.filter(Q(sender=sender_user, receiver=receiver_user) | Q(sender=receiver_user, receiver=sender_user)).first()
+
+    @staticmethod
+    def create_if_not_exists(sender, receiver):
+        res = PersonalConversation.chat_conversation_exists(sender, receiver)
+        sender_user = User.objects.get(id=sender)
+        receiver_user = User.objects.get(id=receiver)
+        return False if res else PersonalConversation.objects.create(sender=sender_user, receiver=receiver_user)
+
+
+class PersonalConversationMessage(models.Model):
+    conversation = models.ForeignKey(PersonalConversation, verbose_name="Conversation", on_delete=models.CASCADE, blank=True, null=True)
+    sender = models.ForeignKey(User, verbose_name="Message Sender", on_delete=models.CASCADE, null=True, blank=True)
+    content = models.TextField(verbose_name="Message", blank=True, null=True)
+    timestamp = models.DateTimeField(verbose_name="Message DateTime", blank=True, null=True)
+
+    def __str__(self):
+        return self.conversation
+
+
+class GroupConversation(models.Model):
+    name = models.CharField(verbose_name="Group Name", max_length=50, null=True, blank=True)
+    group_avatar = models.ImageField(verbose_name="Group Avatar", upload_to='group_avatars/')
+
+    def __str__(self):
+        return self.name
+
+
+class GroupMember(models.Model):
+    group = models.ForeignKey(GroupConversation, verbose_name="Group Conversation", on_delete=models.CASCADE, null=True, blank=True)
+    member = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Member")
+    member_type = models.CharField(verbose_name="Member Type", max_length=20, choices=GroupMembertypeChoice.choices, default=GroupMembertypeChoice.MEMBER, null=True, blank=True)
+    member_status = models.CharField(verbose_name="Member Status", max_length=20, choices=GroupMemberStatusChoice.choices, default=GroupMemberStatusChoice.OFFLINE, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.member)
+
+
+class GroupConversationMessage(models.Model):
+    conversation = models.ForeignKey(GroupMember, verbose_name="Conversation", on_delete=models.CASCADE, blank=True, null=True)
+    sender = models.ForeignKey(User, verbose_name="Message Sender", on_delete=models.CASCADE, null=True, blank=True)
+    content = models.TextField(verbose_name="Message", blank=True, null=True)
+    timestamp = models.DateTimeField(verbose_name="Message DateTime", blank=True, null=True)
+
+    def __str__(self):
+        return self.conversation
+
