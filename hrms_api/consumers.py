@@ -5,13 +5,25 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
-from hrms_api.models import GroupConversationMessage, User, PersonalConversationMessage, GroupMember
+from django.db.models import Q
+
+from hrms_api.models import GroupConversationMessage, PersonalConversationMessage, GroupMember, User, \
+    PersonalConversation
+
+Message_Type ={
+    "MESSAGES": "MESSAGES",
+    "ONLINE": "ONLINE",
+    "OFFLINE": "OFFLINE",
+    "IS_TYPING": "IS_TYPING",
+    "NOT_TYPING": "NOT_TYPING",
+}
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = f"chat_{self.room_name}"
+        self.user = self.scope['user']
 
         await self.channel_layer.group_add(
             self.room_group_name, self.channel_name
@@ -29,25 +41,54 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json["message"]
         room_name = text_data_json.get('room_name')
         sender = text_data_json.get('sender')
-        await self.save_message(room_name, sender, message, current_time)
-        await self.channel_layer.group_send(
-            self.room_group_name, {
-                "type": "chat.message",
-                "message": message,
-                "room_name":room_name,
-                "sender":sender
-            }
-        )
-
+        msg_type = text_data_json.get('msg_type')
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MESSAGE TYPE : ", msg_type)
+        if msg_type == Message_Type['MESSAGES']:
+            await self.save_message(room_name, sender, message, current_time)
+            await self.channel_layer.group_send(
+                self.room_group_name, {
+                    "type": "chat_message",
+                    "message": message,
+                    "room_name":room_name,
+                    "sender":sender
+                }
+            )
+        elif msg_type == Message_Type['IS_TYPING']:
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN TYPING")
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'user_is_typing',
+                    'sender': sender,
+                }
+            )
+        elif msg_type == Message_Type["NOT_TYPING"]:
+            await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                    'type': 'user_not_typing',
+                    'sender' : sender,
+                    }
+                )
 
     async def chat_message(self, event):
-        message = event["message"]
-        sender = event['sender']
-        room_name = event['room_name']
         await self.send(text_data=json.dumps({
-            "message": message,
-            "sender": sender,
-            "room_name": room_name,
+            "msg_type":Message_Type['MESSAGES'],
+            "message": event["message"],
+            "sender": event['sender'],
+            "room_name": event['room_name'],
+        }))
+
+    async def user_is_typing(self,event):
+        await self.send(text_data=json.dumps({
+            'msg_type': Message_Type['IS_TYPING'],
+            'sender' : event['sender']
+        }))
+
+    async def user_not_typing(self,event):
+        await self.send(text_data=json.dumps({
+            'msg_type': Message_Type['NOT_TYPING'],
+            'sender' : event['sender']
         }))
 
     @database_sync_to_async

@@ -280,8 +280,6 @@ def EmpGroupChat(request, groupID):
     group_member = GroupMember.objects.filter(group=group_details.id)
     current_time = datetime.datetime.now()
 
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    print(group_details.id, "-------")
     old_messages = GroupConversationMessage.objects.filter(conversation__group=group_details.id).order_by('timestamp')
 
     context = {

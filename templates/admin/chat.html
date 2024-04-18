@@ -179,7 +179,7 @@
 								<div class="float-left user-img">
 									<a href="profile.html">
 										<img src="{{group_details.group_avatar.url}}" alt="" class="avatar">
-<!--										<span class="status online"></span>-->
+										<span class="status online"></span>
 									</a>
 								</div>
 								<div class=" float-left">
@@ -742,12 +742,18 @@
     	const d = new Date();
 		let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 		let datetime = d.toLocaleString('en-US', options);
+
     	const sender_user = "{{sender.id}}";
         const data = JSON.parse(e.data);
-        if (sender_user == data.sender){
-        	document.querySelector(".chat-log").innerHTML += "<div class='text-right my-1 d-flex justify-content-end'><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#F6F4F4;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime +"</div></div><div><img class='avatar' src='{{sender.avatar.url}}'></div></div>";
-		}else{
-        	document.querySelector(".chat-log").innerHTML += "<div class='my-1 d-flex'><div><img class='avatar' src='{{chat_users.avatar.url}}'></div><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#e8e3e3;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime+"</div></div></div>";
+		if(data.msg_type === 'MESSAGES'){
+			if (sender_user == data.sender){
+				document.querySelector(".chat-log").innerHTML += "<div class='text-right my-1 d-flex justify-content-end'><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#F6F4F4;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime +"</div></div><div><img class='avatar' src='{{sender.avatar.url}}'></div></div>";
+			}else{
+				document.querySelector(".chat-log").innerHTML += "<div class='my-1 d-flex'><div><img class='avatar' src='{{chat_users.avatar.url}}'></div><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#e8e3e3;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime+"</div></div></div>";
+			}
+		}
+		else if(data.msg_type === 'IS_TYPING'){
+			document.querySelector(".last-seen").innerHTML += "<i class="typing-text">Typing...</i>";
 		}
     };
 
@@ -775,12 +781,13 @@
         const message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
         	'message': message,
-        	'room_name': room_name,
-			'sender': '{{request.user.id }}'
+			'room_name': room_name,
+			'sender': '{{request.user.id}}',
+			'msg_type': 'MESSAGES',
 		}));
         messageInputDom.value = "";
     };
-
+<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
     {% elif group_room_name %}
 
     const room_name = "{{group_room_name}}";

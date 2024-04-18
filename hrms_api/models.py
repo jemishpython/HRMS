@@ -86,6 +86,7 @@ class User(AbstractUser):
     religion = models.CharField(verbose_name='Religion', max_length=20, null=True)
     technology = models.ForeignKey(Technology, on_delete=models.CASCADE, null=True, blank=True)
     salary = models.IntegerField(verbose_name="Employee Salary", null=True, blank=True)
+    chat_status = models.BooleanField(verbose_name="Chat Status", default=False)
 
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []
@@ -407,7 +408,6 @@ class GroupMember(models.Model):
     group = models.ForeignKey(GroupConversation, verbose_name="Group Conversation", on_delete=models.CASCADE, null=True, blank=True)
     member = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Member")
     member_type = models.CharField(verbose_name="Member Type", max_length=20, choices=GroupMembertypeChoice.choices, default=GroupMembertypeChoice.MEMBER, null=True, blank=True)
-    member_status = models.CharField(verbose_name="Member Status", max_length=20, choices=GroupMemberStatusChoice.choices, default=GroupMemberStatusChoice.OFFLINE, null=True, blank=True)
 
     def __str__(self):
         return str(self.member)

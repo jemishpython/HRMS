@@ -12,7 +12,7 @@
                         <li>
                             <button class="btn text-muted" id="room-name-{{group_details.group.id}}" onclick="redirectToGroupChatRoom({{group_details.group.id}})">
                                 <span class="chat-avatar-sm user-img">
-                                    <img class="rounded-circle" alt="" src="{{group_details.group.group_avatar.url}}"><!-- <span class="status offline"></span> -->
+                                    <img class="rounded-circle" alt="" src="{{group_details.group.group_avatar.url}}">
                                 </span>
                                 <span class="chat-user">{{group_details.group.name}}</span>
                             </button>
@@ -22,8 +22,8 @@
                 {% for user in user_list %}
                 <li>
                     <button class="btn text-muted" id="room-name-{{user.id}}" onclick="redirectToChatRoom({{user.id}})">
-                        <span class="chat-avatar-sm user-img">
-                            <img class="rounded-circle" alt="" src="{{ user.avatar.url }}">  <!-- <span class="status offline"></span> -->
+                        <span class="chat-avatar-sm user-img" id="user_status">
+                            <img class="rounded-circle" alt="" src="{{ user.avatar.url }}"><span class="status offline"></span>
                         </span>
                         <span class="chat-user">{{user.username}}</span>
                     </button>
