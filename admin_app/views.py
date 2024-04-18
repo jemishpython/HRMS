@@ -1165,26 +1165,6 @@ def UpdateTicketstatus(request, id):
 
 
 @login_required(login_url="Login")
-def ChatView(request):
-    user_list = User.objects.all()
-    context = {
-        'user_list': user_list,
-    }
-    return render(request, "admin/chat.html", context)
-
-
-@login_required(login_url="Login")
-def Chat(request, id):
-    user_list = User.objects.all()
-    chat_users = User.objects.get(id=id)
-    context = {
-        'chat_users': chat_users,
-        'user_list': user_list,
-    }
-    return render(request, "admin/chat.html", context)
-
-
-@login_required(login_url="Login")
 def AttendanceView(request):
     attendances = Attendance.objects.all().order_by('-date')
     context = {

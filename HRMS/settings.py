@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-!r7o03h&(9o_4#6ug6o!8uj_9z)a8fq9&9i*zjj476x6qpe75a
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -82,7 +82,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "HRMS.wsgi.application"
+# WSGI_APPLICATION = "HRMS.wsgi.application"
 ASGI_APPLICATION = "HRMS.asgi.application"
 
 
@@ -149,4 +149,13 @@ EMAIL_HOST_PASSWORD = 'nkxdkvwycdjnuniw'
 
 MESSAGE_TAGS = {
     messages.ERROR: 'danger',
+}
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
 }
