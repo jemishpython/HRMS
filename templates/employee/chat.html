@@ -192,9 +192,9 @@
 <!--								</div>-->
 <!--							</div>-->
 							<ul class="nav custom-menu">
-								<li class="nav-item">
-									<a class="nav-link task-chat profile-rightbar float-right" id="task_chat" href="#task_window"><i class="fa fa-user"></i></a>
-								</li>
+<!--								<li class="nav-item">-->
+<!--									<a class="nav-link task-chat profile-rightbar float-right" id="task_chat" href="#task_window"><i class="fa fa-user"></i></a>-->
+<!--								</li>-->
 <!--								<li class="nav-item">-->
 <!--									<a href="voice-call.html" class="nav-link"><i class="fa fa-phone"></i></a>-->
 <!--								</li>-->
@@ -527,13 +527,12 @@
 									<div class="table-body">
 										<div class="table-content">
 											<div class="chat-profile-img">
-												<div>
-													<img class="" style="width:6rem; height:6rem; border-radius:50%" src="{{group_details.group_avatar.url}}" alt="">
+												<img class="" style="width:6rem; height:6rem; border-radius:50%" src="{{group_details.group_avatar.url}}" alt="">
+												<div class="position-absolute d-flex flex-column fixed-top mt-2" style="left:auto;">
+													<button class="btn text-info" title="Edit Group" data-toggle="tooltip" data-placement="left"><i class="las la-user-edit la-lg"></i></button>
+													<button class="btn text-info" title="Add Member" data-toggle="tooltip" data-placement="left" onclick="addGroupMembers({{group_details.id}})"><i class="las la-plus la-lg"></i></button>
 												</div>
-												<div>
-													<h3 class="user-name m-t-10 mb-0">{{group_details.name}}</h3>
-<!--													<small class="text-muted">{{user.designation}} | {{user.technology}}</small>-->
-												</div>
+												<h3 class="user-name m-t-5">{{group_details.name}}</h3>
 											</div>
 <!--											<div class="chat-profile-info">-->
 <!--												<ul class="user-det-list">-->
@@ -556,12 +555,12 @@
 <!--												</ul>-->
 <!--											</div>-->
 											<div class="transfer-files">
-												<ul class="nav nav-tabs nav-tabs-solid nav-justified mb-0">
-													<li class="nav-item"><a class="nav-link active" href="#all_files" data-toggle="tab">All Files</a></li>
-													<li class="nav-item"><a class="nav-link" href="#my_files" data-toggle="tab">My Files</a></li>
+												<ul class="nav sticky-top nav-tabs nav-tabs-solid nav-justified mb-0">
+													<li class="nav-item"><a class="nav-link" href="#group_files" data-toggle="tab">All Files</a></li>
+													<li class="nav-item"><a class="nav-link active" href="#group_members" data-toggle="tab">Members</a></li>
 												</ul>
 												<div class="tab-content">
-													<div class="tab-pane show active" id="all_files">
+													<div class="tab-pane" id="group_files">
 														<ul class="files-list">
 															<li>
 																<div class="files-cont">
@@ -585,29 +584,27 @@
 															</li>
 														</ul>
 													</div>
-													<div class="tab-pane" id="my_files">
-														<ul class="files-list">
-															<li>
-																<div class="files-cont">
-																	<div class="file-type">
-																		<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+													<div class="tab-pane show active" id="group_members">
+														<div>
+															<ul class="files-list d-flex flex-column">
+																{% for member in group_member %}
+																<li>
+																	<div class="d-flex">
+																		<div class="file-type">
+																			<span><img class="avatar w-75 h-75" src="{{member.member.avatar.url}}"></span>
+																		</div>
+																		<div class="files-info">
+																			<span class="file-name text-ellipsis">{{member.member.username}}</span>
+																			<span class="file-date">{{member.member.department}} | {{member.member.designation}} | {{member.member.technology}}</span>
+																		</div>
+	<!--																	<div class="ml-auto">-->
+	<!--																		<a class="text-danger" href="javascript:void(0)"><i class="las la-minus-circle la-lg"></i></a>-->
+	<!--																	</div>-->
 																	</div>
-																	<div class="files-info">
-																		<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
-																		<span class="file-author"><a href="#">John Doe</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-																	</div>
-																	<ul class="files-action">
-																		<li class="dropdown dropdown-action">
-																			<a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_horiz</i></a>
-																			<div class="dropdown-menu">
-																				<a class="dropdown-item" href="javascript:void(0)">Download</a>
-																				<a class="dropdown-item" href="#" data-toggle="modal" data-target="#share_files">Share</a>
-																			</div>
-																		</li>
-																	</ul>
-																</div>
-															</li>
-														</ul>
+																</li>
+																{% endfor %}
+															</ul>
+														</div>
 													</div>
 												</div>
 											</div>
@@ -704,37 +701,6 @@
 	</div>
 	<!-- /Drogfiles Modal -->
 
-	<!-- Add Group Modal -->
-	<div id="add_group" class="modal custom-modal fade" role="dialog">
-		<div class="modal-dialog modal-dialog-centered modal-md" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Create a group</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<p>Groups are where your team communicates. They’re best when organized around a topic — #leads, for example.</p>
-					<form>
-					<div class="form-group">
-						<label>Group Name <span class="text-danger">*</span></label>
-						<input class="form-control" type="text">
-					</div>
-					<div class="form-group">
-						<label>Send invites to: <span class="text-muted-light">(optional)</span></label>
-						<input class="form-control" type="text">
-					</div>
-					<div class="submit-section">
-						<button class="btn btn-primary submit-btn">Submit</button>
-					</div>
-				</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- /Add Group Modal -->
-
 	<!-- Share Files Modal -->
 	<div id="share_files" class="modal custom-modal fade" role="dialog">
 		<div class="modal-dialog modal-dialog-centered modal-md" role="document">
@@ -769,6 +735,8 @@
 		</div>
 	</div>
 	<!-- /Share Files Modal -->
+
+	<div id="add-group-members"></div>
 
 </div>
 <!-- /Page Wrapper -->
@@ -878,6 +846,19 @@
     };
 
     {% endif %}
+</script>
+
+
+<script>
+	function addGroupMembers(MemberId) {
+		$.ajax({
+			url: "{% url 'AddEmpGroupMember' id=0 %}".replace(0, MemberId),
+			success: function(response) {
+				$("#add-group-members").html(response);
+				$("#add_group_members").modal('show');
+			}
+		});
+	}
 </script>
 
 

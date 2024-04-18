@@ -2,7 +2,7 @@
 {% load static %}
 
 <!-- Add Group Chat Modal -->
-<div id="add_group_model" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
+<div id="add_group_members" class="modal fade" role="dialog" aria-hidden="true" aria-labelledby="addModalToggleLabel" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,14 +11,11 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{% url 'AddEmpGroupChat' %}" method="post" id="form" enctype="multipart/form-data">
+            <form action="{% url 'AddGroupMember' id=group_id.id %}" method="post" id="form" enctype="multipart/form-data">
             {% csrf_token %}
                 <div class="modal-body">
                     <div class="form-group">
-                        {{ form.name|as_crispy_field }}
-                    </div>
-                    <div class="form-group">
-                        {{ form.group_avatar|as_crispy_field }}
+                        {{ form.member|as_crispy_field }}
                     </div>
                     <div class="submit-section">
                         <button class="btn btn-primary submit-btn" type="submit">Submit</button>

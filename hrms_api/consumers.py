@@ -5,7 +5,7 @@ from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
-from hrms_api.models import GroupConversationMessage, User
+from hrms_api.models import GroupConversationMessage, User, PersonalConversationMessage, GroupMember
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -52,7 +52,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_message(self, room_name, sender, message, current_time):
-        return GroupConversationMessage.objects.create(conversation_id=room_name, sender_id=sender, content=message, timestamp=current_time)
+        return PersonalConversationMessage.objects.create(conversation_id=room_name, sender_id=sender, content=message, timestamp=current_time)
 
 
 class GroupChatConsumer(AsyncWebsocketConsumer):
@@ -102,4 +102,5 @@ class GroupChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def save_message(self, room_name, sender, message, current_time):
-        return GroupConversationMessage.objects.create(conversation_id=room_name, sender_id=sender, content=message, timestamp=current_time)
+        room_name = GroupMember.objects.filter(group_id=room_name).first()
+        return GroupConversationMessage.objects.create(conversation=room_name, sender_id=sender, content=message, timestamp=current_time)

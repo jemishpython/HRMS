@@ -9,19 +9,15 @@
                     <a href="{% url 'EmployeeIndex' %}"><i class="la la-home"></i> <span>Back to Home</span></a>
                 </li>
                 <li class="menu-title d-flex justify-content-between"><span>Chat Groups</span> <button class="btn text-primary m-0 p-0 " onclick="addGroupChat()"><i class="fa fa-plus"></i></button></li>
-                {% for group in group_list %}
-                    {% for receiver in group.receiver.all %}
-                        {% if user.id == receiver.id %}
-                            <li>
-                                <button class="btn text-muted" id="room-name-{{group.id}}" onclick="redirectToGroupChatRoom({{group.id}})">
-                                    <span class="chat-avatar-sm user-img">
-                                        <img class="rounded-circle" alt="" src="{{group.group_avatar.url}}"><!-- <span class="status offline"></span> -->
-                                    </span>
-                                    <span class="chat-user">{{group.name}}</span>
-                                </button>
-                            </li>
-                        {% endif %}
-                    {% endfor %}
+                {% for group_details in group_list %}
+                        <li>
+                            <button class="btn text-muted" id="room-name-{{group_details.group.id}}" onclick="redirectToGroupChatRoom({{group_details.group.id}})">
+                                <span class="chat-avatar-sm user-img">
+                                    <img class="rounded-circle" alt="" src="{{group_details.group.group_avatar.url}}"><!-- <span class="status offline"></span> -->
+                                </span>
+                                <span class="chat-user">{{group_details.group.name}}</span>
+                            </button>
+                        </li>
                 {% endfor %}
                 <li class="menu-title">Direct Chats</li>
 <!--                <li class="menu-title">Direct Chats <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>-->

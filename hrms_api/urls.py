@@ -15,11 +15,14 @@ urlpatterns = [
     path("chat/<int:userID>", views.Chat, name='Chat'),
 
     path("chat/group-add", views.GroupChatCreate, name='AddGroupChat'),
+    path("chat/add-group-member/<int:id>", views.AddGroupChatMember, name='AddGroupMember'),
     path("group-chat/<int:groupID>", views.GroupChat, name='GroupChat'),
 
-    path("chat/group-add", views.EmpGroupChatCreate, name='AddEmpGroupChat'),
+    path("employee/chat-view/", views.EmpChatView, name='EmpChatView'),
+    path("employee/chat/<int:userID>", views.EmpChat, name='EmpChat'),
+
+    path("employee/chat/group-add", views.EmpGroupChatCreate, name='AddEmpGroupChat'),
+    path("employee/chat/add-group-member/<int:id>", views.AddEmpGroupChatMember, name='AddEmpGroupMember'),
     path("employee/group-chat/<int:groupID>", views.EmpGroupChat, name='EmpGroupChat'),
 
-    path("chat-view/", views.EmpChatView, name='EmpChatView'),
-    path("employee/chat/<int:userID>", views.EmpChat, name='EmpChat'),
 ]

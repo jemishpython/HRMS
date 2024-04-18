@@ -133,7 +133,7 @@
 <!--							</div>-->
 <!--						</div>-->
 <!--Chat View Add Manually-->
-					<div id="chat-log" class="border overflow-auto px-2 h-100">
+					<div class="border overflow-auto px-2 h-100 chat-log">
 						{% for message in massages %}
 							{% if message.sender.id == chat_users.id %}
 								<div class="my-1 d-flex">
@@ -161,9 +161,9 @@
 								<a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
 								<div class="message-area">
 									<div class="input-group">
-										<input class="form-control" id="chat-message-input" placeholder="Type message..." type="text">
+										<input class="form-control chat-message-input" placeholder="Type message..." type="text">
 										<span class="input-group-append">
-											<button class="btn btn-custom" id="chat-message-submit" type="button"><i class="fa fa-send"></i></button>
+											<button class="btn btn-custom chat-message-submit" type="button"><i class="fa fa-send"></i></button>
 										</span>
 									</div>
 								</div>
@@ -535,7 +535,7 @@
 												<img class="" style="width:6rem; height:6rem; border-radius:50%" src="{{group_details.group_avatar.url}}" alt="">
 												<div class="position-absolute d-flex flex-column fixed-top mt-2" style="left:auto;">
 													<button class="btn text-info" title="Edit Group" data-toggle="tooltip" data-placement="left"><i class="las la-user-edit la-lg"></i></button>
-													<button class="btn text-info" title="Add Member" data-toggle="tooltip" data-placement="left"><i class="las la-plus la-lg"></i></button>
+													<button class="btn text-info" title="Add Member" data-toggle="tooltip" data-placement="left" onclick="addGroupMembers({{group_details.id}})"><i class="las la-plus la-lg"></i></button>
 												</div>
 												<h3 class="user-name m-t-5">{{group_details.name}}</h3>
 											</div>
@@ -575,15 +575,15 @@
 													<div class="tab-pane show active" id="group_members">
 														<div>
 															<ul class="files-list d-flex flex-column">
-																{% for receiver in group_details.receiver.all %}
+																{% for member in group_member %}
 																<li>
 																	<div class="d-flex">
 																		<div class="file-type">
-																			<span><img class="avatar w-75 h-75" src="{{receiver.avatar.url}}"></span>
+																			<span><img class="avatar w-75 h-75" src="{{member.member.avatar.url}}"></span>
 																		</div>
 																		<div class="files-info">
-																			<span class="file-name text-ellipsis">{{receiver.username}}</span>
-																			<span class="file-date">{{receiver.department}} | {{receiver.designation}} | {{receiver.technology}}</span>
+																			<span class="file-name text-ellipsis">{{member.member.username}}</span>
+																			<span class="file-date">{{member.member.department}} | {{member.member.designation}} | {{member.member.technology}}</span>
 																		</div>
 	<!--																	<div class="ml-auto">-->
 	<!--																		<a class="text-danger" href="javascript:void(0)"><i class="las la-minus-circle la-lg"></i></a>-->
@@ -724,6 +724,8 @@
 	</div>
 	<!-- /Share Files Modal -->
 
+	<div id="add-group-members"></div>
+
 </div>
 <!-- /Page Wrapper -->
 
@@ -834,6 +836,18 @@
     };
 
     {% endif %}
+</script>
+
+<script>
+	function addGroupMembers(MemberId) {
+		$.ajax({
+			url: "{% url 'AddGroupMember' id=0 %}".replace(0, MemberId),
+			success: function(response) {
+				$("#add-group-members").html(response);
+				$("#add_group_members").modal('show');
+			}
+		});
+	}
 </script>
 
 

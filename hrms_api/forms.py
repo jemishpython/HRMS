@@ -7,12 +7,18 @@ class GroupChatForm(forms.ModelForm):
 
     class Meta:
         model = GroupConversation
-        fields = ['name', 'group_avatar', 'receiver']
-        widgets = {
-            'receiver': forms.SelectMultiple(attrs={'class': 'form-control'}),
-        }
+        fields = ['name', 'group_avatar']
 
-        receiver = forms.ModelMultipleChoiceField(
-            queryset=User.objects.all(),
-            widget=forms.CheckboxSelectMultiple
-        )
+
+class AddGroupMemberForm(forms.ModelForm):
+    member = forms.ModelMultipleChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.CheckboxSelectMultiple
+    )
+
+    class Meta:
+        model = GroupMember
+        fields = ['member']
+        widgets = {
+            'member': forms.SelectMultiple(attrs={'class': 'form-control'}),
+        }

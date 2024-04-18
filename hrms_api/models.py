@@ -6,7 +6,7 @@ from django.db.models import Q
 # Create your models here.
 from hrms_api.choices import GenderTypeChoice, MaritalStatusChoice, ProjectPriorityChoice, TaskStatusChoice, \
     ProjectStatusChoice, LeaveTypeChoice, LeaveStatusChoice, ProjectAssigneeTypeChoice, TicketPriorityChoice, \
-    TicketStatusChoice, AttendanceStatusChoice
+    TicketStatusChoice, AttendanceStatusChoice, GroupMembertypeChoice, GroupMemberStatusChoice
 
 
 class Department(models.Model):
@@ -398,14 +398,23 @@ class PersonalConversationMessage(models.Model):
 class GroupConversation(models.Model):
     name = models.CharField(verbose_name="Group Name", max_length=50, null=True, blank=True)
     group_avatar = models.ImageField(verbose_name="Group Avatar", upload_to='group_avatars/')
-    receiver = models.ManyToManyField(User, verbose_name="Group Members")
 
     def __str__(self):
-        return self.receiver
+        return self.name
+
+
+class GroupMember(models.Model):
+    group = models.ForeignKey(GroupConversation, verbose_name="Group Conversation", on_delete=models.CASCADE, null=True, blank=True)
+    member = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Member")
+    member_type = models.CharField(verbose_name="Member Type", max_length=20, choices=GroupMembertypeChoice.choices, default=GroupMembertypeChoice.MEMBER, null=True, blank=True)
+    member_status = models.CharField(verbose_name="Member Status", max_length=20, choices=GroupMemberStatusChoice.choices, default=GroupMemberStatusChoice.OFFLINE, null=True, blank=True)
+
+    def __str__(self):
+        return str(self.member)
 
 
 class GroupConversationMessage(models.Model):
-    conversation = models.ForeignKey(GroupConversation, verbose_name="Conversation", on_delete=models.CASCADE, blank=True, null=True)
+    conversation = models.ForeignKey(GroupMember, verbose_name="Conversation", on_delete=models.CASCADE, blank=True, null=True)
     sender = models.ForeignKey(User, verbose_name="Message Sender", on_delete=models.CASCADE, null=True, blank=True)
     content = models.TextField(verbose_name="Message", blank=True, null=True)
     timestamp = models.DateTimeField(verbose_name="Message DateTime", blank=True, null=True)
