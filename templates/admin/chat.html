@@ -35,7 +35,7 @@
 								</div>
 								<div class="float-left align-item-center">
 									<a href=""><span class="text-dark">{{chat_users.username}}</span> <!-- <i class="typing-text">Typing...</i>--></a>
-									<span class="last-seen">{{chat_users.department}} | {{chat_users.designation}} | {{chat_users.technology}}</span>
+									<span class="last-seen"><span class="mr-2">{{chat_users.department}} | {{chat_users.designation}} | {{chat_users.technology}}</span></span>
 <!--									<span class="last-seen">Last seen today at 7:50 AM ||| {{ room_name|json_script:"room-name" }}</span>-->
 								</div>
 							</div>
@@ -179,7 +179,7 @@
 								<div class="float-left user-img">
 									<a href="profile.html">
 										<img src="{{group_details.group_avatar.url}}" alt="" class="avatar">
-<!--										<span class="status online"></span>-->
+										<span class="status online"></span>
 									</a>
 								</div>
 								<div class=" float-left">
@@ -742,12 +742,33 @@
     	const d = new Date();
 		let options = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 		let datetime = d.toLocaleString('en-US', options);
+
     	const sender_user = "{{sender.id}}";
+    	const receiver_user = "{{chat_users.id}}";
         const data = JSON.parse(e.data);
-        if (sender_user == data.sender){
-        	document.querySelector(".chat-log").innerHTML += "<div class='text-right my-1 d-flex justify-content-end'><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#F6F4F4;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime +"</div></div><div><img class='avatar' src='{{sender.avatar.url}}'></div></div>";
-		}else{
-        	document.querySelector(".chat-log").innerHTML += "<div class='my-1 d-flex'><div><img class='avatar' src='{{chat_users.avatar.url}}'></div><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#e8e3e3;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime+"</div></div></div>";
+
+        console.log(sender_user);
+		console.log(data.sender);
+
+		if(data.msg_type === 'MESSAGES'){
+			if (sender_user == data.sender){
+				document.querySelector(".chat-log").innerHTML += "<div class='text-right my-1 d-flex justify-content-end'><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#F6F4F4;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime +"</div></div><div><img class='avatar' src='{{sender.avatar.url}}'></div></div>";
+			}else{
+				document.querySelector(".chat-log").innerHTML += "<div class='my-1 d-flex'><div><img class='avatar' src='{{chat_users.avatar.url}}'></div><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#e8e3e3;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime+"</div></div></div>";
+			}
+		}
+		else if(data.msg_type === 'IS_TYPING'){
+			if (sender_user == data.sender){
+				document.querySelector(".last-seen").innerHTML += "";
+			}else{
+				document.querySelector(".last-seen").innerHTML += "<i class='typing-text' id='isTyping'>Typing...</i>";
+			}
+		}
+		else if(data.msg_type === 'NOT_TYPING'){
+			var isTypingElement = document.getElementById('isTyping');
+				if(isTypingElement) {
+					isTypingElement.remove();
+				}
 		}
     };
 
@@ -770,17 +791,51 @@
         }
     };
 
+    window.onload = function () {
+		var isTyping = false;
+		var isNotTyping;
+		document.querySelector('.chat-message-input').onkeypress = () => {
+			sendIsTypingToUser()
+			if (isNotTyping != undefined) clearTimeout(isNotTyping);
+			isNotTyping = setTimeout(sendIsNotTyping, 500);
+		};
+		function sendIsTypingToUser() {
+			if(!isTyping){
+				chatSocket.send(JSON.stringify({
+					'sender': '{{request.user.id}}',
+					'receiver_user': '{{chat_users.id}}',
+					'room_name': room_name,
+					'msg_type': 'IS_TYPING',
+					'message': '',
+				}));
+				isTyping = true
+			}
+		}
+		function sendIsNotTyping() {
+			chatSocket.send(JSON.stringify({
+				'sender': '{{request.user.id}}',
+				'receiver_user': '{{chat_users.id}}',
+				'room_name': room_name,
+				'msg_type': 'NOT_TYPING',
+				'message': '',
+			}));
+			isTyping = false
+		}
+	};
+
     document.querySelector(".chat-message-submit").onclick = function (e) {
         const messageInputDom = document.querySelector(".chat-message-input");
         const message = messageInputDom.value;
         chatSocket.send(JSON.stringify({
         	'message': message,
-        	'room_name': room_name,
-			'sender': '{{request.user.id }}'
+			'room_name': room_name,
+			'sender': '{{request.user.id}}',
+			'receiver_user': '{{chat_users.id}}',
+			'msg_type': 'MESSAGES',
 		}));
         messageInputDom.value = "";
     };
-
+<!-- -------------------------------------------------------------------------------------------------------------------------------------------------------------  -->
     {% elif group_room_name %}
 
     const room_name = "{{group_room_name}}";
