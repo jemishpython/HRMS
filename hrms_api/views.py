@@ -83,6 +83,7 @@ def ChatView(request):
 def Chat(request, userID):
     sender_id = request.user.id
     sender = User.objects.get(id=sender_id)
+    group_list = GroupMember.objects.filter(member=sender_id)
     user_list = User.objects.all()
     chat_users = User.objects.get(id=userID)
     current_time = datetime.datetime.now()
@@ -100,6 +101,7 @@ def Chat(request, userID):
         'massages': old_messages,
         'sender': sender,
         'current_time': current_time,
+        'group_list': group_list,
     }
     return render(request, "admin/chat.html", context)
 
@@ -197,6 +199,7 @@ def EmpChatView(request):
 def EmpChat(request, userID):
     sender_id = request.user.id
     sender = User.objects.get(id=sender_id)
+    group_list = GroupMember.objects.filter(member=sender_id)
     user_list = User.objects.all()
     chat_users = User.objects.get(id=userID)
     current_time = datetime.datetime.now()
@@ -214,6 +217,7 @@ def EmpChat(request, userID):
         'massages': old_messages,
         'sender': sender,
         'current_time': current_time,
+        'group_list': group_list,
     }
     return render(request, "employee/chat.html", context)
 
