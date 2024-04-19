@@ -1,14 +1,12 @@
 # consumers.py
 import datetime
+import uuid
 
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
-from django.db.models import Q
-
-from hrms_api.models import GroupConversationMessage, PersonalConversationMessage, GroupMember, User, \
-    PersonalConversation
+from hrms_api.models import GroupConversationMessage, PersonalConversationMessage, GroupMember
 
 Message_Type ={
     "MESSAGES": "MESSAGES",
@@ -16,6 +14,7 @@ Message_Type ={
     "OFFLINE": "OFFLINE",
     "IS_TYPING": "IS_TYPING",
     "NOT_TYPING": "NOT_TYPING",
+    "MESSAGE_READ": "MESSAGE_READ",
 }
 
 
@@ -41,7 +40,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = text_data_json["message"]
         room_name = text_data_json.get('room_name')
         sender = text_data_json.get('sender')
+        receiver_user = text_data_json.get('receiver_user')
         msg_type = text_data_json.get('msg_type')
+        print("SENDER : ", sender, "--------------------------------  RECEIVER : ",receiver_user )
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> MESSAGE TYPE : ", msg_type)
         if msg_type == Message_Type['MESSAGES']:
             await self.save_message(room_name, sender, message, current_time)
@@ -50,11 +51,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     "type": "chat_message",
                     "message": message,
                     "room_name":room_name,
-                    "sender":sender
+                    "sender":sender,
                 }
             )
         elif msg_type == Message_Type['IS_TYPING']:
-            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> IN TYPING")
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -67,7 +67,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     self.room_group_name,
                     {
                     'type': 'user_not_typing',
-                    'sender' : sender,
+                    'sender' : receiver_user,
                     }
                 )
 

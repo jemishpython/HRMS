@@ -142,7 +142,7 @@
 								<div class="text-right my-1 d-flex justify-content-end">
 									<div class="border pl-3 pr-1 pt-1 mr-1 rounded" style="background-color:#F6F4F4;">
 										<div>{{message.content}}</div>
-										<div class="h6 m-0 text-muted">{{message.timestamp}}</div>
+										<div class="h6 m-0 text-muted">{{message.timestamp}} <span class="read"><i class="las la-check-double la-lg"></i></span></div>
 									</div>
 									<div><img class="avatar" src="{{message.sender.avatar.url}}"></div>
 								</div>
@@ -758,6 +758,9 @@
     	const receiver_user = "{{chat_users.id}}";
         const data = JSON.parse(e.data);
 
+		console.log(sender_user);
+		console.log(data.sender);
+
 		if(data.msg_type === 'MESSAGES'){
 			if (sender_user == data.sender){
 				document.querySelector(".chat-log").innerHTML += "<div class='text-right my-1 d-flex justify-content-end'><div class='border pl-3 pr-1 pt-1 mr-1 rounded' style='background-color:#F6F4F4;'><div>" +data.message+"</div><div class='h6 m-0 text-muted'>"+datetime +"</div></div><div><img class='avatar' src='{{sender.avatar.url}}'></div></div>";
@@ -766,7 +769,9 @@
 			}
 		}
 		else if(data.msg_type === 'IS_TYPING'){
-			if (sender_user !== data.sender){
+			if (sender_user == data.sender){
+				document.querySelector(".last-seen").innerHTML += "";
+			}else{
 				document.querySelector(".last-seen").innerHTML += "<i class='typing-text' id='isTyping'>Typing...</i>";
 			}
 		}
@@ -796,6 +801,7 @@
             document.querySelector(".chat-message-submit").click();
         }
     };
+
 	window.onload = function () {
 		var isTyping = false;
 		var isNotTyping;
@@ -807,9 +813,10 @@
 		function sendIsTypingToUser() {
 			if(!isTyping){
 				chatSocket.send(JSON.stringify({
-					'sender': '{{request.user.username}}',
+					'sender': '{{request.user.id}}',
 					'room_name': room_name,
 					'msg_type': 'IS_TYPING',
+					'receiver_user': '{{chat_users.id}}',
 					'message': '',
 				}));
 				isTyping = true
@@ -819,13 +826,13 @@
 			chatSocket.send(JSON.stringify({
 				'sender': '{{request.user.username}}',
 				'room_name': room_name,
+				'receiver_user': '{{chat_users.id}}',
 				'msg_type': 'NOT_TYPING',
 				'message': '',
 			}));
 			isTyping = false
 		}
 	};
-
     document.querySelector(".chat-message-submit").onclick = function (e) {
         const messageInputDom = document.querySelector(".chat-message-input");
         const message = messageInputDom.value;
@@ -833,6 +840,7 @@
         	'message': message,
         	'room_name': room_name,
 			'sender': '{{request.user.id }}',
+			'receiver_user': '{{chat_users.id}}',
 			'msg_type': 'MESSAGES',
 		}));
         messageInputDom.value = "";
